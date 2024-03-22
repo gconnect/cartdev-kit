@@ -1,58 +1,67 @@
 #!/usr/bin/env node
-// Function to log your details in the terminal
 
-const figlet = require('figlet');
-const inquirer = require('inquirer');
-const fs = require('fs-extra');
+const { program } = require('commander');
+const { spawnSync } = require('child_process');
+const fs = require('fs');
 const path = require('path');
-// const { execSync } = require('child_process');
 
+// Define available templates
+const templates = {
+  backend: ['python', 'js', 'ts', 'rust', 'go'],
+  frontend: ['react', 'nestjs', 'vuejs', 'angular'],
+  cartesify: ['backend', 'frontend'],
+  mobile: ['reactnative', 'flutter']
+};
 
-const figletText = figlet('Cartesi Kit', function(err, data) {
-  if (err) {
-      console.log('Something went wrong...');
-      console.dir(err);
-      return;
+// Function to generate template
+function generateTemplate(templateType, templateName) {
+  // Define template directory
+  const templateDir = path.join(__dirname, 'templates', templateType, templateName);
+
+  // Check if template directory exists
+  if (!fs.existsSync(templateDir)) {
+    console.error(`Template ${templateType}/${templateName} not found`);
+    return;
   }
-  return data
-});
 
+  // Execute template generation command
+  const command = 'git';
+  const args = ['clone', templateDir, templateName];
+  const result = spawnSync(command, args, { stdio: 'inherit' });
 
-async function main() {
+  if (result.status !== 0) {
+    console.error(`Error generating template ${templateType}/${templateName}`);
+    return;
+  }
 
-  try {
-    const { projectName } = await inquirer.prompt({
-      type: 'input',
-      name: 'projectName',
-      message: 'Enter the name of your new project:'
-    });
-
-    console.log("projectName", projectName);
-    
-    const packagesDir = path.join(__dirname, 'packages');
-    const packages = fs.readdirSync(packagesDir);
-
-    const { selectedPackage } = await inquirer.prompt({
-      type: 'list',
-      name: 'selectedPackage',
-      message: 'Select a package to include in your project:',
-      choices: packages
-    });
-
-    const userProjectsDir = path.join(process.cwd(), projectName);
-    const packageDir = path.join(packagesDir, selectedPackage);
-    const userProjectDir = path.join(userProjectsDir, selectedPackage);
-
-    if (fs.existsSync(packageDir)) {
-      fs.ensureDirSync(userProjectDir);
-      fs.copySync(packageDir, userProjectDir);
-      console.log(`${selectedPackage} package added to your project.`);
-      console.log(figletText);
-    } else {
-      console.error(`${selectedPackage} package does not exist.`);
-    }
-  } catch (error){console.log(error)}
-
+  console.log(`Template ${templateType}/${templateName} generated successfully`);
 }
-main();
 
+// Function to prompt user to select templates
+async function selectTemplates() {
+  // Prompt user to select templates for each template type
+  const selectedTemplates = {};
+  for (const type of Object.keys(templates)) {
+    const { template } = await program
+      .prompt(`Select template for ${type} (${templates[type].join(', ')}): `);
+    selectedTemplates[type] = template;
+  }
+  return selectedTemplates;
+}
+
+// Define CLI command
+program
+  .version('1.0.0')
+  .description('CLI tool to generate templates for backend, frontend, Cartesify, and mobile development')
+  .action(async () => {
+    // Select templates
+    const selectedTemplates = await selectTemplates();
+
+    // Generate templates based on selections
+    for (const type of Object.keys(selectedTemplates)) {
+      generateTemplate(type, selectedTemplates[type]);
+    }
+  });
+
+// Parse CLI arguments
+program.parse(process.argv);
