@@ -30,7 +30,7 @@ Once you have successfully install the package globally on your machine, you are
 Replace myapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
 
 ### CLI Options: 
-View available command-line options and flags by running  cartesi-app --help or cartesi-app create --help
+View available command-line options and flags by running  `cartesikit --help` or `cartesikit create --help`
 
 # Supported Templates
 A more comprehensive doc for each of the supported templates will be provided soon.
@@ -87,8 +87,8 @@ Below are the key features available in this current release:
 - child_process
 - commander
 
-# Official Documentaion
-To read a more comprehensive version of this doc visit [here]()
+# Official CartesiKit Documentaion
+To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartesikit)
 
 # Contributing Guide
 This will be provided soon
