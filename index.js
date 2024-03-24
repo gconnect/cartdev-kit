@@ -3,6 +3,7 @@ const { ensureDir, copy } = require("fs-extra");
 const fs = require("fs-extra");
 const inquirer = require('inquirer');
 const path = require('path');
+const  { figletText } = require( "./utils/ascii-image");
 
 const templates = {
   frontend: ['react-app', 'next-app', 'angular-app', 'vue-app',],
@@ -86,6 +87,7 @@ async function promptInclude(message, name) {
   return {includeBackend,includeFrontend, includeConsole };
 }
 
+
 // Function to copy template files to the project directory
 async function copyTemplateFiles(templateName, destinationDir, templateDirectory) {
     let templateDir;
@@ -93,7 +95,8 @@ async function copyTemplateFiles(templateName, destinationDir, templateDirectory
   try {
     await ensureDir(templateDir); // Ensure template directory exists
     await copy(templateDir, destinationDir);
-    console.log(`Template files copied successfully to ${destinationDir}`);
+    console.log(`✔ Template ${templateName} app created successfully!` )
+    // console.log(`Template files copied successfully to ${destinationDir}`);
   } catch (err) {
     console.error(`Error copying template files: ${err}`);
   }
@@ -106,6 +109,7 @@ async function main() {
     console.log("Please provide the name of the app");
     process.exit(1);
   }
+  console.log(await figletText)
 
   const projectDir = `${process.cwd()}/${projectName}`;
   await ensureDirectory(projectDir);
