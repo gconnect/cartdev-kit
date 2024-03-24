@@ -17,7 +17,8 @@ async function copyGitTemplateFiles(templateName, destinationDir, repositoryURL)
             const packageJson = await fs.readJson(packageJsonPath);
             packageJson.name = templateName.toLowerCase(); // Assuming templateName is suitable for a package name
             await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
-            console.log(`✔ Package name updated to ${templateName.toLowerCase()} in ${packageJsonPath}`);
+            // console.log(`✔ Package name updated to ${templateName.toLowerCase()} in ${packageJsonPath}`);
+            console.log(`✔ Template ${templateName} created successfully!` )
         } else {
             console.warn(`Warning: No package.json found in ${destinationDir}.`);
         }
