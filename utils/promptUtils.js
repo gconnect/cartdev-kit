@@ -1,6 +1,9 @@
-
+// const inquirer = require('inquirer');
+let inquirer
 // Function to prompt user for template selection
 async function promptTemplateSelection(templateType, choices) {
+  inquirer = await import('inquirer');
+
   const { selectedTemplate } = await inquirer.prompt({
     type: 'list',
     name: 'selectedTemplate',

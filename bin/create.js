@@ -1,18 +1,20 @@
 // Main function
 const { ensureDir, copy } = require("fs-extra");
 const fs = require("fs-extra");
-const inquirer = require('inquirer');
+// const inquirer = require('inquirer');
 const path = require('path');
 const { ensureDirectory } = require('../utils/directoryUtils');
 const { promptTemplateSelection, promptInclude } = require('../utils/promptUtils');
 const { copyTemplateFiles } = require('../utils/fileUtils');
 const  { figletText } = require( "../utils/ascii-image");
+let inquirer
 
 async function createProject(projectName) {
+  inquirer = await import('inquirer');
 
   const templates = {
-    frontend: ['react-app', 'next-app', 'angular-app', 'vue-app',],
-    frontendConsole: ['sunodo-frontend-console'],
+    frontend: ['react-app', 'next-app', 'angular-app', 'vue-app'],
+    frontendConsole: ['sunodo-frontend-console-cli'],
     backend: ['js-template', 'ts-template', 'python-template'],
     cartesify: {
       backend: ['js-template', 'ts-template'],
@@ -68,6 +70,9 @@ async function createProject(projectName) {
         selectedCartesifyBackend = await promptTemplateSelection('cartesify', templates.cartesify.backend)
         selectedCartesifyFrontend = await promptTemplateSelection('cartesify', templates.cartesify.frontend)
         break
+      case 'frontendConsole':
+        selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole)
+        break
     }
   
     const frontendProjectDir = `${projectDir}/frontend`;
@@ -92,7 +97,7 @@ async function createProject(projectName) {
       await copyTemplateFiles(selectedMobile, mobileProjectDir, "apps/mobileApp"); 
     }
     if(selectedConsole){
-      await copyTemplateFiles(selectedConsole, projectDir, "apps/frontend")
+      await copyTemplateFiles(selectedConsole, projectDir, "apps/frontendConsole")
     }
   }
   

@@ -8,7 +8,7 @@ const path = require('path');
   try {
     await ensureDir(templateDir); // Ensure template directory exists
     await copy(templateDir, destinationDir);
-    console.log(`✔ Template ${templateName} app created successfully!` )
+    console.log(`✔ Template ${templateName} created successfully!` )
     // console.log(`Template files copied successfully to ${destinationDir}`);
   } catch (err) {
     console.error(`Error copying template files: ${err}`);
