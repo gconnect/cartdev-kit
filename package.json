@@ -14,7 +14,7 @@
     "cartesi"
   ],
   "bin": {
-    "cartesikit": "./index.js"
+    "cartesikit": "./bin/index.js"
   },
   "dependencies": {
     "chalk": "^5.3.0",

@@ -1,4 +1,6 @@
 # CartesiKit
+![CartesiKit](cartesi-kit.png)
+
 An all in one package to help you get started building your project on Cartesi
 
 ![CartesiKit Architecture](image.png)
@@ -21,16 +23,29 @@ CartesiKit requires Node.js and npm to be installed on your system. Ensure that 
 ### Npm Installation:  
 To install CartesiKit globally via npm, run the following command:
 
-`npm install -g cartesikit`
+```bash 
+npm install -g cartesikit
+```
 
 Once you have successfully install the package globally on your machine, you are now set to create your first project using the template by running the below command
 
-`npx create cartesikit myapp`
+```bash
+npx cartesikit create myapp
+```
 
 Replace myapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
 
 ### CLI Options: 
-View available command-line options and flags by running  `cartesikit --help` or `cartesikit create --help`
+View available command-line options and flags by running  
+
+```bash
+cartesikit --help
+```` 
+or 
+
+  ```bash
+  cartesikit create --help
+  ```
 
 # Supported Templates
 A more comprehensive doc for each of the supported templates will be provided soon.

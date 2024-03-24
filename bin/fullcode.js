@@ -3,7 +3,9 @@ const { ensureDir, copy } = require("fs-extra");
 const fs = require("fs-extra");
 const inquirer = require('inquirer');
 const path = require('path');
-const  { figletText } = require( "./utils/ascii-image");
+const  { figletText } = require( "../utils/ascii-image");
+const { Command } = require('commander');
+const packageJson = require('../package.json');
 
 const templates = {
   frontend: ['react-app', 'next-app', 'angular-app', 'vue-app',],
@@ -104,11 +106,31 @@ async function copyTemplateFiles(templateName, destinationDir, templateDirectory
 
 // Main function
 async function main() {
-  const projectName = process.argv[3];
-  if (!projectName) {
-    console.log("Please provide the name of the app");
+
+const program = new Command();
+let projectName
+  // Define the 'create' command
+program
+.version(packageJson.version, '-v, --version', 'Output the current version of your package')
+.description('We are glad you are here💃')
+.command('create  [name]')
+.command('help', 'Display help for cartesikit')
+.command('update', 'Update the cartesikit CLI')
+.action((name) => {
+  // projectName = process.argv[3];
+  if (!name) {
+    console.log("MissingError: Missing 1 required arg:\n  name  application and directory name\n  See more help with --help");
     process.exit(1);
   }
+  // Implement the logic to create a new project here
+});
+
+// Add a '--help' option to display help information
+program.option('--help', 'display help for command');
+
+// Parse command-line arguments
+program.parse(process.argv);
+
   console.log(await figletText)
 
   const projectDir = `${process.cwd()}/${projectName}`;
