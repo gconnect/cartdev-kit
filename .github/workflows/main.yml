@@ -25,13 +25,15 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Bump version
-        run: npm version patch --no-git-tag-version
+      - name: Check changed files
+        id: check_changes
+        run: |
+          CHANGED_FILES=$(git diff-tree --name-only HEAD^ HEAD)
+          echo "::set-output name=changed_files::$CHANGED_FILES"
 
-      - name: Push changes
-        run: git push origin master --follow-tags
-
-      - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        run: npm publish
+      - name: Bump version and publish
+        if: ${{ steps.check_changes.outputs.changed_files != *'apps'* && steps.check_changes.outputs.changed_files != *'bin'* }}
+        run: |
+          npm version patch --no-git-tag-version
+          git push origin master --follow-tags
+          npm publish
