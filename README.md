@@ -94,6 +94,6 @@ To read a more comprehensive version of this doc visit [here](https://africlab.g
 This will be provided soon
 
 # LICENSE
-CartesiKit is licensed under the Apache License. Refer to the LICENSE file for more details
+CartesiKit is licensed under the Apache License. Refer to the [LICENSE](https://github.com/gconnect/cartesi-kit/blob/master/LICENSE) file for more details
 
 
