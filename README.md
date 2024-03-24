@@ -1,9 +1,7 @@
 # CartesiKit
-![CartesiKit](cartesi-kit.png)
-
 An all in one package to help you get started building your project on Cartesi
 
-![CartesiKit Architecture](image.png)
+![CartesiKit Architecture](images/image.png)
 
 Building on the blockchain doesn't have to hard. With CartesiKit you are one click away from bringing your ideas to life and launching your product while utilizing the full potentials of the Cartesi Rollup.
 
@@ -32,6 +30,8 @@ Once you have successfully install the package globally on your machine, you are
 ```bash
 npx cartesikit create myapp
 ```
+You should see something like this
+![prompt image](architecture/prompt-ui.png)
 
 Replace myapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
 
@@ -41,11 +41,46 @@ View available command-line options and flags by running
 ```bash
 cartesikit --help
 ```` 
-or 
 
+### Backend Setup
+If you are interacting with the frontend and backend at the same time. Say you are building a full stack solution. 
+
+Here are the steps:
+
+But if you are only working on the frontend and you are not interacting with the backend you can skip this step.
+
+- First navigate to the backend directory of your created project and run the below command, keep in mind also ensure your docker is all setup and up and running.
+   
   ```bash
-  cartesikit create --help
+    sunodo build
   ```
+This will help build the image and run the Cartesi machine. Once this step is completed you should see something like this
+![sunodo build](images/build-output.png)
+
+The next step will be to start the local server by running
+
+```bash
+  sunodo run
+```
+If all goes well you should see this
+![sunodo run](images/sunodo-run-output.png)
+
+### Debugging 
+For quick troubleshooting incase you run into any issue you can quickly check the status using
+
+```bash
+sunodo doctor
+```
+This will start the development server
+
+### Frontend Setup
+If you are working on the frontend, all you need to do is to navigate into the frontend project directory and run
+
+```bash
+npm run dev 
+```
+### Note 
+More details on each individual project setup base on selected template will be provide soon.
 
 # Supported Templates
 A more comprehensive doc for each of the supported templates will be provided soon.

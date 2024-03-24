@@ -7,6 +7,8 @@ const { ensureDirectory } = require('../utils/directoryUtils');
 const { promptTemplateSelection, promptInclude } = require('../utils/promptUtils');
 const { copyTemplateFiles } = require('../utils/fileUtils');
 const  { figletText } = require( "../utils/ascii-image");
+const { copyGitTemplateFiles } = require("../utils/fetch-git-repo")
+
 let inquirer
 
 async function createProject(projectName) {
@@ -97,7 +99,8 @@ async function createProject(projectName) {
       await copyTemplateFiles(selectedMobile, mobileProjectDir, "apps/mobileApp"); 
     }
     if(selectedConsole){
-      await copyTemplateFiles(selectedConsole, projectDir, "apps/frontendConsole")
+      const giturl = "https://github.com/Mugen-Builders/sunodo-frontend-console.git"
+      await copyGitTemplateFiles(selectedConsole, projectDir, giturl)
     }
   }
   
