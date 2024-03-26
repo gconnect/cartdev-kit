@@ -1,4 +1,4 @@
-# Cartesi frontend web
+# Frontend-Cartesi-Wallet-x
 
 ```
 Cartesi Rollups version: 1.0.x
@@ -6,21 +6,22 @@ Cartesi Rollups version: 1.0.x
 
 ## Features
 
-With this project you can test some interactions with the Cartesi Rollups project:
+This repository will help you get started with building a frontend wallet functionality for your Cartesi dApps:
 
-1. Metamask integration
-2. Send Inspect state Requests and Listing Reports response
-3. Sending Dapp Address with the DApp Relay
-4. Sending inputs
-5. Depositing Ether
-6. Depositing ERC20
-7. Depositing ERC721
-8. Depositing ERC1155 Single
-9. Depositing ERC1155 Batch
-10. Listing Notices
-11. Listing Reports
-12. Listing Vouchers
-13. Executing Vouchers
+- Switch Networks
+  - Localhost
+  - Testnets & Mainnet
+- Check Cartesi account balance
+- Transfer assets 
+  - Ether
+  - ERC20
+  - ERC721
+- Show activity
+  - Notices
+  - Reports
+- Perform Withdrawals
+  - Relay dApp address
+  - Voucher Execution
 
 ## Configurtion
 
@@ -51,6 +52,10 @@ As a reminder, you can advance time in hardhat with the command:
 
 ```shell
 curl --data '{"id":1337,"jsonrpc":"2.0","method":"evm_increaseTime","params":[864010]}' http://localhost:8545
+```
+Alternatively, you can run cartesi node with shorter epoch duration in seconds
+```
+sunodo run --epoch-duration=60
 ```
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/lynoferraz/frontend-web-cartesi)

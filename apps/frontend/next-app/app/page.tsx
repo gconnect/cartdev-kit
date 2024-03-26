@@ -1,58 +1,87 @@
-"use client"
-import Image from "next/image";
-import React, { useState } from "react";
-import { ethers } from "ethers";
-import { useRollups } from "./useRollups";
-import { useWallets } from "@web3-onboard/react";
-import { IERC1155__factory, IERC20__factory, IERC721__factory } from "../src/generated/rollups";
-import { Notices } from "./Notices";
+'use client'
+// Copyright 2022 Cartesi Pte. Ltd.
 
-interface IInputPropos {
-  dappAddress: string 
-}
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy
+// of the license at http://www.apache.org/licenses/LICENSE-2.0
 
-export const Home: React.FC<IInputPropos> = (propos) => {
-  const rollups = useRollups("0x59b22D57D4f067708AB0c00552767405926dc768");
-  const [connectedWallet] = useWallets();
-  const [hexInput, setHexInput] = useState<boolean>(false);
-  const [input, setInput] = useState<string>("");
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations
+// under the License.
 
-  // const provider = new ethers.providers.Web3Provider(
-  //     connectedWallet.provider
-  // );
-  const addInput = async (str: string) => {
-    if (rollups) {
-        try {
-            let payload = ethers.utils.toUtf8Bytes(str);
-            if (hexInput) {
-                payload = ethers.utils.arrayify(str);
-            }
-            await rollups.inputContract.addInput("0x59b22D57D4f067708AB0c00552767405926dc768", payload);
-        } catch (e) {
-            console.log(`${e}`);
-        }
-    }
+import { FC } from "react";
+import injectedModule from "@web3-onboard/injected-wallets";
+import { init } from "@web3-onboard/react";
+import { useState } from "react";
+
+import { GraphQLProvider } from "./cartesi/GraphQL";
+import { Notices } from "./cartesi/Notices";
+import { Transfers } from "./component/Transfers";
+import { Inspect } from "./cartesi/Inspect";
+import { Network } from "./component/Network";
+import { Vouchers } from "./cartesi/Vouchers";
+import { Reports } from "./cartesi/Reports";
+import configFile from "./cartesi/config.json";
+//import "./App.css";
+import { Balance } from "./component/Balance";
+import {Heading, Flex, Input, Box, InputGroup, InputLeftAddon, Stack, SimpleGrid} from "@chakra-ui/react"
+
+
+const config: any = configFile;
+
+const injected: any = injectedModule();
+init({
+    wallets: [injected],
+    chains: Object.entries(config).map(([k, v]: [string, any], i) => ({id: k, token: v.token, label: v.label, rpcUrl: v.rpcUrl})),
+    appMetadata: {
+        name: "Cartesi Rollups Test DApp",
+        icon: "<svg><svg/>",
+        description: "Demo app for Cartesi Rollups",
+        recommendedInjectedWallets: [
+            { name: "MetaMask", url: "https://metamask.io" },
+        ],
+    },
+});
+
+const Home: FC = () => {
+    const [dappAddress, setDappAddress] = useState<string>("0x70ac08179605AF2D9e75782b8DEcDD3c22aA4D0C");
+
+    return (
+        <div className="h-full">
+        <SimpleGrid columns={1} marginLeft={'25%'} marginRight={'25%'}>  
+        <Network />
+        <GraphQLProvider>
+            <Stack>
+                <Box alignItems='baseline' marginLeft='2' mt='0'>
+                    
+                <InputGroup size='xs'>
+                <InputLeftAddon>
+                    Dapp Address
+                </InputLeftAddon> 
+                <Input 
+                    width='auto'
+                    size='xs'
+                    className="address-textbox"
+                    type="text"
+                    value={dappAddress}
+                    onChange={(e) => setDappAddress(e.target.value)}
+                />
+                </ InputGroup >
+                <br /><br />
+                </Box>
+            </Stack>
+                <br />
+                    <Balance />
+                    <br /> <br />
+                    <Transfers dappAddress={dappAddress} />
+                    <br /> <br />
+            </GraphQLProvider>
+        </SimpleGrid>
+     </div>
+        
+    );
 };
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        Send Input <br />
-                Input: <input className="text-black"
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                />
-        <button onClick={() => addInput(input)} disabled={!rollups}>
-                    Send
-                </button>
-       <div>
-        Notice
-        {/* <Notices/> */}
-       </div>
-      </div>
-    </main>
-  );
-}
-
-export default Home
+export default Home;

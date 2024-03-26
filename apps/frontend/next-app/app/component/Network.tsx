@@ -1,4 +1,3 @@
-"use client"
 // Copyright 2022 Cartesi Pte. Ltd.
 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,7 +12,8 @@
 
 import { FC } from "react";
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
-import configFile from "../config.json";
+import configFile from "../cartesi/config.json";
+import {Button, Select, Box, Badge, Spacer, Heading, Text, Stack } from "@chakra-ui/react"
 
 const config: any = configFile;
 
@@ -22,21 +22,31 @@ export const Network: FC = () => {
     const [{ chains, connectedChain, settingChain }, setChain] = useSetChain();
 
     return (
-        <div>
-            {!wallet && <button
+        <Box>
+            {!wallet && 
+            <Box mt='20' alignContent={"center"}>
+            <Stack>
+            <Heading>Welcome to CartesiKit Template! 💰</Heading>
+            <Text color={'grey'}>
+                Assets are paramount for the functioning of dApps on-chain. This web interface will guide you on how to deposit and withdraw assets from a Cartesi rollups dApp. Play around and you'll learn a few tricks on how to build wallets for dApp chains. 🚀
+            </Text>
+            <Button
                 onClick={() =>
                     connect()
                 }
             >
-                {connecting ? "connecting" : "connect"}
-            </button>}
+                {connecting ? "Connecting" : "Connect"}
+            </Button>
+            </Stack>
+            </Box>
+            }
             {wallet && (
-                <div>
-                    <label>Switch Chain</label>
+                <Box display='flex' w='100%' ml='2' mt='2' alignItems='baseline'>
+                   {/* <label><Badge>Network</Badge></label> */}
                     {settingChain ? (
                         <span>Switching chain...</span>
                     ) : (
-                        <select className="text-black"
+                        <Select size='xs' width='auto'
                             onChange={({ target: { value } }) => {
                                 if (config[value] !== undefined) {
                                     setChain({ chainId: value })
@@ -54,13 +64,16 @@ export const Network: FC = () => {
                                     </option>
                                 );
                             })}
-                        </select>
+                        </Select>
                     )}
-                    <button onClick={() => disconnect(wallet)}>
-                        Disconnect Wallet
-                    </button>
-                </div>
+                    <Spacer />
+                    <Box alignContent='right'>
+                    <Button marginRight={'20px'} size='xs' onClick={() => disconnect(wallet)}>
+                    ✂️ Disconnect Wallet
+                    </Button>
+                    </Box>
+                </Box>
             )}
-        </div>
+        </Box>
     );
 };

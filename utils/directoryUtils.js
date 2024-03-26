@@ -1,9 +1,9 @@
 const fs = require("fs-extra");
-// const inquirer = require('inquirer');
-let inquirer
+const inquirer = require('inquirer');
+// let inquirer
 
 async function ensureDirectory(dirPath) {
-  inquirer = await import('inquirer');
+  // inquirer = await import('inquirer');
 
   return new Promise((resolve, reject) => {
     fs.access(dirPath, fs.constants.F_OK, (err) => {

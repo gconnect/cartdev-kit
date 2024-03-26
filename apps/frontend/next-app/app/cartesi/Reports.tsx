@@ -9,10 +9,9 @@
 // WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 // License for the specific language governing permissions and limitations
 // under the License.
-
 import { ethers } from "ethers";
 import React from "react";
-import { useReportsQuery } from "./generated/graphql";
+import { useReportsQuery } from "../cartesi/generated/graphql";
 import {
     Table,
     Thead,

@@ -8,6 +8,7 @@ const { promptTemplateSelection, promptInclude } = require('../utils/promptUtils
 const { copyTemplateFiles } = require('../utils/fileUtils');
 const  { figletText } = require( "../utils/ascii-image");
 const { copyGitTemplateFiles } = require("../utils/fetch-git-repo")
+const { installDependencies } = require("../utils/install-dependencies")
 
 let inquirer
 

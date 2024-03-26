@@ -71,9 +71,9 @@ export default function Greetings() {
     setSigner(etherSigner)
   },[etherSigner])
   return (
-      <div className="flex min-h-screen flex-col items-center bg-slate-900">
+      <div className="flex min-h-screen flex-col items-center bg-white text-black">
         <h1 className='mt-36 text-xl mb-4'>Send Greetings</h1>
-        <input className='p-4 rounded lg:w-1/3 md:w-full text-black' type="text" onChange={handleMessageChange} placeholder='Enter your message' value={message} required/>
+        <input className='p-4 rounded lg:w-1/3 md:w-full text-black border-2' type="text" onChange={handleMessageChange} placeholder='Enter your message' value={message} required/>
         <button className='bg-cyan-500 p-4 mt-4 w-1/3 rounded' onClick={sendGreeting}>     
           {loading ? "loading...": "Send"}
         </button>

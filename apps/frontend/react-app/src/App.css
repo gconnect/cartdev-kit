@@ -1,0 +1,129 @@
+body{
+    background-color: rgb(225, 224, 224);
+    font-family:monospace
+}
+
+.main-container {
+    margin-left: 20%;
+    margin-right: 20%;
+    background-color: aliceblue;
+    padding: 3em;
+    border-radius: 12px;
+    overflow: auto;
+}
+
+button{
+    background-color:rgb(212, 223, 223);
+    border: none;
+    border-radius: 3px;
+    padding: 0.5em;
+    margin: 0.5em;
+}
+
+.deposit-balance {
+}
+
+.balance-table {
+ 
+}
+table {
+    border-collapse: collapse;
+  }
+  table td {
+    border: 1px solid black;
+    padding: 1em; 
+    border-left: none;
+    border-right: none;
+    border-color: grey;
+  }
+  table th {    
+  }
+
+.ether-value{
+    background-color:rgb(50, 50, 50);
+    color: whitesmoke;
+    font-weight: 800;
+    font-size: large;
+}
+
+.erc20-value{
+    background-color:rgb(50, 50, 50);
+    color: whitesmoke;
+    font-weight: 800;
+    font-size: large;
+}
+
+.erc721-value{
+    background-color:rgb(50, 50, 50);
+    color: whitesmoke;
+    font-weight: 800;
+    font-size: large;
+}
+
+.activity-ui {
+
+}
+
+/*
+.balance-ui {
+    background-color:#ADC4CE;
+    border-radius: 1ch;
+    border: 3px solid;
+    box-shadow: 5px 10px;
+    padding: 2%;
+    margin-top: 1.5em;
+    margin-right: 1.5em;
+}
+*/
+
+.bal-table-row {
+
+}
+
+.inspect-ui {
+    background-color:beige;
+    border-radius: 1ch;
+    border: 3px solid;
+    box-shadow: 5px 10px;
+    padding: 2%;
+}
+
+.input-ui {
+    background-color:#EEE0C9;
+    border-radius: 1ch;
+    border: 3px solid;
+    box-shadow: 5px 10px;
+    padding: 2%;
+    margin-top: 1.5em;
+}
+
+.reports-ui {
+    background-color:azure;
+    border-radius: 1ch;
+    border: 3px solid;
+    box-shadow: 5px 10px;
+    padding: 2%;
+    margin-top: 1.5em;
+}
+
+.notices-ui {
+    background-color:azure;
+    border-radius: 1ch;
+    border: 3px solid;
+    box-shadow: 5px 10px;
+    padding: 2%;
+    margin-top: 1.5em;
+}
+
+.vouchers-ui {
+    background-color: azure;
+    border-radius: 1ch;
+    border: 3px solid;
+    box-shadow: 5px 10px;
+    padding: 2%;
+    margin-top: 1.5em;
+}
+
+.address-textbox {
+    width:300px;
+}

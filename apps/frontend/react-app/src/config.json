@@ -1,7 +1,7 @@
 {
     "0x7a69":{
         "token": "DummyETH",
-        "label": "localhost",
+        "label": "localhost/DevNet",
         "rpcUrl": "http://localhost:8545",
         "graphqlAPIURL" : "http://localhost:8080",
         "inspectAPIURL":"http://localhost:8080",

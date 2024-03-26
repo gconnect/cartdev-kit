@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import Image from "next/image";
-import cartesi from "../../../public/images/cartesi-logo.png";
+import cartesi from "../../../public/images/cartesikit-logo.png";
 import {FaBars} from 'react-icons/fa'
 import { IoCloseSharp } from "react-icons/io5";
 
@@ -15,10 +15,11 @@ const Header: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-between h-full bg-black text-white p-4 items-center">
+    <div className="flex justify-between h-full p-2 bg-black px-2 text-white  items-center">
       <Link href={"/"}>
-        <p className="py-4">
-          <Image src={cartesi} width={120} height={120} alt="logo" />
+        <p className="flex">
+          <Image src={cartesi} width={60} height={50} alt="logo" />
+          <span className="text-xl mt-4">CartesiKit</span>
         </p>
       </Link>
       <div className="flex items-center">
@@ -26,8 +27,8 @@ const Header: React.FC = () => {
           <Link href={"/pages/greetings"}>
             <p className="mx-2 my-4">Greetings</p>
           </Link>
-          <Link href={"/pages/payments"}>
-            <p className="mx-2 my-4">Payments</p>
+          <Link href={"/pages/wallet"}>
+            <p className="mx-2 my-4">Wallet</p>
           </Link>
           <div className="my-2">
             <ConnectButton />
@@ -52,8 +53,8 @@ const Header: React.FC = () => {
             <Link href={"/pages/greetings"}>
               <p className="my-4" onClick={toggleMenu}>Greetings</p>
             </Link>
-            <Link href={"/pages/payments"}>
-              <p className="my-4" onClick={toggleMenu}>Payments</p>
+            <Link href={"/pages/wallet"}>
+              <p className="my-4" onClick={toggleMenu}>Wallet</p>
             </Link>
             <div className="my-4">
             <ConnectButton />
