@@ -4,11 +4,11 @@ const fs = require("fs-extra");
 // const inquirer = require('inquirer');
 const path = require('path');
 const { ensureDirectory } = require('../utils/directoryUtils');
-const { promptTemplateSelection, promptInclude } = require('../utils/promptUtils');
-const { copyTemplateFiles } = require('../utils/fileUtils');
+const { promptTemplateSelection, promptInclude } = require('../helper/promptUtils');
+const { copyTemplateFiles } = require('../helper/copy-template-files');
 const  { figletText } = require( "../utils/ascii-image");
-const { copyGitTemplateFiles } = require("../utils/fetch-git-repo")
-const { installDependencies } = require("../utils/install-dependencies")
+const { copyGitTemplateFiles } = require("../helper/fetch-git-repo")
+const { installDependencies } = require("../helper/install-dependencies")
 
 let inquirer
 

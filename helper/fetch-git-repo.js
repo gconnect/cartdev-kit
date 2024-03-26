@@ -2,6 +2,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs-extra');
 const { ensureDirectory } = require('../utils/directoryUtils')
+
 async function copyGitTemplateFiles(templateName, destinationDir, repositoryURL) {
     try {
         await fs.ensureDir(destinationDir)
