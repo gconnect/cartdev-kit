@@ -60,10 +60,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`} >
-      {/* <Header/> */}
       <ApolloProvider client={client}>
       <ChakraProviders>
-        <Header/>
+        {/* <Header/> */}
           {children}
           <Toaster />
           </ChakraProviders>
