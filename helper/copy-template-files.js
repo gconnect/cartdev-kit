@@ -9,7 +9,7 @@ const { installDependencies } = require("./install-dependencies")
   try {
    const templateDir = path.resolve(__dirname,'..', templateDirectory, templateName);
    const destDir = path.resolve(process.cwd(), destinationDir);
-    await ensureDir(destDir); // Ensure template directory exists
+   await ensureDir(destDir); // Ensure template directory exists
     // Function to filter out .git, .env, node_modules, and package-lock.json files/directories
     exludeFiles(templateDir, destDir)
     await copy(templateDir, destDir);
