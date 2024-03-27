@@ -30,9 +30,12 @@ jobs:
         run: |       
           CHANGED_FILES=$(git diff-tree --name-only HEAD^ HEAD 2>/dev/null || echo "")
           echo "::set-output name=changed_files::$CHANGED_FILES"
-          
+
       - name: Bump version and publish
         if: ${{ steps.check_changes.outputs.changed_files != 'apps' && steps.check_changes.outputs.changed_files != 'bin' && steps.check_changes.outputs.changed_files != 'helper' && steps.check_changes.outputs.changed_files != 'utils'}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
         run: |
           npm version patch --no-git-tag-version
           git push origin master --follow-tags
