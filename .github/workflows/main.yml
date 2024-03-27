@@ -38,6 +38,8 @@ jobs:
 
         run: |
           git add . && git commit -am "new version"
+          git config --global user.email "agatevureglory@gmail.com"
+          git config --global user.name "gconnect"
           npm version patch
           git push origin master --follow-tags
           npm publish
