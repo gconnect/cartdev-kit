@@ -3,13 +3,18 @@ const {ensureDirectory} = require('../utils/directoryUtils')
 const fs = require("fs-extra");
 const path = require('path');
 const { exludeFiles } = require("../utils/exlude-files");
+const { fileURLToPath } = require('url'); // For Node.js 14+
 
  // Function to copy template files to the project directory
  async function copyTemplateFiles(templateName, destinationDir, templateDirectory) {
-  let templateDir;
-   templateDir = path.join(__dirname, templateDirectory, templateName);
-   const destDir = path.resolve(process.cwd(), destinationDir);
   try {
+
+   const templateDir = path.resolve(process.cwd(), templateDirectory, templateName);
+   const destDir = path.resolve(process.cwd(), destinationDir);
+
+    console.log('Template directory:', templateDir);
+    console.log('Destination directory:', destDir);
+
     await ensureDir(destDir); // Ensure template directory exists
     // Function to filter out .git, .env, node_modules, and package-lock.json files/directories
     exludeFiles(templateDir, destDir)
