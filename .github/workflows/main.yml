@@ -34,8 +34,7 @@ jobs:
       - name: Bump version and publish
         if: ${{ steps.check_changes.outputs.changed_files == 'apps' || steps.check_changes.outputs.changed_files == 'bin' || steps.check_changes.outputs.changed_files == 'helper' || steps.check_changes.outputs.changed_files == 'utils'}}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN2 }}
-
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           git config --global user.email "agatevureglory@gmail.com"
           git config --global user.name "gconnect"
