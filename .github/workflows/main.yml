@@ -32,7 +32,7 @@ jobs:
           echo "::set-output name=changed_files::$CHANGED_FILES"
 
       - name: Bump version and publish
-        if: ${{ steps.check_changes.outputs.changed_files != 'apps' && steps.check_changes.outputs.changed_files != 'bin' && steps.check_changes.outputs.changed_files != 'helper' && steps.check_changes.outputs.changed_files != 'utils'}}
+        if: ${{ steps.check_changes.outputs.changed_files == 'apps' || steps.check_changes.outputs.changed_files == 'bin' || steps.check_changes.outputs.changed_files == 'helper' || steps.check_changes.outputs.changed_files == 'utils'}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN2 }}
 
@@ -43,3 +43,7 @@ jobs:
           npm version patch
           git push origin master --follow-tags
           npm publish
+
+      - name: Echo message
+        if: ${{ steps.check_changes.outputs.changed_files != 'apps' && steps.check_changes.outputs.changed_files != 'bin' && steps.check_changes.outputs.changed_files != 'helper' && steps.check_changes.outputs.changed_files != 'utils'}}
+        run: echo "All good here!"
