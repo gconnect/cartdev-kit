@@ -8,8 +8,7 @@ const { fileURLToPath } = require('url'); // For Node.js 14+
  // Function to copy template files to the project directory
  async function copyTemplateFiles(templateName, destinationDir, templateDirectory) {
   try {
-
-   const templateDir = path.resolve(process.cwd(), templateDirectory, templateName);
+   const templateDir = path.resolve(__dirname,'..', templateDirectory, templateName);
    const destDir = path.resolve(process.cwd(), destinationDir);
 
     console.log('Template directory:', templateDir);

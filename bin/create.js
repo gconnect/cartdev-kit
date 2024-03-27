@@ -10,10 +10,9 @@ const  { figletText } = require( "../utils/ascii-image");
 const { copyGitTemplateFiles } = require("../helper/fetch-git-repo")
 const { installDependencies } = require("../helper/install-dependencies")
 
-let inquirer
 
 async function createProject(projectName) {
-  inquirer = await import('inquirer');
+  const inquirer = await import('inquirer');
 
   const templates = {
     frontend: ['react-app', 'next-app', 'angular-app', 'vue-app'],

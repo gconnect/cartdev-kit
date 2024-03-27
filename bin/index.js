@@ -2,7 +2,7 @@
 
 const { Command } = require('commander');
 const packageJson = require('../package.json');
-const { createProject } = require('./create.js')
+const { createProject } = require('./create')
 
 const program = new Command();
 
