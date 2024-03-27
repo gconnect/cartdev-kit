@@ -6,6 +6,7 @@ const fs = require("fs-extra")
  const installDependencies = async (templateName, destinationDir, templateDirectory) => {
   console.log('Installing dependencies...');
   fs.ensureDir(destinationDir)
+  console.log(destinationDir)
   process.chdir(destinationDir);
   exec('npm install', (error, stdout, stderr) => {
       if (error) {
