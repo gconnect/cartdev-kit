@@ -7,12 +7,13 @@ const { exludeFiles } = require("../utils/exlude-files");
  // Function to copy template files to the project directory
  async function copyTemplateFiles(templateName, destinationDir, templateDirectory) {
   let templateDir;
-   templateDir = path.join(process.cwd(), templateDirectory, templateName);
+   templateDir = path.join(__dirname, templateDirectory, templateName);
+   const destDir = path.resolve(process.cwd(), destinationDir);
   try {
-    await ensureDir(templateDir); // Ensure template directory exists
+    await ensureDir(destDir); // Ensure template directory exists
     // Function to filter out .git, .env, node_modules, and package-lock.json files/directories
-    exludeFiles(templateDir, destinationDir)
-    await copy(templateDir, destinationDir);
+    exludeFiles(templateDir, destDir)
+    await copy(templateDir, destDir);
     
     console.log(`✔ Template ${templateName} created successfully!` )
     // console.log(`Template files copied successfully to ${destinationDir}`);

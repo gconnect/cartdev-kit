@@ -28,7 +28,7 @@ async function createProject(projectName) {
   
   console.log(await figletText)
   
-    const projectDir = `${process.cwd()}/${projectName}`;
+    const projectDir = path.resolve(process.cwd(), projectName);
     await ensureDirectory(projectDir);
 
     const selectedTemplateType = await promptTemplateSelection('project', [
