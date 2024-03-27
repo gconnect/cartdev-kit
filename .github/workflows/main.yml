@@ -27,10 +27,10 @@ jobs:
 
       - name: Check changed files
         id: check_changes
-        run: |
-          CHANGED_FILES=$(git diff-tree --name-only HEAD^ HEAD)
+        run: |       
+          CHANGED_FILES=$(git diff-tree --name-only HEAD^ HEAD 2>/dev/null || echo "")
           echo "::set-output name=changed_files::$CHANGED_FILES"
-
+          
       - name: Bump version and publish
         if: ${{ steps.check_changes.outputs.changed_files != 'apps' && steps.check_changes.outputs.changed_files != 'bin' && steps.check_changes.outputs.changed_files != 'helper' && steps.check_changes.outputs.changed_files != 'utils'}}
         run: |
