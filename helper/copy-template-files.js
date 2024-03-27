@@ -11,9 +11,6 @@ const { fileURLToPath } = require('url'); // For Node.js 14+
    const templateDir = path.resolve(__dirname,'..', templateDirectory, templateName);
    const destDir = path.resolve(process.cwd(), destinationDir);
 
-    console.log('Template directory:', templateDir);
-    console.log('Destination directory:', destDir);
-
     await ensureDir(destDir); // Ensure template directory exists
     // Function to filter out .git, .env, node_modules, and package-lock.json files/directories
     exludeFiles(templateDir, destDir)
