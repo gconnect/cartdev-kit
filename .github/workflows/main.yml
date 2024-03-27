@@ -32,7 +32,7 @@ jobs:
           echo "::set-output name=changed_files::$CHANGED_FILES"
 
       - name: Bump version and publish
-        if: ${{ steps.check_changes.outputs.changed_files != 'apps' && steps.check_changes.outputs.changed_files != 'bin'}}
+        if: ${{ steps.check_changes.outputs.changed_files != 'apps' && steps.check_changes.outputs.changed_files != 'bin' && steps.check_changes.outputs.changed_files != 'helper' && steps.check_changes.outputs.changed_files != 'utils'}}
         run: |
           npm version patch --no-git-tag-version
           git push origin master --follow-tags
