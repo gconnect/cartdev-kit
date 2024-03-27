@@ -37,6 +37,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
         run: |
-          npm version patch --no-git-tag-version
+          npm version patch
           git push origin master --follow-tags
           npm publish
