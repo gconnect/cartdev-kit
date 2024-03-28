@@ -127,6 +127,8 @@ Below are the key features available in this current release:
 # Built With
 - Cartesi Rollup
 - Sunodo
+- Deroll/Cartesi Wallet
+- Deroll/Cartesi Router
 - Cartesify
 - Node and Yarn Packages
 - Figlet
