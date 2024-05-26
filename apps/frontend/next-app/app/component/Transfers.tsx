@@ -1,3 +1,4 @@
+"use client"
 // Copyright 2022 Cartesi Pte. Ltd.
 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -11,25 +12,16 @@
 // under the License.
 
 import React, { useState } from "react";
-import { ethers } from "ethers";
+import { ethers, parseEther, Provider } from "ethers";
 import { useRollups } from "../cartesi/useRollups";
-import { useWallets } from "@web3-onboard/react";
 import {
   IERC1155__factory,
   IERC20__factory,
   IERC721__factory,
 } from "../cartesi/generated/rollups";
-import { Tabs, TabList, TabPanels, TabPanel, Tab } from "@chakra-ui/react";
-import { Divider } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, TabPanel, Tab, Card, CardBody } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
-import { Button, ButtonGroup, Box } from "@chakra-ui/react";
-import {
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-} from "@chakra-ui/react";
+import { Button, Box } from "@chakra-ui/react";
 import { Input, Stack, Flex } from "@chakra-ui/react";
 import {
   Accordion,
@@ -42,16 +34,25 @@ import { Text } from "@chakra-ui/react";
 import { Vouchers } from "./../cartesi/Vouchers";
 import { Notices } from "./../cartesi/Notices";
 import { Reports } from "./../cartesi/Reports";
-
+import { useEthersSigner } from "../utils/useEtherSigner";
+import toast from "react-hot-toast";
 interface IInputPropos {
   dappAddress: string;
 }
 
 export const Transfers: React.FC<IInputPropos> = (propos) => {
   const rollups = useRollups(propos.dappAddress);
-  const [connectedWallet] = useWallets();
-  const provider = new ethers.providers.Web3Provider(connectedWallet.provider);
-  const toast = useToast();
+  const signer = useEthersSigner()
+  const provider = signer?.provider
+
+  const [input, setInput] = useState<string>("");
+  const [dappRelayedAddress, setDappRelayedAddress] = useState<boolean>(false)
+  const [erc20Amount, setErc20Amount] = useState<number>(0);
+  const [erc20Token, setErc20Token] = useState<string>("");
+  const [erc721Id, setErc721Id] = useState<number>(0);
+  const [erc721, setErc721] = useState<string>("");
+  const [etherAmount, setEtherAmount] = useState<number>(0);
+  const [loadEther, setLoadEther] = useState(false)
 
   const sendAddress = async (str: string) => {
     if (rollups) {
@@ -67,34 +68,35 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
   const depositErc20ToPortal = async (token: string, amount: number) => {
     try {
       if (rollups && provider) {
-        const data = ethers.utils.toUtf8Bytes(
+        const data = ethers.toUtf8Bytes(
           `Deposited (${amount}) of ERC20 (${token}).`
         );
         //const data = `Deposited ${args.amount} tokens (${args.token}) for DAppERC20Portal(${portalAddress}) (signer: ${address})`;
-        const signer = provider.getSigner();
+        // const signer = provider.getSigner();
         const signerAddress = await signer.getAddress();
 
         const erc20PortalAddress = rollups.erc20PortalContract.address;
         const tokenContract = signer
           ? IERC20__factory.connect(token, signer)
-          : IERC20__factory.connect(token, provider);
+          : IERC20__factory.connect(token, signer);
 
         // query current allowance
         const currentAllowance = await tokenContract.allowance(
           signerAddress,
           erc20PortalAddress
         );
-        if (ethers.utils.parseEther(`${amount}`) > currentAllowance) {
+        if (parseEther(`${amount}`) > currentAllowance) {
           // Allow portal to withdraw `amount` tokens from signer
           const tx = await tokenContract.approve(
             erc20PortalAddress,
-            ethers.utils.parseEther(`${amount}`)
+            parseEther(`${amount}`)
           );
-          const receipt = await tx.wait(1);
+          const trans = await signer.sendTransaction(tx)
+          const receipt = await trans.wait();
           const event = (
             await tokenContract.queryFilter(
               tokenContract.filters.Approval(),
-              receipt.blockHash
+              receipt?.hash
             )
           ).pop();
           if (!event) {
@@ -107,7 +109,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
         await rollups.erc20PortalContract.depositERC20Tokens(
           token,
           propos.dappAddress,
-          ethers.utils.parseEther(`${amount}`),
+          ethers.parseEther(`${amount}`),
           data
         );
       }
@@ -119,26 +121,41 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
   const depositEtherToPortal = async (amount: number) => {
     try {
       if (rollups && provider) {
-        const data = ethers.utils.toUtf8Bytes(`Deposited (${amount}) ether.`);
-        const txOverrides = { value: ethers.utils.parseEther(`${amount}`) };
+        setLoadEther(true)
+        const data = ethers.toUtf8Bytes(`Deposited (${amount}) ether.`);
+        const txOverrides = { value: parseEther(`${amount}`) };
         console.log("Ether to deposit: ", txOverrides);
 
         // const tx = await ...
-        rollups.etherPortalContract.depositEther(
+      const trans =  await rollups.etherPortalContract.depositEther(
           propos.dappAddress,
           data,
           txOverrides
         );
+        const tx = await signer.sendTransaction(trans)
+        setLoadEther(false)
+        console.log(tx.hash)
+        toast(tx.hash, {
+          position: 'bottom-right',
+        })
+        return tx.hash
       }
-    } catch (e) {
+    } catch (e: any) {
+      setLoadEther(false)
       console.log(`${e}`);
+      toast.error(e.message, {
+        position: 'bottom-right',
+        style: {
+          paddingRight: '40px',
+        },
+      })
     }
   };
 
   const withdrawEther = async (amount: number) => {
     try {
       if (rollups && provider) {
-        let ether_amount = ethers.utils.parseEther(String(amount)).toString();
+        let ether_amount = parseEther(String(amount)).toString();
         console.log("ether after parsing: ", ether_amount);
         const input_obj = {
           method: "ether_withdraw",
@@ -147,7 +164,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
           },
         };
         const data = JSON.stringify(input_obj);
-        let payload = ethers.utils.toUtf8Bytes(data);
+        let payload = ethers.toUtf8Bytes(data);
         await rollups.inputContract.addInput(propos.dappAddress, payload);
       }
     } catch (e) {
@@ -158,7 +175,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
   const withdrawErc20 = async (amount: number, address: String) => {
     try {
       if (rollups && provider) {
-        let erc20_amount = ethers.utils.parseEther(String(amount)).toString();
+        let erc20_amount = parseEther(String(amount)).toString();
         console.log("erc20 after parsing: ", erc20_amount);
         const input_obj = {
           method: "erc20_withdraw",
@@ -168,7 +185,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
           },
         };
         const data = JSON.stringify(input_obj);
-        let payload = ethers.utils.toUtf8Bytes(data);
+        let payload = ethers.toUtf8Bytes(data);
         await rollups.inputContract.addInput(propos.dappAddress, payload);
       }
     } catch (e) {
@@ -189,7 +206,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
           },
         };
         const data = JSON.stringify(input_obj);
-        let payload = ethers.utils.toUtf8Bytes(data);
+        let payload = ethers.toUtf8Bytes(data);
         await rollups.inputContract.addInput(propos.dappAddress, payload);
       }
     } catch (e) {
@@ -203,29 +220,30 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
   ) => {
     try {
       if (rollups && provider) {
-        const data = ethers.utils.toUtf8Bytes(
+        const data = ethers.toUtf8Bytes(
           `Deposited (${nftid}) of ERC721 (${contractAddress}).`
         );
         //const data = `Deposited ${args.amount} tokens (${args.token}) for DAppERC20Portal(${portalAddress}) (signer: ${address})`;
         const signer = provider.getSigner();
-        const signerAddress = await signer.getAddress();
+        const signerAddress = await (await signer).getAddress();
 
         const erc721PortalAddress = rollups.erc721PortalContract.address;
 
         const tokenContract = signer
-          ? IERC721__factory.connect(contractAddress, signer)
-          : IERC721__factory.connect(contractAddress, provider);
+          ? IERC721__factory.connect(contractAddress, await signer)
+          : IERC721__factory.connect(contractAddress, signer);
 
         // query current approval
         const currentApproval = await tokenContract.getApproved(nftid);
         if (currentApproval !== erc721PortalAddress) {
           // Allow portal to withdraw `amount` tokens from signer
           const tx = await tokenContract.approve(erc721PortalAddress, nftid);
-          const receipt = await tx.wait(1);
+          const trans = await (await signer).sendTransaction(tx)
+          const receipt = await trans.wait(1);
           const event = (
             await tokenContract.queryFilter(
               tokenContract.filters.Approval(),
-              receipt.blockHash
+              receipt?.hash
             )
           ).pop();
           if (!event) {
@@ -249,52 +267,56 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
     }
   };
 
-  const [input, setInput] = useState<string>("");
-  const [dappRelayedAddress, setDappRelayedAddress] = useState<boolean>(false)
-  const [hexInput, setHexInput] = useState<boolean>(false);
-  const [erc20Amount, setErc20Amount] = useState<number>(0);
-  const [erc20Token, setErc20Token] = useState<string>("");
-  const [erc721Id, setErc721Id] = useState<number>(0);
-  const [erc721, setErc721] = useState<string>("");
-  const [etherAmount, setEtherAmount] = useState<number>(0);
-
   return (
+    <Box borderWidth='0.1px' padding='4' borderRadius='lg' overflow='hidden'>
     <Tabs variant="enclosed" size="lg" align="center">
-      <TabList>
-        <Tab>🚀 Transfer</Tab>
-        <Tab>🎟️ Vouchers</Tab>
-        <Tab>🔔 Activity</Tab>
+      <TabList >
+        <Tab sx={{
+            "&:not([aria-selected=true])": {
+              color: "gray.500", // Setting the color for inactive tabs
+            },
+          }}> 🚀 Transfer</Tab>
+        <Tab sx={{
+            "&:not([aria-selected=true])": {
+              color: "gray.500", // Setting the color for inactive tabs
+            },
+          }} >🎟️ Vouchers</Tab>
+        <Tab sx={{
+            "&:not([aria-selected=true])": {
+              color: "gray.500", // Setting the color for inactive tabs
+            },
+          }}>🔔 Activity</Tab>
       </TabList>
       <Box p={4} display="flex">
         <TabPanels>
           <TabPanel>
-            <Text fontSize="sm" color="grey">
+            <Text fontSize="sm" color="slategray">
               Cartesi dApps recieve asset deposits via Portal smart contracts on
               the base layer.
             </Text>
-            <br />
-            <Accordion size="xl" defaultIndex={[0]} allowMultiple>
-              <AccordionItem>
+            <br/>
+            <Accordion size="xl" border="#09324C" borderWidth="0.1px" defaultIndex={[0]} allowMultiple>
+              <AccordionItem>         
                 <h2>
-                  <AccordionButton>
+                  <AccordionButton textColor="white">
                     Ether
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>
+             
                 <AccordionPanel>
                   <Stack>
-                    <NumberInput
-                      defaultValue={0}
+                     <Input
                       min={0}
-                      onChange={(value) => setEtherAmount(Number(value))}
+                      borderWidth="0.1px"
+                      borderColor="slategrey"
+                      color="slategrey"
+                      type="number"
+                      variant="outline"
+                      placeholder="Enter amount"
+                      onChange={(e) => setEtherAmount(Number(e.target.value))}
                       value={etherAmount}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                    />
                     <Button
                       colorScheme="blue"
                       size="sm"
@@ -302,8 +324,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
                         depositEtherToPortal(etherAmount);
                       }}
                       disabled={!rollups}
-                    >
-                      Deposit
+                    > {loadEther ? "Depositing please wait..🤑" :"Deposit"}
                     </Button>
                     <Button
                       size="sm"
@@ -321,7 +342,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
 
               <AccordionItem>
                 <h2>
-                  <AccordionButton>
+                  <AccordionButton textColor="white">
                     ERC20
                     <AccordionIcon />
                   </AccordionButton>
@@ -329,13 +350,19 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
                 <AccordionPanel>
                   <Stack>
                     <Input
+                      borderWidth="0.1px"
+                      borderColor="slategrey"
                       type="text"
+                      color="slategrey"
                       variant="outline"
                       placeholder="Address"
                       onChange={(e) => setErc20Token(String(e.target.value))}
                       value={erc20Token}
                     />
                     <Input
+                      borderWidth="0.1px"
+                      borderColor="slategrey" 
+                      color="slategrey"                   
                       type="number"
                       variant="outline"
                       placeholder="Amount"
@@ -368,7 +395,7 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
 
               <AccordionItem>
                 <h2>
-                  <AccordionButton>
+                  <AccordionButton textColor="white">
                     ERC721
                     <AccordionIcon />
                   </AccordionButton>
@@ -377,6 +404,9 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
                   <Stack>
                     <Input
                       type="text"
+                      borderWidth="0.1px"
+                      borderColor="slategrey"
+                      color="slategrey"
                       variant="outline"
                       placeholder="Address"
                       onChange={(e) => setErc721(String(e.target.value))}
@@ -384,6 +414,9 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
                     />
                     <Input
                       type="number"
+                      borderWidth="0.1px"
+                      borderColor="slategrey"
+                      color="slategrey"
                       variant="outline"
                       placeholder="ID"
                       onChange={(e) => setErc721Id(Number(e.target.value))}
@@ -416,14 +449,15 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
 
           <TabPanel>
             <Accordion defaultIndex={[0]} allowMultiple>
-            <Text fontSize="sm" color="grey">
+            <Text fontSize="sm" color="slategrey">
               After the withdraw request, the user has to execute a voucher to transfer assets from Cartesi dApp to their account. 
             </Text>
             <br />
             {!dappRelayedAddress && 
-              <div>
+              <div className="text-slate-500">
                 Let the dApp know its address! <br />
                 <Button
+                className="mt-4"
                   size="sm"
                   onClick={() => sendAddress(input)}
                   disabled={!rollups}
@@ -440,11 +474,12 @@ export const Transfers: React.FC<IInputPropos> = (propos) => {
           <TabPanel>
             <Notices />
             <br />
-            <Reports />
+            {/* <Reports /> */}
           </TabPanel>
         </TabPanels>
       </Box>
     </Tabs>
+    </Box>
     //</div>
   );
 };

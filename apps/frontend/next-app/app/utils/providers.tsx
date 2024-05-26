@@ -12,16 +12,17 @@ import {
   argentWallet,
   trustWallet,
   ledgerWallet,
+  metaMaskWallet
 } from '@rainbow-me/rainbowkit/wallets';
 import {
   arbitrum,
   base,
+  baseSepolia,
   mainnet,
   optimism,
-  polygon,
   sepolia,
-  zora,
-  localhost
+  optimismSepolia,
+  arbitrumSepolia
 } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
@@ -30,24 +31,26 @@ import { mylocalhost } from './mylocalhost';
 
 const { wallets } = getDefaultWallets();
 
-const config = getDefaultConfig({
+export const config = getDefaultConfig({
   appName: 'RainbowKit demo',
-  projectId: 'YOUR_PROJECT_ID',
+  projectId: process.env.NEXT_PUBLIC_WALLECT_CONNECT_PROJECT_ID as string,
   wallets: [
     ...wallets,
     {
       groupName: 'Other',
-      wallets: [argentWallet, trustWallet, ledgerWallet],
+      wallets: [argentWallet, trustWallet, ledgerWallet, metaMaskWallet],
     },
   ],
   chains: [
-    mainnet,
-    polygon,
+    mylocalhost, 
+    sepolia,
+    optimismSepolia,
+    arbitrumSepolia,
     optimism,
     arbitrum,
+    mainnet,
     base,
-    zora,
-    mylocalhost,
+    baseSepolia,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [sepolia] : []),
   ],
   ssr: true,
@@ -61,7 +64,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
         theme={lightTheme({
-          accentColor: '#00FFFF',
+          accentColor: '#FE8A7C',
           accentColorForeground: 'black',
           borderRadius: 'small',
           fontStack: 'system',

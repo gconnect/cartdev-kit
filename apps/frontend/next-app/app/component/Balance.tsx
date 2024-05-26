@@ -12,12 +12,12 @@
 
 import React, { useState } from "react";
 import { useSetChain } from "@web3-onboard/react";
-import { ethers } from "ethers";
+import { ethers, parseEther } from "ethers";
 // import { useRollups } from "./useRollups";
-
+import { useAccount } from "wagmi";
 import configFile from "./../cartesi/config.json";
-import { parseEther } from "ethers/lib/utils";
 //import "./App.css"
+
 import {
     Table,
     Thead,
@@ -33,6 +33,8 @@ import {
     Box,
     Spacer
   } from '@chakra-ui/react'
+import { useRollups } from "../cartesi/useRollups";
+import { toHex } from "viem";
 
 const config: any = configFile;
 interface Report {
@@ -40,24 +42,25 @@ interface Report {
 }
 
 export const Balance: React.FC = () => {
-    // const rollups = useRollups();
-    const [{ connectedChain }] = useSetChain();
+    const { chain } = useAccount();
+
+    // const rollups = useRollups("DApp Address");
     const inspectCall = async (str: string) => {
         let payload = str;
         if (hexData) {
-            const uint8array = ethers.utils.arrayify(payload);
+            const uint8array = ethers.getBytes(payload);
             payload = new TextDecoder().decode(uint8array);
         }
-        if (!connectedChain){
+        if (!chain){
             return;
         }
         
         let apiURL= ""
 
-        if(config[connectedChain.id]?.inspectAPIURL) {
-            apiURL = `${config[connectedChain.id].inspectAPIURL}/inspect`;
+        if(config[toHex(chain.id)]?.inspectAPIURL) {
+            apiURL = `${config[toHex(chain.id)].inspectAPIURL}/inspect`;
         } else {
-            console.error(`No inspect interface defined for chain ${connectedChain.id}`);
+            console.error(`No inspect interface defined for chain ${toHex(chain.id)}`);
             return;
         }
         
@@ -77,7 +80,7 @@ export const Balance: React.FC = () => {
 
                 // Decode payload from each report
                 const decode = data.reports.map((report: Report) => {
-                return ethers.utils.toUtf8String(report.payload);
+                return ethers.toUtf8String(report.payload);
                 });
                 console.log("Decoded Reports:", decode);
                 const reportData = JSON.parse(decode)
@@ -95,15 +98,15 @@ export const Balance: React.FC = () => {
     const [postData, setPostData] = useState<boolean>(false);
 
     return (
-        <Box borderWidth='1px' borderRadius='lg' overflow='hidden'>
+        <Box borderWidth='0.1px' padding='4' borderRadius='lg' overflow='hidden'>
         <TableContainer>
             <Stack>
             <Table variant='striped' size="lg">
                 <Thead>
                     <Tr>
-                        <Th textAlign={'center'}>Ether</Th>
-                        <Th textAlign={'center'}>ERC-20</Th>
-                        <Th textAlign={'center'}>ERC-721</Th>
+                        <Th textAlign={'center'} textColor={'slategray'}>Ether</Th>
+                        <Th textAlign={'center'} textColor={'slategray'}>ERC-20</Th>
+                        <Th textAlign={'center'} textColor={'slategray'}>ERC-721</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -115,7 +118,7 @@ export const Balance: React.FC = () => {
                 
                     {<Tr key={`${decodedReports}`}>
                         {decodedReports && decodedReports.ether && (
-                        <Td textAlign={'center'}>{ethers.utils.formatEther(decodedReports.ether)}</Td> )}
+                        <Td textAlign={'center'}>{ethers.formatEther(decodedReports.ether)}</Td> )}
                         { decodedReports && decodedReports.erc20 && (
                         <Td textAlign={'center'}>
                             <div>📍 {String(decodedReports.erc20).split(",")[0]}</div>
@@ -129,7 +132,7 @@ export const Balance: React.FC = () => {
                     </Tr>}
                 </Tbody>
             </Table>
-            <Button onClick={() => inspectCall("balance/0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")}>Get Balance</Button>
+            <Button backgroundColor={"#9395D3"} onClick={() => inspectCall("balance/0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")}>Get Balance</Button>
             </Stack>
         </TableContainer>
         </Box>

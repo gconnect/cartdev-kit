@@ -1,3 +1,5 @@
+"use client"
+
 // Copyright 2022 Cartesi Pte. Ltd.
 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,6 +15,9 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useSetChain, useWallets } from "@web3-onboard/react";
+import { useAccount, Config } from 'wagmi';
+import { Chain, toHex } from "viem";
+import { useEthersSigner } from "../utils/useEtherSigner";
 
 import {
     CartesiDApp,
@@ -32,8 +37,6 @@ import {
     ERC1155BatchPortal,
     ERC1155BatchPortal__factory
 } from "../cartesi/generated/rollups";
-import { ConnectedChain } from "@web3-onboard/core";
-
 import configFile from "./config.json";
 import { JsonRpcSigner } from "@ethersproject/providers";
 
@@ -42,7 +45,7 @@ const config: any = configFile;
 
 export interface RollupsContracts {
     dappContract: CartesiDApp;
-    signer: JsonRpcSigner;
+    signer: any;
     relayContract: DAppAddressRelay;
     inputContract: InputBox;
     etherPortalContract: EtherPortal;
@@ -54,70 +57,66 @@ export interface RollupsContracts {
 
 export const useRollups = (dAddress: string): RollupsContracts | undefined => {
     const [contracts, setContracts] = useState<RollupsContracts | undefined>();
-    const [{ connectedChain }] = useSetChain();
-    const [connectedWallet] = useWallets();
     const [dappAddress] = useState<string>(dAddress);
+    const { address, chain } = useAccount();
+    const signer = useEthersSigner();
+   
 
     useEffect(() => {
         const connect = async (
-            chain: ConnectedChain
+            chain: Chain
             ): Promise<RollupsContracts> => {
-            const provider = new ethers.providers.Web3Provider(
-                connectedWallet.provider
-            );
-            const signer = provider.getSigner();
-
             let dappRelayAddress = "";
-            if(config[chain.id]?.DAppRelayAddress) {
-                dappRelayAddress = config[chain.id].DAppRelayAddress;
+            if(config[toHex(toHex(chain.id))]?.DAppRelayAddress) {
+                dappRelayAddress = config[toHex(chain.id)].DAppRelayAddress;
             } else {
-                console.error(`No dapp relay address address defined for chain ${chain.id}`);
+                console.error(`No dapp relay address address defined for chain ${toHex(chain.id)}`);
             }
 
             let inputBoxAddress = "";
-            if(config[chain.id]?.InputBoxAddress) {
-                inputBoxAddress = config[chain.id].InputBoxAddress;
+            if(config[toHex(chain.id)]?.InputBoxAddress) {
+                inputBoxAddress = config[toHex(chain.id)].InputBoxAddress;
             } else {
-                console.error(`No input box address address defined for chain ${chain.id}`);
+                console.error(`No input box address address defined for chain ${toHex(chain.id)}`);
             }
 
             let etherPortalAddress = "";
-            if(config[chain.id]?.EtherPortalAddress) {
-                etherPortalAddress = config[chain.id].EtherPortalAddress;
+            if(config[toHex(chain.id)]?.EtherPortalAddress) {
+                etherPortalAddress = config[toHex(chain.id)].EtherPortalAddress;
             } else {
-                console.error(`No ether portal address address defined for chain ${chain.id}`);
+                console.error(`No ether portal address address defined for chain ${toHex(chain.id)}`);
             }
 
             let erc20PortalAddress = "";
-            if(config[chain.id]?.Erc20PortalAddress) {
-                erc20PortalAddress = config[chain.id].Erc20PortalAddress;
+            if(config[toHex(chain.id)]?.Erc20PortalAddress) {
+                erc20PortalAddress = config[toHex(chain.id)].Erc20PortalAddress;
             } else {
-                console.error(`No erc20 portal address address defined for chain ${chain.id}`);
-                alert(`No erc20 portal address defined for chain ${chain.id}`);
+                console.error(`No erc20 portal address address defined for chain ${toHex(chain.id)}`);
+                alert(`No erc20 portal address defined for chain ${toHex(chain.id)}`);
             }
 
             let erc721PortalAddress = "";
-            if(config[chain.id]?.Erc721PortalAddress) {
-                erc721PortalAddress = config[chain.id].Erc721PortalAddress;
+            if(config[toHex(chain.id)]?.Erc721PortalAddress) {
+                erc721PortalAddress = config[toHex(chain.id)].Erc721PortalAddress;
             } else {
-                console.error(`No erc721 portal address address defined for chain ${chain.id}`);
-                alert(`No erc721 portal address defined for chain ${chain.id}`);
+                console.error(`No erc721 portal address address defined for chain ${toHex(chain.id)}`);
+                alert(`No erc721 portal address defined for chain ${toHex(chain.id)}`);
             }
 
             let erc1155SinglePortalAddress = "";
-            if(config[chain.id]?.Erc1155SinglePortalAddress) {
-                erc1155SinglePortalAddress = config[chain.id].Erc1155SinglePortalAddress;
+            if(config[toHex(chain.id)]?.Erc1155SinglePortalAddress) {
+                erc1155SinglePortalAddress = config[toHex(chain.id)].Erc1155SinglePortalAddress;
             } else {
-                console.error(`No erc1155 single portal address address defined for chain ${chain.id}`);
-                alert(`No erc1155 single portal address defined for chain ${chain.id}`);
+                console.error(`No erc1155 single portal address address defined for chain ${toHex(chain.id)}`);
+                alert(`No erc1155 single portal address defined for chain ${toHex(chain.id)}`);
             }
 
             let erc1155BatchPortalAddress = "";
-            if(config[chain.id]?.Erc1155BatchPortalAddress) {
-                erc1155BatchPortalAddress = config[chain.id].Erc1155BatchPortalAddress;
+            if(config[toHex(chain.id)]?.Erc1155BatchPortalAddress) {
+                erc1155BatchPortalAddress = config[toHex(chain.id)].Erc1155BatchPortalAddress;
             } else {
-                console.error(`No erc1155 batch portal address address defined for chain ${chain.id}`);
-                alert(`No erc1155 batch portal address defined for chain ${chain.id}`);
+                console.error(`No erc1155 batch portal address address defined for chain ${toHex(chain.id)}`);
+                alert(`No erc1155 batch portal address defined for chain ${toHex(chain.id)}`);
             }
             // dapp contract 
             const dappContract = CartesiDApp__factory.connect(dappAddress, signer);
@@ -151,11 +150,11 @@ export const useRollups = (dAddress: string): RollupsContracts | undefined => {
                 erc1155BatchPortalContract,
             };
         };
-        if (connectedWallet?.provider && connectedChain) {
-            connect(connectedChain).then((contracts) => {
+        if (address && chain) {
+            connect(chain).then((contracts) => {
                 setContracts(contracts);
             });
         }
-    }, [connectedWallet, connectedChain, dappAddress]);
+    }, [address, chain, dappAddress, signer]);
     return contracts;
 };

@@ -15,7 +15,8 @@
 import { useSetChain } from "@web3-onboard/react";
 import React, { useMemo } from "react";
 import { Client, createClient, Provider } from "urql";
-
+import { Chain } from "viem";
+// import { Chain } from "@rainbow-me/rainbowkit";
 import configFile from "./config.json";
 
 const config: any = configFile;

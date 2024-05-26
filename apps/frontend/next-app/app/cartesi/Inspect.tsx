@@ -13,31 +13,34 @@
 import React, { useState } from "react";
 import { useSetChain } from "@web3-onboard/react";
 import { ethers } from "ethers";
-// import { useRollups } from "./useRollups";
-
-import configFile from "../config.json";
+import { useRollups } from "./useRollups";
+import { useAccount } from "wagmi";
+import configFile from "../cartesi/config.json";
+import { DAPP_ADDRESS } from "../utils/constants";
+import { toHex } from "viem";
 
 const config: any = configFile;
 
 export const Inspect: React.FC = () => {
-    // const rollups = useRollups();
-    const [{ connectedChain }] = useSetChain();
+    const rollups = useRollups(DAPP_ADDRESS);
+    const { chain } = useAccount();
+
     const inspectCall = async (str: string) => {
         let payload = str;
         if (hexData) {
             const uint8array = ethers.utils.arrayify(str);
             payload = new TextDecoder().decode(uint8array);
         }
-        if (!connectedChain){
+        if (!chain){
             return;
         }
         
         let apiURL= ""
 
-        if(config[connectedChain.id]?.inspectAPIURL) {
-            apiURL = `${config[connectedChain.id].inspectAPIURL}/inspect`;
+        if(config[toHex(chain.id)]?.inspectAPIURL) {
+            apiURL = `${config[toHex(chain.id)].inspectAPIURL}/inspect`;
         } else {
-            console.error(`No inspect interface defined for chain ${connectedChain.id}`);
+            console.error(`No inspect interface defined for chain ${toHex(chain.id)}`);
             return;
         }
         
@@ -90,7 +93,7 @@ export const Inspect: React.FC = () => {
                         <td>{metadata.metadata ? metadata.metadata.active_epoch_index : ""}</td>
                         <td>{metadata.metadata ? metadata.metadata.current_input_index : ""}</td>
                         <td>{metadata.status}</td>
-                        <td>{metadata.exception_payload ? ethers.utils.toUtf8String(metadata.exception_payload): ""}</td>
+                        <td>{metadata.exception_payload ? ethers.toUtf8String(metadata.exception_payload): ""}</td>
                     </tr>
                 </tbody>
             </table>
@@ -104,7 +107,7 @@ export const Inspect: React.FC = () => {
                     )}
                     {reports?.map((n: any) => (
                         <tr key={`${n.payload}`}>
-                            <td>{ethers.utils.toUtf8String(n.payload)}</td>
+                            <td>{ethers.toUtf8String(n.payload)}</td>
                         </tr>
                     ))}
                 </tbody>

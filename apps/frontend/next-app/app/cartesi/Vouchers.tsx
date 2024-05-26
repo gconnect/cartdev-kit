@@ -1,3 +1,4 @@
+"use client"
 // Copyright 2022 Cartesi Pte. Ltd.
 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -10,7 +11,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import React, { useEffect } from "react";
 import { useVouchersQuery, useVoucherQuery } from "./generated/graphql";
 import { useRollups } from "./useRollups";
@@ -18,15 +19,13 @@ import {
     Table,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
-    TableCaption,
-    TableContainer,
     Button,
     Text
   } from '@chakra-ui/react'
+  import { useEthersSigner } from "../utils/useEtherSigner";
 
 type Voucher = {
     id: string;
@@ -51,7 +50,9 @@ export const Vouchers: React.FC<IVoucherPropos> = (propos) => {
     const [voucherToExecute, setVoucherToExecute] = React.useState<any>();
     const { data, fetching, error } = result;
     const rollups = useRollups(propos.dappAddress);
-
+    const signer = useEthersSigner()
+    const provider = signer?.provider
+    
     const getProof = async (voucher: Voucher) => {
         setVoucherToFetch([voucher.index,voucher.input.index]);
         reexecuteVoucherQuery({ requestPolicy: 'network-only' });
@@ -63,8 +64,9 @@ export const Vouchers: React.FC<IVoucherPropos> = (propos) => {
             const newVoucherToExecute = {...voucher};
             try {
                 const tx = await rollups.dappContract.executeVoucher( voucher.destination,voucher.payload,voucher.proof);
-                const receipt = await tx.wait();
-                newVoucherToExecute.msg = `voucher executed! (tx="${tx.hash}")`;
+                const trans = await signer?.sendTransaction(tx)
+                const receipt = await trans?.wait(1);
+                newVoucherToExecute.msg = `voucher executed! (tx="${receipt?.hash}")`;
                 if (receipt.events) {
                     newVoucherToExecute.msg = `${newVoucherToExecute.msg} - resulting events: ${JSON.stringify(receipt.events)}`;
                     newVoucherToExecute.executed = await rollups.dappContract.wasVoucherExecuted(BigNumber.from(voucher.input.index),BigNumber.from(voucher.index));
@@ -101,7 +103,7 @@ export const Vouchers: React.FC<IVoucherPropos> = (propos) => {
         let inputPayload = n?.input.payload;
         if (inputPayload) {
             try {
-                inputPayload = ethers.utils.toUtf8String(inputPayload);
+                inputPayload = ethers.toUtf8String(inputPayload);
             } catch (e) {
                 inputPayload = inputPayload + " (hex)";
             }
@@ -109,15 +111,15 @@ export const Vouchers: React.FC<IVoucherPropos> = (propos) => {
             inputPayload = "(empty)";
         }
         if (payload) {
-            const decoder = new ethers.utils.AbiCoder();
+            const decoder = new ethers.AbiCoder();
             const selector = decoder.decode(["bytes4"], payload)[0]; 
-            payload = ethers.utils.hexDataSlice(payload,4);
+            payload = ethers.dataSlice(payload,4);
             try {
                 switch(selector) { 
                     case '0xa9059cbb': { 
                         // erc20 transfer; 
                         const decode = decoder.decode(["address","uint256"], payload);
-                        payload = `Erc20 Transfer - Amount: ${ethers.utils.formatEther(decode[1])} - Address: ${decode[0]}`;
+                        payload = `Erc20 Transfer - Amount: ${ethers.formatEther(decode[1])} - Address: ${decode[0]}`;
                         break; 
                     }
                     case '0x42842e0e': { 
@@ -129,7 +131,7 @@ export const Vouchers: React.FC<IVoucherPropos> = (propos) => {
                     case '0x522f6815': { 
                         //ether transfer; 
                         const decode2 = decoder.decode(["address", "uint256"], payload)
-                        payload = `Ether Transfer - Amount: ${ethers.utils.formatEther(decode2[1])} (Native eth) - Address: ${decode2[0]}`;
+                        payload = `Ether Transfer - Amount: ${ethers.formatEther(decode2[1])} (Native eth) - Address: ${decode2[0]}`;
                         break; 
                     }
                     case '0xf242432a': { 

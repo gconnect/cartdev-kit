@@ -1,87 +1,19 @@
-'use client'
-// Copyright 2022 Cartesi Pte. Ltd.
-
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not
-// use this file except in compliance with the License. You may obtain a copy
-// of the license at http://www.apache.org/licenses/LICENSE-2.0
-
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-// License for the specific language governing permissions and limitations
-// under the License.
-
-import { FC } from "react";
-import injectedModule from "@web3-onboard/injected-wallets";
-import { init } from "@web3-onboard/react";
-import { useState } from "react";
-
-import { GraphQLProvider } from "./cartesi/GraphQL";
-import { Notices } from "./cartesi/Notices";
-import { Transfers } from "./component/Transfers";
-import { Inspect } from "./cartesi/Inspect";
-import { Network } from "./component/Network";
-import { Vouchers } from "./cartesi/Vouchers";
-import { Reports } from "./cartesi/Reports";
-import configFile from "./cartesi/config.json";
-//import "./App.css";
-import { Balance } from "./component/Balance";
-import {Heading, Flex, Input, Box, InputGroup, InputLeftAddon, Stack, SimpleGrid} from "@chakra-ui/react"
-
-
-const config: any = configFile;
-
-const injected: any = injectedModule();
-init({
-    wallets: [injected],
-    chains: Object.entries(config).map(([k, v]: [string, any], i) => ({id: k, token: v.token, label: v.label, rpcUrl: v.rpcUrl})),
-    appMetadata: {
-        name: "Cartesi Rollups Test DApp",
-        icon: "<svg><svg/>",
-        description: "Demo app for Cartesi Rollups",
-        recommendedInjectedWallets: [
-            { name: "MetaMask", url: "https://metamask.io" },
-        ],
-    },
-});
+"use client"
+import { FC, useCallback, useContext, createContext } from "react"
+import { useState, useEffect } from "react";
+import { useAccount } from 'wagmi';
+import { Transfers } from "./component/Transfers"
+import Greetings from "./greetings/page";
+import { config } from './utils/providers'
+import { useEthersSigner } from "./utils/useEtherSigner";
+import { sign } from "crypto";
 
 const Home: FC = () => {
-    const [dappAddress, setDappAddress] = useState<string>("0x70ac08179605AF2D9e75782b8DEcDD3c22aA4D0C");
-
-    return (
-        <div className="h-full">
-        <SimpleGrid columns={1} marginLeft={'25%'} marginRight={'25%'}>  
-        <Network />
-        <GraphQLProvider>
-            <Stack>
-                <Box alignItems='baseline' marginLeft='2' mt='0'>
-                    
-                <InputGroup size='xs'>
-                <InputLeftAddon>
-                    Dapp Address
-                </InputLeftAddon> 
-                <Input 
-                    width='auto'
-                    size='xs'
-                    className="address-textbox"
-                    type="text"
-                    value={dappAddress}
-                    onChange={(e) => setDappAddress(e.target.value)}
-                />
-                </ InputGroup >
-                <br /><br />
-                </Box>
-            </Stack>
-                <br />
-                    <Balance />
-                    <br /> <br />
-                    <Transfers dappAddress={dappAddress} />
-                    <br /> <br />
-            </GraphQLProvider>
-        </SimpleGrid>
-     </div>
-        
-    );
-};
-
-export default Home;
+    return(
+      <div>        
+        <Greetings/>       
+      </div>
+    )
+  }
+  
+  export default Home

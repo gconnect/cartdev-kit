@@ -40,7 +40,7 @@ export const Input: React.FC<IInputPropos> = (propos) => {
     const addInput = async (str: string) => {
         if (rollups) {
             try {
-                let payload = ethers.utils.toUtf8Bytes(str);
+                let payload = ethers.toUtf8Bytes(str);
                 if (hexInput) {
                     payload = ethers.utils.arrayify(str);
                 }
@@ -54,7 +54,7 @@ export const Input: React.FC<IInputPropos> = (propos) => {
     const depositErc20ToPortal = async (token: string,amount: number) => {
         try {
             if (rollups && provider) {
-                const data = ethers.utils.toUtf8Bytes(`Deposited (${amount}) of ERC20 (${token}).`);
+                const data = ethers.toUtf8Bytes(`Deposited (${amount}) of ERC20 (${token}).`);
                 //const data = `Deposited ${args.amount} tokens (${args.token}) for DAppERC20Portal(${portalAddress}) (signer: ${address})`;
                 const signer = provider.getSigner();
                 const signerAddress = await signer.getAddress()
@@ -64,9 +64,9 @@ export const Input: React.FC<IInputPropos> = (propos) => {
 
                 // query current allowance
                 const currentAllowance = await tokenContract.allowance(signerAddress, erc20PortalAddress);
-                if (ethers.utils.parseEther(`${amount}`) > currentAllowance) {
+                if (ethers.parseEther(`${amount}`) > currentAllowance) {
                     // Allow portal to withdraw `amount` tokens from signer
-                    const tx = await tokenContract.approve(erc20PortalAddress, ethers.utils.parseEther(`${amount}`));
+                    const tx = await tokenContract.approve(erc20PortalAddress, ethers.parseEther(`${amount}`));
                     const receipt = await tx.wait(1);
                     const event = (await tokenContract.queryFilter(tokenContract.filters.Approval(), receipt.blockHash)).pop();
                     if (!event) {
@@ -84,8 +84,8 @@ export const Input: React.FC<IInputPropos> = (propos) => {
     const depositEtherToPortal = async (amount: number) => {
         try {
             if (rollups && provider) {
-                const data = ethers.utils.toUtf8Bytes(`Deposited (${amount}) ether.`);
-                const txOverrides = {value: ethers.utils.parseEther(`${amount}`)}
+                const data = ethers.toUtf8Bytes(`Deposited (${amount}) ether.`);
+                const txOverrides = {value: ethers.parseEther(`${amount}`)}
 
                 // const tx = await ...
                 rollups.etherPortalContract.depositEther(propos.dappAddress,data,txOverrides);
@@ -98,7 +98,7 @@ export const Input: React.FC<IInputPropos> = (propos) => {
     const transferNftToPortal = async (contractAddress: string,nftid: number) => {
         try {
             if (rollups && provider) {
-                const data = ethers.utils.toUtf8Bytes(`Deposited (${nftid}) of ERC721 (${contractAddress}).`);
+                const data = ethers.toUtf8Bytes(`Deposited (${nftid}) of ERC721 (${contractAddress}).`);
                 //const data = `Deposited ${args.amount} tokens (${args.token}) for DAppERC20Portal(${portalAddress}) (signer: ${address})`;
                 const signer = provider.getSigner();
                 const signerAddress = await signer.getAddress()
@@ -130,7 +130,7 @@ export const Input: React.FC<IInputPropos> = (propos) => {
     const transferErc1155SingleToPortal = async (contractAddress: string, id: number, amount: number) => {
         try {
             if (rollups && provider) {
-                const data = ethers.utils.toUtf8Bytes(`Deposited (${amount}) tokens from id (${id}) of ERC1155 (${contractAddress}).`);
+                const data = ethers.toUtf8Bytes(`Deposited (${amount}) tokens from id (${id}) of ERC1155 (${contractAddress}).`);
                 //const data = `Deposited ${args.amount} tokens (${args.token}) for DAppERC20Portal(${portalAddress}) (signer: ${address})`;
                 const signer = provider.getSigner();
                 const signerAddress = await signer.getAddress()

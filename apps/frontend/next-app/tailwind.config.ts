@@ -12,9 +12,17 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        'gradient-custom': 'linear-gradient(to right, #AE62EE, #FE8A7C)',
+
       },
-    },
+      colors: {
+        'dark-blue': '#040419',
+        'dark-text': '#09324C',
+        'custom-purple': '#AE62EE',
+        'custom-orange': '#FE8A7C',
+        'bcolor': '#05051F'
+      },
   },
   plugins: [],
-};
+}}
 export default config;
