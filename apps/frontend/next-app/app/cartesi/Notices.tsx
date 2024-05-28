@@ -13,69 +13,25 @@
 
 import { ethers } from "ethers";
 import React, {useEffect} from "react";
-
-import { useNoticesQuery } from "../cartesi/generated/graphql";
-
-type Notice = {
-    id: string;
-    index: number;
-    input: any, //{index: number; epoch: {index: number; }
-    payload: string;
-};
+import { useNotices } from "./hooks/useNotices";
+import { useRollups } from "./hooks/useRollups";
+import { DAPP_ADDRESS } from "../utils/constants";
 
 export const Notices: React.FC = () => {
-    const [result,reexecuteQuery] = useNoticesQuery();
-    const { data, fetching, error } = result;
+    const {loading, error, data, notices, refetch } = useNotices()
 
     useEffect(() => {
-        reexecuteQuery({ requestPolicy: 'network-only' });
-    }, [reexecuteQuery]);
+        refetch({ requestPolicy: 'network-only' });
+    }, []);
+    
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p className="text-slate-400">Oh no... {error.message}</p>;
 
-    if (fetching) return <p>Loading...</p>;
-    if (error) return <p>Oh no... {error.message}</p>;
-
-    if (!data || !data.notices) return <p>No notices</p>;
-
-    const notices: Notice[] = data.notices.edges.map((node: any) => {
-        const n = node.node;
-        let inputPayload = n?.input.payload;
-        if (inputPayload) {
-            try {
-                inputPayload = ethers.toUtf8String(inputPayload);
-            } catch (e) {
-                inputPayload = inputPayload + " (hex)";
-            }
-        } else {
-            inputPayload = "(empty)";
-        }
-        let payload = n?.payload;
-        if (payload) {
-            try {
-                payload = ethers.toUtf8String(payload);
-            } catch (e) {
-                payload = payload + " (hex)";
-            }
-        } else {
-            payload = "(empty)";
-        }
-        return {
-            id: `${n?.id}`,
-            index: parseInt(n?.index),
-            payload: `${payload}`,
-            input: n ? {index:n.input.index,payload: inputPayload} : {},
-        };
-    }).sort((b: any, a: any) => {
-        if (a.input.index === b.input.index) {
-            return b.index - a.index;
-        } else {
-            return b.input.index - a.input.index;
-        }
-    });
-
-    // const forceUpdate = useForceUpdate();
+    if (!data || !data.notices) return <p className="text-slate-400">No Notices</p>;
+  
     return (
         <div>
-            <button className="text-slate-400" onClick={() => reexecuteQuery({ requestPolicy: 'network-only' })}>
+            <button className="text-slate-400" onClick={() => refetch({ requestPolicy: 'network-only' })}>
                 Reload
             </button>
             <table className="text-slate-400 border">
@@ -88,12 +44,12 @@ export const Notices: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {notices.length === 0 && (
+                    {notices && notices.length === 0 && (
                         <tr>
                             <td className="p-4" colSpan={4}>no notices</td>
                         </tr>
                     )}
-                    {notices.map((n: any) => (
+                    {notices && notices.map((n: any) => (
                         <tr key={`${n.input.index}-${n.index}`}>
                             <td>{n.input.index}</td>
                             <td>{n.index}</td>

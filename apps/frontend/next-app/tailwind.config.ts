@@ -19,6 +19,7 @@ const config: Config = {
         'dark-blue': '#040419',
         'dark-text': '#09324C',
         'custom-purple': '#AE62EE',
+        'light-purple': '#9395D3',
         'custom-orange': '#FE8A7C',
         'bcolor': '#05051F'
       },

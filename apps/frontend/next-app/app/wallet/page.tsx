@@ -2,10 +2,11 @@
 import { FC, useState } from "react"
 import { Input, Box, InputGroup, InputLeftAddon, Stack, SimpleGrid} from "@chakra-ui/react"
 import { Balance } from "../component/Balance";
-import { Transfers } from "../component/Transfers";
+import Transfers from "../component/Transfers";
+import { DAPP_ADDRESS } from "../utils/constants";
 
 const Payment: FC = () => {
-  const [dappAddress, setDappAddress] = useState<string>("0x70ac08179605AF2D9e75782b8DEcDD3c22aA4D0C");
+  const [dappAddress, setDappAddress] = useState<string>(DAPP_ADDRESS);
 
   return (
       <SimpleGrid columns={1} marginTop={'48px'} marginLeft={'25%'} marginRight={'25%'}>  

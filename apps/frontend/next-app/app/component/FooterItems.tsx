@@ -8,19 +8,13 @@ type FooterProps = {
 
 const footerItems : FooterProps[] = [
   {
-    title: "Supported Templates",
+    title: "Templates",
     contentItems: [
       "Reactjs & Nextjs",
       "Cartesify Reactjs & Nextjs",
       // "Javascript & Typescript"
     ]
   },
-  // {
-  //   title: "How to Use",
-  //   contentItems: [
-  //     "Documentation",
-  //   ]
-  // },
   {
     title: "Follow Us",
     contentItems: [

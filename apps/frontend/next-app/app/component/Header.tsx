@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import Image from "next/image";
-import devkit from "../../public/images/devkit-logo.png";
+import devkit from "../../public/images/CartDevKit.png";
 import {FaBars} from 'react-icons/fa'
 import { IoCloseSharp } from "react-icons/io5";
 import CustomButton from "./CustomButton";
@@ -19,7 +19,7 @@ const Header: React.FC = () => {
     <div className="flex justify-between h-full bg-dark-blue text-white items-center px-8 py-4">
       <Link href={"/"}>
         <p className="py-4">
-          <Image src={devkit} width={80} height={50} alt="logo" />
+          <Image src={devkit} width={120} height={80} alt="logo" />
         </p>
       </Link>
       <div className="flex items-center">

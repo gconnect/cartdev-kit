@@ -2,70 +2,65 @@
 import {useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useEthersSigner } from '../utils/useEtherSigner'
-import { BASE_URL, DAPP_ADDRESS } from '@/app/utils/constants'
+import { DAPP_ADDRESS } from '@/app/utils/constants'
 import { Box } from '@chakra-ui/react'
-import { useRollups } from '../cartesi/useRollups'
+import { useRollups } from '../cartesi/hooks/useRollups'
 import toast from 'react-hot-toast'
+import { useNotices } from '../cartesi/hooks/useNotices'
+import { Notices } from '../cartesi/Notices'
+import { ethers } from 'ethers'
+import { addInput } from '../cartesi/Portals'
 
 export default function Greetings() {
-  const [result, setResult] = useState<string>("") 
-  // const [signer, setSigner] = useState<any>(undefined)
-  const [loading, setLoading] = useState(false)
   const [greeting, setGreeting] = useState('')
-  const [loadGreeting, setLoadGreeting] = useState(false)
+  const [loadGreeting, setLoading] = useState(false)
   const rollups = useRollups(DAPP_ADDRESS);
   const { isConnected } = useAccount();
   const signer = useEthersSigner()
-  const provider = signer?.provider
+  const { refetch } = useNotices()
 
   const handleMessageChange = (e:  React.ChangeEvent<HTMLInputElement>) =>{ 
     console.log(e.target.value)
     setGreeting(e.target.value)
 }
-  const jsonPayload = JSON.stringify({
-    method: 'sendgreeting',
-    data: greeting,
-  })
 
   const sendGreeting = async () => {
+
+    const jsonPayload = JSON.stringify({
+      method: 'sendgreeting',
+      args: {
+        amount: greeting,
+      },
+    })
+
     if(!isConnected) return toast("Please connect your wallet")
-    if (rollups) {
-      try {
-       const trans = await rollups.inputContract.addInput(JSON.stringify(jsonPayload), DAPP_ADDRESS);
-        const tx = await signer?.sendTransaction(trans)
-        const receipt = await tx?.wait()
-        console.log("receipt", receipt?.hash)
-        return receipt?.hash
-      } catch (e) {
-        console.log(`${e}`);
-      }
-    }
+    if(!greeting) return toast.error("Input field should not be empty")
+  
+    await addInput(rollups, signer, setLoading, jsonPayload)
   };
 
+  useEffect(() => {
+      const handleInputAdded = () => {
+        console.log('Input added, refetching notices')
+        refetch()
+      }
+      // Add event listener for inputAdded event
+      rollups?.inputContract.on('InputAdded', handleInputAdded)
+      // Cleanup function to remove event listener
+      return () => {
+        rollups?.inputContract.off('InputAdded', handleInputAdded)
+      }
+    }, [rollups, refetch])
 
-  const getGreeting = async () => {
-    if(!isConnected) return toast("Please connect your wallet")
-    console.log("Hello world")
-  }
-
-
-
-  return (
+    return (
       <div className="flex min-h-screen flex-col lg:mb-2 md:mb-8 mb-36 items-center text-black">
         <h1 className='mt-36 text-xl mb-4 font-bold text-gray-400'>Welcome! Say Hello 👋</h1>
         <input className='p-4 rounded border-2 lg:w-1/3 md:w-full w-3/4' type="text" onChange={handleMessageChange} placeholder='Enter your message' value={greeting} required/>
-        <button className='bg-cyan-500 p-4 mt-4 lg:w-1/3 md:w-1/2 w-3/4 rounded' onClick={() => sendGreeting()}>     
-          {loading ? "loading...": "Send"}
+        <button className='bg-purple-400 p-4 mt-4 lg:w-1/3 md:w-1/2 w-3/4 rounded' onClick={() => sendGreeting()}>     
+          {loadGreeting ? "Sending message please wait... 💁‍♀️": "Send"}
         </button>
-
-        <button className='bg-purple-400 p-4 mt-4 lg:w-1/3 md:w-1/2 w-3/4  rounded' onClick={getGreeting}>     
-          {loadGreeting ? "fetching data...": "Get Greet"}
-        </button>
-
-        <p>
-          {greeting && greeting}
-        </p>
-        <p className='mt-4 font-bold text-gray-400'>{`Result: ${result}`}</p>
+        <p className='my-4 font-bold text-gray-400'>Output</p>
+        <Notices/>
       </div>
   );
 }

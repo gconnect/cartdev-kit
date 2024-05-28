@@ -1,23 +1,9 @@
 "use client"
 
-// Copyright 2022 Cartesi Pte. Ltd.
-
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not
-// use this file except in compliance with the License. You may obtain a copy
-// of the license at http://www.apache.org/licenses/LICENSE-2.0
-
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-// License for the specific language governing permissions and limitations
-// under the License.
-
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { useSetChain, useWallets } from "@web3-onboard/react";
-import { useAccount, Config } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { Chain, toHex } from "viem";
-import { useEthersSigner } from "../utils/useEtherSigner";
+import { useEthersSigner } from "../../utils/useEtherSigner";
 
 import {
     CartesiDApp,
@@ -36,10 +22,8 @@ import {
     ERC1155SinglePortal__factory,
     ERC1155BatchPortal,
     ERC1155BatchPortal__factory
-} from "../cartesi/generated/rollups";
-import configFile from "./config.json";
-import { JsonRpcSigner } from "@ethersproject/providers";
-
+} from "../generated/rollups";
+import configFile from "../config.json";
 const config: any = configFile;
 
 

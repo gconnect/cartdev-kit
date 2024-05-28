@@ -1,101 +1,21 @@
-// Copyright 2022 Cartesi Pte. Ltd.
-
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not
-// use this file except in compliance with the License. You may obtain a copy
-// of the license at http://www.apache.org/licenses/LICENSE-2.0
-
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-// License for the specific language governing permissions and limitations
-// under the License.
-
-import React, { useState } from "react";
-import { useSetChain } from "@web3-onboard/react";
-import { ethers, parseEther } from "ethers";
-// import { useRollups } from "./useRollups";
-import { useAccount } from "wagmi";
-import configFile from "./../cartesi/config.json";
-//import "./App.css"
-
+import React from "react";
+import { ethers } from "ethers";
 import {
     Table,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
-    TableCaption,
     TableContainer,
     Button,
     Stack,
     Box,
-    Spacer
   } from '@chakra-ui/react'
-import { useRollups } from "../cartesi/useRollups";
-import { toHex } from "viem";
-
-const config: any = configFile;
-interface Report {
-    payload: string;
-}
+import { useInspectCall } from "../cartesi/hooks/useInspectCall";
 
 export const Balance: React.FC = () => {
-    const { chain } = useAccount();
-
-    // const rollups = useRollups("DApp Address");
-    const inspectCall = async (str: string) => {
-        let payload = str;
-        if (hexData) {
-            const uint8array = ethers.getBytes(payload);
-            payload = new TextDecoder().decode(uint8array);
-        }
-        if (!chain){
-            return;
-        }
-        
-        let apiURL= ""
-
-        if(config[toHex(chain.id)]?.inspectAPIURL) {
-            apiURL = `${config[toHex(chain.id)].inspectAPIURL}/inspect`;
-        } else {
-            console.error(`No inspect interface defined for chain ${toHex(chain.id)}`);
-            return;
-        }
-        
-        let fetchData: Promise<Response>;
-        if (postData) {
-            const payloadBlob = new TextEncoder().encode(payload);
-            fetchData = fetch(`${apiURL}`, { method: 'POST', body: payloadBlob });
-        } else {
-            fetchData = fetch(`${apiURL}/${payload}`);
-        }
-        fetchData
-            .then(response => response.json())
-            .then(data => {
-                setReports(data.reports);
-                setMetadata({status: data.status, exception_payload: data.exception_payload});
-                console.log("Metadata:", data.reports);
-
-                // Decode payload from each report
-                const decode = data.reports.map((report: Report) => {
-                return ethers.toUtf8String(report.payload);
-                });
-                console.log("Decoded Reports:", decode);
-                const reportData = JSON.parse(decode)
-                console.log("Report data: ", reportData)
-                setDecodedReports(reportData)
-                console.log("Erc20 : ", decodedReports.erc20)
-                //console.log(parseEther("1000000000000000000", "gwei"))
-            });
-    };
-    const [inspectData, setInspectData] = useState<string>("");
-    const [reports, setReports] = useState<string[]>([]);
-    const [decodedReports, setDecodedReports] = useState<any>({});
-    const [metadata, setMetadata] = useState<any>({});
-    const [hexData, setHexData] = useState<boolean>(false);
-    const [postData, setPostData] = useState<boolean>(false);
+    const { decodedReports = {}, reports, inspectCall} = useInspectCall()
 
     return (
         <Box borderWidth='0.1px' padding='4' borderRadius='lg' overflow='hidden'>
@@ -116,7 +36,7 @@ export const Balance: React.FC = () => {
                         </Tr>
                     )}
                 
-                    {<Tr key={`${decodedReports}`}>
+                    {<Tr key={`${decodedReports && decodedReports}`}>
                         {decodedReports && decodedReports.ether && (
                         <Td textAlign={'center'}>{ethers.formatEther(decodedReports.ether)}</Td> )}
                         { decodedReports && decodedReports.erc20 && (

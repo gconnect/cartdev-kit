@@ -10,59 +10,14 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-import React, { useState } from "react";
-import { useSetChain } from "@web3-onboard/react";
+import React from "react";
 import { ethers } from "ethers";
-import { useRollups } from "./useRollups";
-import { useAccount } from "wagmi";
-import configFile from "../cartesi/config.json";
-import { DAPP_ADDRESS } from "../utils/constants";
-import { toHex } from "viem";
+import { useInspectCall } from "../cartesi/hooks/useInspectCall";
 
-const config: any = configFile;
 
 export const Inspect: React.FC = () => {
-    const rollups = useRollups(DAPP_ADDRESS);
-    const { chain } = useAccount();
-
-    const inspectCall = async (str: string) => {
-        let payload = str;
-        if (hexData) {
-            const uint8array = ethers.utils.arrayify(str);
-            payload = new TextDecoder().decode(uint8array);
-        }
-        if (!chain){
-            return;
-        }
-        
-        let apiURL= ""
-
-        if(config[toHex(chain.id)]?.inspectAPIURL) {
-            apiURL = `${config[toHex(chain.id)].inspectAPIURL}/inspect`;
-        } else {
-            console.error(`No inspect interface defined for chain ${toHex(chain.id)}`);
-            return;
-        }
-        
-        let fetchData: Promise<Response>;
-        if (postData) {
-            const payloadBlob = new TextEncoder().encode(payload);
-            fetchData = fetch(`${apiURL}`, { method: 'POST', body: payloadBlob });
-        } else {
-            fetchData = fetch(`${apiURL}/${payload}`);
-        }
-        fetchData
-            .then(response => response.json())
-            .then(data => {
-                setReports(data.reports);
-                setMetadata({metadata:data.metadata, status: data.status, exception_payload: data.exception_payload});
-            });
-    };
-    const [inspectData, setInspectData] = useState<string>("");
-    const [reports, setReports] = useState<string[]>([]);
-    const [metadata, setMetadata] = useState<any>({});
-    const [hexData, setHexData] = useState<boolean>(false);
-    const [postData, setPostData] = useState<boolean>(false);
+    const { setInspectData, inspectData, setHexData,hexData,postData, 
+        setPostData,metadata, reports, inspectCall} = useInspectCall()
 
     return (
         <div>

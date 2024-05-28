@@ -14,7 +14,7 @@
 import { ethers } from "ethers";
 import React, { useEffect } from "react";
 import { useVouchersQuery, useVoucherQuery } from "./generated/graphql";
-import { useRollups } from "./useRollups";
+import { useRollups } from "./hooks/useRollups";
 import {
     Table,
     Thead,
