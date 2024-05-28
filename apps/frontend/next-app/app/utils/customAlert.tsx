@@ -1,7 +1,8 @@
-import toast from "react-hot-toast";
+import toast, { Renderable, Toast, ValueOrFunction } from "react-hot-toast";
 
+type Message = ValueOrFunction<Renderable, Toast>;
 
-export const successAlert = (message: string | undefined) => {
+export const successAlert = (message: string | undefined | Message | any) => {
     toast.success(message, {
       position: 'bottom-right',
       style: {
@@ -10,8 +11,8 @@ export const successAlert = (message: string | undefined) => {
     )
   }
 
-export const errorAlert = (errorMessage: any) => {
-    toast.error(errorMessage.message, {
+export const errorAlert = (errorMessage: Message | any) => {
+    toast.error(errorMessage, {
       position: 'bottom-right',
       style: {
         paddingRight: '40px',
