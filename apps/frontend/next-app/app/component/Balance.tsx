@@ -27,6 +27,7 @@ export const Balance: React.FC = () => {
                         <Th textAlign={'center'} textColor={'slategray'}>Ether</Th>
                         <Th textAlign={'center'} textColor={'slategray'}>ERC-20</Th>
                         <Th textAlign={'center'} textColor={'slategray'}>ERC-721</Th>
+                        <Th textAlign={'center'} textColor={'slategray'}>ERC-1155</Th>
                     </Tr>
                 </Thead>
                 <Tbody>

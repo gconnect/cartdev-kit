@@ -55,12 +55,12 @@ export const Reports: React.FC = () => {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {reports.length === 0 && (
+                    {reports && reports.length === 0 && (
                         <Tr>
                             <Td colSpan={4}>-</Td>
                         </Tr>
                     )}
-                    {reports.map((n: any) => (
+                    {reports && reports.map((n: any) => (
                         <Tr key={`${n.input.index}-${n.index}`}>
                             {/* <Td>{n.input.index}</Td>
                             <Td>{n.index}</Td> */}

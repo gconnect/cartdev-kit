@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { useMemo } from "react";
 import '@rainbow-me/rainbowkit/styles.css';
 import { Providers } from './utils/providers';
 import Header from "./component/Header";
@@ -10,6 +11,14 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { Toaster } from 'react-hot-toast'
 import { API_BASE_URL } from "./utils/constants";
+import {
+  UrqlProvider,
+  ssrExchange,
+  cacheExchange,
+  fetchExchange,
+  createClient,
+} from '@urql/next';
+
 const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
@@ -28,10 +37,26 @@ export default function RootLayout({
     cache: new InMemoryCache(),
   })
 
+  const [client, ssr] = useMemo(() => {
+    const ssr = ssrExchange({
+      isClient: typeof window !== 'undefined',
+    });
+    const client = createClient({
+      url: API_BASE_URL,
+      exchanges: [cacheExchange, ssr, fetchExchange],
+      suspense: true,
+    });
+
+    return [client, ssr];
+  }, []);
+
+
+
   return (
     <html lang="en">
       <body className={`${inter.className} bg-bcolor`}>
         <ChakraProvider>
+        <UrqlProvider client={client} ssr={ssr}>
         <ApolloProvider client={apolloClient}>
           <Providers>
           <Header/>
@@ -39,6 +64,7 @@ export default function RootLayout({
           <Footer/>
         </Providers>
         </ApolloProvider>
+        </UrqlProvider>
         <Toaster />
       </ChakraProvider> 
           </body>

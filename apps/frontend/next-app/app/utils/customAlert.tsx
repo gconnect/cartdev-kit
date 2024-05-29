@@ -12,7 +12,7 @@ export const successAlert = (message: string | undefined | Message | any) => {
   }
 
 export const errorAlert = (errorMessage: Message | any) => {
-    toast.error(errorMessage, {
+    toast.error(errorMessage.message, {
       position: 'bottom-right',
       style: {
         paddingRight: '40px',

@@ -360,7 +360,7 @@ const clear1155Batch = () => {
                 <br />
               </div>
               }
-              {dappRelayedAddress && <Vouchers dappAddress={props.dappAddress} />}
+              {dappRelayedAddress &&  <Vouchers dappAddress={props.dappAddress} />}
             </Accordion>
           </TabPanel>
           <TabPanel>

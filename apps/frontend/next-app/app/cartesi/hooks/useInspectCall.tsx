@@ -3,7 +3,7 @@ import configFile from '../config.json';
 import { toHex } from 'viem';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-import toast from 'react-hot-toast';
+import { errorAlert, successAlert } from '@/app/utils/customAlert';
 
 const config: any = configFile;
 
@@ -23,7 +23,7 @@ export const useInspectCall = () => {
   const inspectCall = async (payload: string) => {
     try {
       if (hexData) {
-        const uint8array = ethers.utils.arrayify(payload);
+        const uint8array = ethers.getBytes(payload);
         payload = new TextDecoder().decode(uint8array);
       }
 
@@ -61,21 +61,10 @@ export const useInspectCall = () => {
       const reportData: any = JSON.parse(decode);
       console.log("Report data: ", reportData);
       setDecodedReports(reportData);
-      
-      toast.success(reportData, {
-        position: 'bottom-right',
-        style: {
-          paddingRight: '40px',
-        },
-      })
+      successAlert(reportData)
     } catch (error: any) {      
       console.error("Error fetching inspect data:", error)
-      toast.error(error.message, {
-        position: 'bottom-right',
-        style: {
-          paddingRight: '40px',
-        },
-      });
+      errorAlert(error)
     }
   };
 

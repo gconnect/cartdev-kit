@@ -393,3 +393,29 @@ export const transferErc1155BatchToPortal = async (
   }
 };
 
+export const executeVoucher = async (
+  rollups: RollupsContracts | undefined, 
+  signer: JsonRpcSigner | undefined,
+  setVoucherToExecute: Function,
+  voucher: any
+  ) => {
+  if (rollups && !!voucher.proof) {
+
+      const newVoucherToExecute = {...voucher};
+      try {
+          const tx = await rollups.dappContract.executeVoucher( voucher.destination,voucher.payload,voucher.proof);
+          const trans = await signer?.sendTransaction(tx)
+          const receipt = await trans?.wait(1);
+          newVoucherToExecute.msg = `voucher executed! (tx="${receipt?.hash}")`;
+          const event = (await rollups.dappContract.queryFilter(rollups.dappContract.filters.VoucherExecuted(), receipt?.blockHash)).pop();
+          if (event) {
+              newVoucherToExecute.msg = `${newVoucherToExecute.msg} - resulting events: ${JSON.stringify(receipt?.hash)}`;
+              newVoucherToExecute.executed = await rollups.dappContract.wasVoucherExecuted(toBigInt(voucher.input.index),toBigInt(voucher.index));
+          }
+      } catch (e) {
+          newVoucherToExecute.msg = `COULD NOT EXECUTE VOUCHER: ${JSON.stringify(e)}`;
+          console.log(`COULD NOT EXECUTE VOUCHER: ${JSON.stringify(e)}`);
+      }
+      setVoucherToExecute(newVoucherToExecute);
+  }
+}
