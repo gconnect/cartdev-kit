@@ -13,7 +13,7 @@ const { installDependencies } = require("./install-dependencies")
     // Function to filter out .git, .env, node_modules, and package-lock.json files/directories
     exludeFiles(templateDir, destDir)
     await copy(templateDir, destDir);
-    console.log(`✔ Template ${templateName} created successfully!` )
+    console.log(`✅ Template ${templateName} created successfully!` )
 
   } catch (err) {
     console.error(`Error copying template files: ${err}`);

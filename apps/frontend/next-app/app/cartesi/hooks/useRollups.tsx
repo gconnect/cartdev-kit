@@ -51,7 +51,7 @@ export const useRollups = (dAddress: string): RollupsContracts | undefined => {
             chain: Chain
             ): Promise<RollupsContracts> => {
             let dappRelayAddress = "";
-            if(config[toHex(toHex(chain.id))]?.DAppRelayAddress) {
+            if(config[toHex(chain.id)]?.DAppRelayAddress) {
                 dappRelayAddress = config[toHex(chain.id)].DAppRelayAddress;
             } else {
                 console.error(`No dapp relay address address defined for chain ${toHex(chain.id)}`);
