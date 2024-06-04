@@ -35,20 +35,7 @@ export default function Greetings() {
   
     await addInput(rollups, signer, setLoading, jsonPayload)
   };
-
-  // useEffect(() => {
-  //     const handleInputAdded = () => {
-  //       console.log('Input added, refetching notices')
-  //       refetch()
-  //     }
-  //     // Add event listener for inputAdded event
-  //     rollups?.inputContract.on('InputAdded', handleInputAdded)
-  //     // Cleanup function to remove event listener
-  //     return () => {
-  //       rollups?.inputContract.off('InputAdded', handleInputAdded)
-  //     }
-  //   }, [rollups, refetch])
-
+  
     return (
       <div className="flex min-h-screen flex-col lg:mb-2 md:mb-8 mb-36 items-center text-black">
         <h1 className='mt-36 text-xl mb-4 font-bold text-gray-400'>Welcome! Say Hello 👋</h1>
