@@ -1,0 +1,8 @@
+schema: ./graphql/schema.graphql
+documents: ./graphql/queries.graphql
+generates:
+    ./src/cartesi/generated/graphql/index.ts:
+        plugins:
+            - typescript
+            - typescript-operations
+            - typescript-urql

@@ -61,7 +61,7 @@ export const depositErc20ToPortal = async (rollups: RollupsContracts | undefined
       const signer = await provider.getSigner();
       const signerAddress = await signer?.getAddress();
 
-      const erc20PortalAddress = rollups.erc20PortalContract.address;
+      const erc20PortalAddress = await rollups.erc20PortalContract.getAddress();
       const tokenContract = signer
         ? IERC20__factory.connect(token, signer)
         : IERC20__factory.connect(token, signer!);
@@ -250,10 +250,10 @@ export const transferNftToPortal = async (
       const signer = await provider.getSigner();
       const signerAddress = await signer.getAddress();
 
-      const erc721PortalAddress = rollups.erc721PortalContract.address;
+      const erc721PortalAddress = await rollups.erc721PortalContract.getAddress();
 
       const tokenContract = signer
-        ? IERC721__factory.connect(contractAddress, await signer)
+        ? IERC721__factory.connect(contractAddress, signer)
         : IERC721__factory.connect(contractAddress, signer);
 
       // query current approval
