@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@chakra-ui/react"
 import { useEthersSigner } from "../utils/useEtherSigner"
 import { createOrUpdateRequest, getRequest } from "./services/RestApiCalls"

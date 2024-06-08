@@ -2,7 +2,7 @@ import { JsonRpcSigner } from "ethers";
 import { RPC_URL, BASE_URL } from "../../utils/constants";
 import { fetch } from '../../utils/cartersify-init'
 import { Batch } from "../model";
-import { balanceERC20, balanceERC721 } from './Portal'
+import { balanceERC1155, balanceERC20, balanceERC721, loadBatchBalances } from './Portal'
 import { errorAlert, successAlert } from '../../utils/customAlert'
 
 export const transferEther = async (
@@ -10,7 +10,7 @@ export const transferEther = async (
   toAddress: string,
   etherValue: number
 ) => {
-  const res = await fetch(`http://127.0.0.1:8383/wallet/ether/transfer`, {
+  const res = await fetch(`${BASE_URL}/wallet/ether/transfer`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -26,13 +26,15 @@ export const transferEther = async (
         console.log(res.status, res.text())
         return
     }
+    successAlert("Transfer successful")
     console.log('Success!')
   } catch (error) {
     console.log(error)
+    errorAlert(error)
   }
 }
 
-export  const transferErc20 = async (
+export const transferErc20 = async (
   signer: JsonRpcSigner | undefined, 
   erc20address: string, toAddress: string,
   erc20value: number
@@ -54,9 +56,11 @@ export  const transferErc20 = async (
         console.log(res.status, res.text())
         return
     }
+    successAlert("Success")
     console.log('Success!')
   } catch (error) {
     console.log(error)
+    errorAlert(error)
   }
 }
 
@@ -65,7 +69,7 @@ export const transferErc721 = async (
   erc721address: string, toAddress: string,
   erc721id: number
 ) => {
-  const res = await fetch(`http://127.0.0.1:8383/wallet/erc-721/transfer`, {
+  const res = await fetch(`${BASE_URL}/wallet/erc-721/transfer`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -83,8 +87,10 @@ export const transferErc721 = async (
         return
     }
     console.log('Success!')
+    successAlert("Success!")
   } catch (error) {
     console.log(error)
+    errorAlert(error)
   }
 }
 
@@ -119,7 +125,7 @@ export const withdrawEther = async (
   signer: JsonRpcSigner | undefined, 
   etherValue: number
  ) => {
-  const res = await fetch(`http://127.0.0.1:8383/wallet/ether/withdraw`, {
+  const res = await fetch(`${BASE_URL}/wallet/ether/withdraw`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -135,8 +141,10 @@ export const withdrawEther = async (
         return
     }
     console.log('Success!')
+    successAlert("Withdrawn successfully!")
   } catch (error) {
     console.log(error)
+    errorAlert(error)
   }
 }
 
@@ -145,7 +153,7 @@ export const withdrawErc20 = async (
   erc20address: string,
   erc20value: number
 ) => {
-  const res = await fetch(`http://127.0.0.1:8383/wallet/erc-20/withdraw`, {
+  const res = await fetch(`${BASE_URL}/wallet/erc-20/withdraw`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -161,9 +169,11 @@ export const withdrawErc20 = async (
         console.log(res.status, res.text())
         return
     }
+    successAlert("Success")
     console.log('Success!')
   } catch (error) {
     console.log(error)
+    errorAlert(error)
   }
 }
 
@@ -174,7 +184,7 @@ export const withdrawErc20 = async (
  ) => {
   // await Cartesify.withdrawERC721(erc721address, address, tokenId)
 
-  const res = await fetch(`http://127.0.0.1:8383/wallet/erc-721/withdraw`, {
+  const res = await fetch(`${BASE_URL}/wallet/erc-721/withdraw`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -190,9 +200,40 @@ export const withdrawErc20 = async (
         console.log(res.status, res.text())
         return
     }
-    console.log('Success!')
+    successAlert('Success!')
   } catch (error) {
-    console.log(error)
+    errorAlert(error)
+  }
+}
+
+export const withdrawErc1155 = async (
+  signer: JsonRpcSigner | undefined, 
+  erc1155address: string,
+  erc1155id: number,
+  tokenAmount: number
+ ) => {
+  // await Cartesify.withdrawERC721(erc721address, address, tokenId)
+
+  const res = await fetch(`${BASE_URL}/wallet/erc-1155/withdraw`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          token: erc1155address,
+          tokenId: erc1155id,
+          amount: tokenAmount
+      }),
+      signer,
+  })
+  try {
+    if (!res.ok) {
+        console.log(res.status, res.text())
+        return
+    }
+    successAlert('Success!')
+  } catch (error) {
+    errorAlert(error)
   }
 }
 
@@ -286,7 +327,7 @@ export const fetchWallet = async (signer: JsonRpcSigner | undefined,
   setResponse: Function
 ) => {
   try {
-    const res = await fetch(`http://127.0.0.1:8383/wallet/${signer?.address}`)
+    const res = await fetch(`${BASE_URL}/${signer?.address}`)
     const json = await res.json()
     setResponse(JSON.stringify(json, null, 4))
   } catch (error) {
@@ -296,14 +337,16 @@ export const fetchWallet = async (signer: JsonRpcSigner | undefined,
 
 export const getEtherBalance = async (signer: JsonRpcSigner | undefined, setEtherBalanceL1: Function, setEtherBalanceL2: Function ) => {
   try {
-      const res = await fetch(`http://127.0.0.1:8383/wallet/${signer?.address}`)
+      const res = await fetch(`${BASE_URL}/${signer?.address}`)
       const json = await res.json()
       setEtherBalanceL2(json.ether)
       const balance = await signer?.provider.getBalance(signer.address)
       setEtherBalanceL1(balance?.toString())
       console.log('Success!')
+      successAlert("Succesfully fetched balance")
     } catch (error) {
       console.log(error)
+      errorAlert(error)
   }
 }
 
@@ -314,14 +357,16 @@ export const getERC20Balance = async (
   setErc20balanceL2: Function
 ) => {
   try {
-      const res = await fetch(`http://127.0.0.1:8383/wallet/${signer?.address}`)
+      const res = await fetch(`${BASE_URL}/wallet/${signer?.address}`)
       const json = await res.json()
       setErc20balanceL2(json.erc20[erc20address] ?? '0')
       const balance = await balanceERC20(erc20address, signer)
       setErc20balanceL1(balance.toString())
       console.log('Success!')
+      successAlert("Success")
   } catch (error) {
     console.log(error)
+    errorAlert(error)
   }
 }
 
@@ -332,18 +377,41 @@ export const getERC721Balance = async (
   setErc721balanceL2: Function
 ) => {
   try {
-    const url = `http://127.0.0.1:8383/wallet/${signer.address}`
+    const url = `${BASE_URL}/wallet/${signer.address}`
     const res = await fetch(url)
     const json = await res.json()
     setErc721balanceL2(json.erc721[erc721address]?.length ?? '0')
     const balance = await balanceERC721(erc721address, signer)
     setErc721balanceL1(balance.toString())
     console.log('Success!')
+    successAlert("Success")
   } catch (error) {
     console.log(error)
+    errorAlert(error)
   }
 }
 
+export const getERC1155Balance = async (
+  signer: JsonRpcSigner, 
+  erc1155address: string,
+  tokenId: number,
+  setErc1155balanceL1: Function,
+  setErc1155balanceL2: Function
+) => {
+  try {
+    const url = `${BASE_URL}/wallet/${signer.address}`
+    const res = await fetch(url)
+    const json = await res.json()
+    setErc1155balanceL2(json.erc1155[erc1155address]?.length ?? '0')
+    const balance = await balanceERC1155(erc1155address, signer!, tokenId)
+    setErc1155balanceL1(balance.toString())
+    console.log('Success!')
+    successAlert("Success")
+  } catch (error) {
+    console.log(error)
+    errorAlert(error)
+  }
+}
 
 
 export  const sendRPCCommand = async (method: string, params: any[]) => {

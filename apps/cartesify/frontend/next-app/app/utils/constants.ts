@@ -7,9 +7,6 @@ export const INSPECT_BASE_URL= 'http://localhost:8080/inspect'
 export const RPC_URL = "http://localhost:8545"
 
 
- 
-
-
 
 /*
      | 0xF5B2d8c81cDE4D6238bBf20D3D77DB37df13f735 Bitmask
