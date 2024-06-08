@@ -2,11 +2,14 @@
 import { useEffect, useState } from "react"
 import { Button } from "@chakra-ui/react"
 import { useEthersSigner } from "../utils/useEtherSigner"
-import { createOrUpdateRequest, getRequest } from "./services/RestApiCalls"
+import { createOrUpdateRequest, fetchWallet, getRequest } from "./services/RestApiCalls"
+import { callDAppAddressRelay } from "./services/Portal"
+import { useAccount } from "wagmi"
 
 export function RestExample() {
     const [backendResponse, setResponse] = useState('')
     const signer = useEthersSigner()
+    const { chain } = useAccount()
 
     return (
         <div className="flex justify-center text-white">
@@ -23,6 +26,17 @@ export function RestExample() {
             <Button colorScheme="red" className=" p-2 rounded m-2" onClick={async () => {
                 await createOrUpdateRequest(signer, "delete?some=body", "DELETE")
             }}>DELETE</Button>
+
+            <div>
+                <Button colorScheme="purple" className=" p-2 rounded m-2" onClick={async () => {
+                    await callDAppAddressRelay(signer, chain!)
+                }}>Dapp Relay Address</Button>
+
+                <Button colorScheme="blue" className=" p-2 rounded m-2" onClick={async () => {
+                    await fetchWallet(signer, setResponse)
+                }}>Get Wallet</Button>
+            </div>
+
             
             <div className="text-lg my-4 text-slate-400">
                 Backend response: <pre>{backendResponse}</pre>

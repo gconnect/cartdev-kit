@@ -330,8 +330,9 @@ export const fetchWallet = async (signer: JsonRpcSigner | undefined,
     const res = await fetch(`${BASE_URL}/${signer?.address}`)
     const json = await res.json()
     setResponse(JSON.stringify(json, null, 4))
+    successAlert("Successful!")
   } catch (error) {
-    console.log(error)
+    errorAlert(error)
   }
 }
 

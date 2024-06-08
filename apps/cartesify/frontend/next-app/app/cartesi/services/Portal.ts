@@ -102,7 +102,7 @@ export const depositERC20 = async (dappAddress: string, erc20address: string,
         const portal = ERC20Portal__factory.connect(portalAddress, signer)
         const tx = await portal.depositERC20Tokens(erc20address, dappAddress, parseUnits(erc20value, 6), '0x')
         const receipt = await (tx as any).wait()
-        successAlert(`Transaction Hash: <a href=${explorer/+"tx"/receipt.hash}> </a>`)
+        successAlert(`${explorer/+"tx"/receipt.hash}`)
     } catch (error) {
         console.log(error)
         errorAlert(error)
@@ -119,7 +119,7 @@ export const depositERC721 = async (dappAddress: string, erc721address: string,
     const portal = ERC721Portal__factory.connect(portalAddress, signer)
     const tx = await portal.depositERC721Token(erc721address, dappAddress, erc721id, '0x', '0x')
     const receipt = await (tx as any).wait()
-    successAlert(`Transaction Hash: <a href=${explorer/+"tx"/receipt.hash}> </a>`)
+    successAlert(`${explorer/+"tx"/receipt.hash}`)
     } catch (error) {
     errorAlert(error)
     }
@@ -138,7 +138,7 @@ export const depositSingleERC1155 = async (dappAddress: string, erc1155address: 
         const portal = ERC1155SinglePortal__factory.connect(portalAddress, signer)
         const tx = await portal.depositSingleERC1155Token(erc1155address, dappAddress, erc1155id, amount, '0x', data)
         const receipt = await (tx as any).wait()
-        successAlert(`Transaction Hash: <a href=${explorer/+"tx"/receipt.hash}> </a>`)
+        successAlert(`${explorer/+"tx"/receipt.hash}`)
     } catch (error) {
         errorAlert(error)
     }
@@ -156,7 +156,7 @@ export const depositBatchERC1155 = async (dappAddress: string, erc1155address: s
         const portal = ERC1155BatchPortal__factory.connect(portalAddress, signer)
         const tx = await portal.depositBatchERC1155Token(erc1155address, dappAddress, erc1155ids, amounts, '0x', data)
         const receipt = await (tx as any).wait()
-        successAlert(`Transaction Hash: <a href=${explorer/+"tx"/receipt.hash}> </a>`)
+        successAlert(`${explorer/+"tx"/receipt.hash}`)
     } catch (error) {
         errorAlert(error)
     }
@@ -176,7 +176,7 @@ try {
             console.log(tx)
             const receipt = await (tx as any).wait()
             console.log('Executed!', receipt)
-            successAlert(`Transaction Hash: <a href=${explorer/+"tx"/receipt.hash}> </a>`)
+            successAlert(`${explorer/+"tx"/receipt.hash}`)
 
         }
     } catch (error) {
@@ -192,7 +192,7 @@ export const callDAppAddressRelay = async (signer: JsonRpcSigner | undefined, ch
         const tx = await relay.relayDAppAddress(DAPP_ADDRESS)
         const receipt = await (tx as any).wait()
         console.log('Executed!', receipt)
-        successAlert(`Transaction Hash: <a href=${explorer/+"tx"/receipt.hash}> </a>`)
+        successAlert(`${explorer/+"tx"/receipt.hash}`)
     } catch (error) {
         errorAlert(error)
     }
