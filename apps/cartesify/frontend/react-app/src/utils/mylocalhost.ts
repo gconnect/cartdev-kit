@@ -1,6 +1,5 @@
-import { Chain } from "viem"
-export const mylocalhost: Chain = 
-  {
+
+export const mylocalhost = {
   id: 31337,
   name: 'Localhost',
   nativeCurrency: {

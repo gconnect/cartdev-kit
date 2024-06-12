@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import devkit from "../images/CartDevKit.png";
 import {FaBars} from 'react-icons/fa'

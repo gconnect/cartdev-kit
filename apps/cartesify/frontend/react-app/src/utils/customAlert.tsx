@@ -13,7 +13,16 @@ export const successAlert = (message: string | undefined | Message | any) => {
     )
   }
 
-export const errorAlert = (errorMessage: Message | any) => {
+export const errorAlert = (errorMessage: Message | string | any) => {
+  if(typeof errorMessage === "string"){
+    toast.error(errorMessage, {
+      position: 'bottom-right',
+      style: {
+        paddingRight: '40px',
+        height: '100%'
+      },
+    })
+  }else {
     toast.error(errorMessage.message, {
       position: 'bottom-right',
       style: {
@@ -21,4 +30,5 @@ export const errorAlert = (errorMessage: Message | any) => {
         height: '100%'
       },
     })
+  }
 }

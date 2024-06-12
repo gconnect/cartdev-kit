@@ -27,16 +27,17 @@ export default function Greetings() {
   const sendGreeting = async () => {
 
     const jsonPayload = JSON.stringify({
-      method: 'sendgreeting',
+      method: "sendgreeting",
       args: {
-        amount: greeting,
+        message: greeting,
       },
     })
 
     if(!isConnected) return toast("Please connect your wallet")
     if(!greeting) return toast.error("Input field should not be empty")
   
-    await addInput(rollups, signer, setLoading, jsonPayload)
+    await addInput(rollups, setLoading, jsonPayload)
+    setGreeting("")
   };
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function Greetings() {
         refetch()
       }
       // Add event listener for inputAdded event
-      rollups?.inputContract.on('InputAdded', handleInputAdded)
+      // rollups?.inputContract.on('InputAdded', handleInputAdded)
       // Cleanup function to remove event listener
       return () => {
         rollups?.inputContract.off('InputAdded', handleInputAdded)

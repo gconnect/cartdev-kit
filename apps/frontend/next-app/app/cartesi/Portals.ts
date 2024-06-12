@@ -8,13 +8,12 @@ import {
 import { successAlert, errorAlert } from "../utils/customAlert";
 import { DAPP_ADDRESS } from "../utils/constants";
 
-export const sendAddress = async (rollups: RollupsContracts | undefined, signer: JsonRpcSigner | undefined, setDappRelayedAddress: Function) => {
+export const sendAddress = async (rollups: RollupsContracts | undefined, setDappRelayedAddress: Function) => {
   if (rollups) {
     try {
     const relayTx =  await rollups.relayContract.relayDAppAddress(DAPP_ADDRESS);
       setDappRelayedAddress(true);
-      const trans = await signer!.sendTransaction(relayTx)
-       const tx =  await trans?.wait(1)
+      const tx = await relayTx.wait(1) 
       successAlert(tx!.hash)
       return tx?.hash
     } catch (e) {
@@ -26,7 +25,6 @@ export const sendAddress = async (rollups: RollupsContracts | undefined, signer:
 
 export const addInput = async (
   rollups: RollupsContracts | undefined, 
-  signer: JsonRpcSigner | undefined,
   setLoading: Function,
   jsonPayload: string
  ) => {
@@ -35,17 +33,43 @@ export const addInput = async (
         setLoading(true)
         const data = JSON.stringify(jsonPayload);
         let payload = ethers.toUtf8Bytes(data);
-        const trans = await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
-        const tx = await signer?.sendTransaction(trans)
+        const tx = await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
         const receipt = await tx?.wait()
         setLoading(false)
         successAlert(receipt?.hash)
+        console.log(receipt?.hash)
         return receipt?.hash
       } catch (e) {
         setLoading(false)
         errorAlert(e)
         console.log(`${e}`);
       }
+  }
+};
+
+export const depositEtherToPortal = async (rollups: RollupsContracts | undefined, 
+  provider: JsonRpcApiProvider | undefined, setLoadEther: Function, amount: number) => {
+  try {
+    if (rollups && provider) {
+      setLoadEther(true)
+      const data = ethers.toUtf8Bytes(`Deposited (${amount}) ether.`);
+      const txOverrides = { value: parseEther(`${amount}`) };
+      console.log("Ether to deposit: ", txOverrides);
+
+    const tx =  await rollups.etherPortalContract.depositEther(
+        DAPP_ADDRESS,
+        data,
+        txOverrides
+      );
+      setLoadEther(false)
+      const receipt = await tx.wait(1)
+      successAlert(receipt!.hash)
+      return receipt!.hash
+    }
+  } catch (e: any) {
+    setLoadEther(false)
+    console.log(`${e}`);
+    errorAlert(e)
   }
 };
 
@@ -77,8 +101,7 @@ export const depositErc20ToPortal = async (rollups: RollupsContracts | undefined
           erc20PortalAddress,
           parseEther(`${amount}`)
         );
-        const trans = await signer.sendTransaction(tx)
-        const receipt = await trans.wait(1);
+        const receipt = await tx.wait(1);
         const event = (
           await tokenContract.queryFilter(
             tokenContract.filters.Approval(),
@@ -98,42 +121,13 @@ export const depositErc20ToPortal = async (rollups: RollupsContracts | undefined
         ethers.parseEther(`${amount}`),
         data
       );
-      const depositTx = await signer.sendTransaction(deposit)
-      const transReceipt = await depositTx.wait(1);
+      const transReceipt = await deposit.wait(1);
       setLoadERC20(false)
       successAlert(transReceipt!.hash)
       return transReceipt?.hash
     }
   } catch (e) {
     setLoadERC20(false)
-    console.log(`${e}`);
-    errorAlert(e)
-  }
-};
-
-export const depositEtherToPortal = async (rollups: RollupsContracts | undefined, 
-  provider: JsonRpcApiProvider | undefined, setLoadEther: Function, amount: number) => {
-  try {
-    if (rollups && provider) {
-      setLoadEther(true)
-      const data = ethers.toUtf8Bytes(`Deposited (${amount}) ether.`);
-      const txOverrides = { value: parseEther(`${amount}`) };
-      console.log("Ether to deposit: ", txOverrides);
-
-    const trans =  await rollups.etherPortalContract.depositEther(
-        DAPP_ADDRESS,
-        data,
-        txOverrides
-      );
-      const signer = await provider.getSigner();
-      const tx = await signer.sendTransaction(trans)
-      setLoadEther(false)
-      const receipt = await tx.wait(1)
-      successAlert(receipt!.hash)
-      return receipt!.hash
-    }
-  } catch (e: any) {
-    setLoadEther(false)
     console.log(`${e}`);
     errorAlert(e)
   }
@@ -154,9 +148,7 @@ export const withdrawEther = async (rollups: RollupsContracts | undefined,
       };
       const data = JSON.stringify(input_obj);
       let payload = ethers.toUtf8Bytes(data);
-      const trans = await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
-      const signer = await provider.getSigner();
-      const tx = await signer.sendTransaction(trans)
+      const tx = await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
       const receipt = await tx.wait(1)
       setLoadWithdrawEther(false)
       successAlert(receipt!.hash)
@@ -186,9 +178,7 @@ export const withdrawErc20 = async (rollups: RollupsContracts | undefined,
       };
       const data = JSON.stringify(input_obj);
       let payload = ethers.toUtf8Bytes(data);
-      const trans =  await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
-      const signer = await provider.getSigner();
-      const tx = await signer.sendTransaction(trans)
+      const tx =  await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
       const receipt = await tx.wait(1)
       setLoadWithdrawERC20(false)
       successAlert(receipt?.hash)
@@ -218,9 +208,7 @@ export const withdrawErc721 = async (rollups: RollupsContracts | undefined,
       };
       const data = JSON.stringify(input_obj);
       let payload = ethers.toUtf8Bytes(data);
-      const trans = await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
-      const signer = await provider.getSigner();
-      const tx = await signer.sendTransaction(trans)
+      const tx = await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
       const receipt = await tx.wait(1)
       setLoadWithdrawERC721(false)
       successAlert(receipt?.hash)
@@ -260,9 +248,8 @@ export const transferNftToPortal = async (
       const currentApproval = await tokenContract.getApproved(nftid);
       if (currentApproval !== erc721PortalAddress) {
         // Allow portal to withdraw `amount` tokens from signer
-        const tx = await tokenContract.approve(erc721PortalAddress, nftid);
-        const trans = await (await signer).sendTransaction(tx)
-        const receipt = await trans.wait(1);
+        const tx = await tokenContract.approve(erc721PortalAddress, nftid);      
+        const receipt = await tx.wait(1);
         const event = (
           await tokenContract.queryFilter(
             tokenContract.filters.Approval(),
@@ -277,7 +264,7 @@ export const transferNftToPortal = async (
       }
 
       // Transfer
-      const trans = await rollups.erc721PortalContract.depositERC721Token(
+      const tx = await rollups.erc721PortalContract.depositERC721Token(
         contractAddress,
         DAPP_ADDRESS,
         nftid,
@@ -285,7 +272,6 @@ export const transferNftToPortal = async (
         data
       );
 
-      const tx = await (await signer).sendTransaction(trans)
       const receipt = await tx.wait(1)
       setLoadTransferNFT(false)
       successAlert(receipt?.hash)
@@ -320,8 +306,7 @@ export const transferErc1155SingleToPortal = async (
           const currentApproval = await tokenContract.isApprovedForAll(signerAddress,erc1155SinglePortalAddress);
           if (!currentApproval) {
               // Allow portal to withdraw `amount` tokens from signer
-              const trans = await tokenContract.setApprovalForAll(erc1155SinglePortalAddress,true);
-              const tx = await signer.sendTransaction(trans)
+              const tx = await tokenContract.setApprovalForAll(erc1155SinglePortalAddress,true);
               const receipt = await tx.wait(1);
               const event = (await tokenContract.queryFilter(tokenContract.filters.ApprovalForAll(), receipt?.blockHash)).pop();
               if (!event) {
@@ -330,8 +315,7 @@ export const transferErc1155SingleToPortal = async (
           }
 
           // Transfer
-        const depositTx =  await rollups.erc1155SinglePortalContract.depositSingleERC1155Token(contractAddress,DAPP_ADDRESS, id, amount, "0x", data);
-        const tx = await signer.sendTransaction(depositTx)
+        const tx =  await rollups.erc1155SinglePortalContract.depositSingleERC1155Token(contractAddress,DAPP_ADDRESS, id, amount, "0x", data);
         const receipt = await tx.wait(1)
         setLoadERC1155(false)
         successAlert(receipt?.hash)
@@ -378,8 +362,7 @@ export const transferErc1155BatchToPortal = async (
           }
 
           // Transfer
-         const depositTx = await rollups.erc1155BatchPortalContract.depositBatchERC1155Token(contractAddress,DAPP_ADDRESS, ids, amounts, "0x", data);        
-         const tx = await signer.sendTransaction(depositTx)  
+         const tx = await rollups.erc1155BatchPortalContract.depositBatchERC1155Token(contractAddress,DAPP_ADDRESS, ids, amounts, "0x", data);        
          const receipt = await tx.wait()
          setLoadERC1155Batch(false)
          successAlert(receipt?.hash)
@@ -395,7 +378,6 @@ export const transferErc1155BatchToPortal = async (
 
 export const executeVoucher = async (
   rollups: RollupsContracts | undefined, 
-  signer: JsonRpcSigner | undefined,
   setVoucherToExecute: Function,
   voucher: any
   ) => {
@@ -404,8 +386,7 @@ export const executeVoucher = async (
       const newVoucherToExecute = {...voucher};
       try {
           const tx = await rollups.dappContract.executeVoucher( voucher.destination,voucher.payload,voucher.proof);
-          const trans = await signer?.sendTransaction(tx)
-          const receipt = await trans?.wait(1);
+          const receipt = await tx?.wait(1);
           newVoucherToExecute.msg = `voucher executed! (tx="${receipt?.hash}")`;
           const event = (await rollups.dappContract.queryFilter(rollups.dappContract.filters.VoucherExecuted(), receipt?.blockHash)).pop();
           if (event) {

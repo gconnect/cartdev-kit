@@ -107,7 +107,7 @@ async function handle_advance(data: any) {
     try {
       const jsonpayload = JSON.parse(payloadStr);
       console.log("payload is");
-      return router.process (jsonpayload.method, data);
+      return router.process(jsonpayload.method, data);
     } catch (e) {
       return new Error_out(`failed to process command ${payloadStr} ${e}`);
     }

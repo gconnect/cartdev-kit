@@ -108,7 +108,7 @@ const clear1155Batch = () => {
             <Accordion size="xl" border="#09324C" borderWidth="0.1px" defaultIndex={[0]}>
             <AccordionItem>
               <h2>
-                <AccordionButton>
+                <AccordionButton textColor="white">
                     Ether
                     <AccordionIcon />
                   </AccordionButton>
@@ -317,7 +317,7 @@ const clear1155Batch = () => {
                       className="my-2 bg-light-purple"
                       colorScheme=""
                       size="sm"
-                      onClick={() => addTo1155Batch(erc1155, erc1155Ids, erc1155Amounts)}
+                      onClick={() => addTo1155Batch()}
                       disabled={!rollups}
                     >
                       Add to Batch
@@ -351,7 +351,7 @@ const clear1155Batch = () => {
                 <Button
                 className="mt-4"
                   size="sm"
-                  onClick={() => sendAddress(rollups, signer, setDappRelayedAddress)}
+                  onClick={() => sendAddress(rollups, setDappRelayedAddress)}
                   disabled={!rollups}
                 >
                   Relay Address

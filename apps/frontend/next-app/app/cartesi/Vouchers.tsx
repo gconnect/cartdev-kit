@@ -27,7 +27,6 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
 
     const [voucherToExecute, setVoucherToExecute] = React.useState<any>();
     const rollups = useRollups(props.dappAddress);
-    const signer = useEthersSigner()
     
     const getProof = async (voucher: Voucher) => {
         setVoucherToFetch([voucher.index, voucher.input.index]);
@@ -80,7 +79,7 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
                     {/*<Td>{voucherToExecute.destination}</Td> */}
                     <Td>
                         <Button size='sm' isDisabled={voucherToExecute && !voucherToExecute.proof || voucherToExecute && voucherToExecute.executed}
-                         onClick={() => executeVoucher(rollups, signer, setVoucherToExecute, voucherToExecute)}>{voucherToExecute && voucherToExecute.proof ? 
+                         onClick={() => executeVoucher(rollups, setVoucherToExecute, voucherToExecute)}>{voucherToExecute && voucherToExecute.proof ? 
                          (voucherToExecute.executed ? "Voucher executed" : "Execute voucher") : "No proof yet"}
                         </Button>
                     </Td>

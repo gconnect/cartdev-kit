@@ -1,53 +1,187 @@
-import createClient from "openapi-fetch";
-import { components, paths } from "../schema";
+import { hexToString } from "viem";
+import { AdvanceRoute, DefaultRoute, Router } from "cartesi-router";
+import { Wallet, Notice, Output, Error_out, Report } from "cartesi-wallet";
+import viem from "viem"
+import deployments from "./rollups.json";
+let rollup_address = "";
+const rollup_server: string = <string>process.env.ROLLUP_HTTP_SERVER_URL;
 
-type AdvanceRequestData = components["schemas"]["Advance"];
-type InspectRequestData = components["schemas"]["Inspect"];
-type RequestHandlerResult = components["schemas"]["Finish"]["status"];
-type RollupsRequest = components["schemas"]["RollupRequest"];
-type InspectRequestHandler = (data: InspectRequestData) => Promise<void>;
-type AdvanceRequestHandler = (
-  data: AdvanceRequestData
-) => Promise<RequestHandlerResult>;
+let Network: string = "localhost";
+Network = <string>process.env.Network;
+console.info("rollup server url is ", rollup_server, Network);
+if (Network === undefined) {
+  Network = "localhost";
+}
 
-const rollupServer = process.env.ROLLUP_HTTP_SERVER_URL;
-console.log("HTTP rollup_server url is " + rollupServer);
-
-const handleAdvance: AdvanceRequestHandler = async (data) => {
-  console.log("Received advance request data " + JSON.stringify(data));
-  return "accept";
+const wallet = new Wallet(new Map());
+const router = new Router(wallet);
+var handlers: any = {
+  advance_state: handle_advance,
+  inspect_state: handle_inspect,
 };
 
-const handleInspect: InspectRequestHandler = async (data) => {
-  console.log("Received inspect request data " + JSON.stringify(data));
-};
 
-const main = async () => {
-  const { POST } = createClient<paths>({ baseUrl: rollupServer });
-  let status: RequestHandlerResult = "accept";
-  while (true) {
-    const { response } = await POST("/finish", {
-      body: { status } as any,
-      parseAs: "text",
-    });
+// class AddGreeting extends AdvanceRoute {
+//   execute = (request: any) => {
+//     this.parse_request(request)
+//     const user = this.msg_sender;
+//     if (user == undefined) {
+//       return new Error_out(`User with id:${user} not found`);
+//     }
+//     return new Notice(this.request_args.message);;
+//   };
+// }
+// router.addRoute("sendgreeting", new AddGreeting())
 
-    if (response.status === 200) {
-      const data = (await response.json()) as RollupsRequest;
-      switch (data.request_type) {
-        case "advance_state":
-          status = await handleAdvance(data.data as AdvanceRequestData);
-          break;
-        case "inspect_state":
-          await handleInspect(data.data as InspectRequestData);
-          break;
-      }
-    } else if (response.status === 202) {
-      console.log(await response.text());
+const send_request = async (output: Output | Set<Output>) => {
+  if (output instanceof Output) {
+    let endpoint;
+    console.log("type of output", output.type);
+
+    if (output.type == "notice") {
+      endpoint = "/notice";
+    } else if (output.type == "voucher") {
+      endpoint = "/voucher";
+    } else {
+      endpoint = "/report";
     }
+
+    console.log(`sending request ${typeof output}`);
+    const response = await fetch(rollup_server + endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(output),
+    });
+    console.debug(
+      `received ${output.payload} status ${response.status} body ${response.body}`
+    );
+  } else {
+    output.forEach((value: Output) => {
+      send_request(value);
+    });
   }
 };
 
-main().catch((e) => {
-  console.log(e);
-  process.exit(1);
-});
+
+async function handle_advance(data: any) {
+  console.log("Received advance request data " + JSON.stringify(data));
+  try {
+    const payload = data.payload;
+    const msg_sender: string = data.metadata.msg_sender;
+    console.log("msg sender is", msg_sender.toLowerCase());
+    const payloadStr = hexToString(payload);
+
+    if (
+      msg_sender.toLowerCase() ===
+      deployments.contracts.EtherPortal.address.toLowerCase()
+    ) {
+      try {
+        return router.process("ether_deposit", payload);
+      } catch (e) {
+        return new Error_out(`failed to process ether deposit ${payload} ${e}`);
+      }
+    }
+    if (
+      msg_sender.toLowerCase() ===
+      deployments.contracts.DAppAddressRelay.address.toLowerCase()
+    ) {
+      rollup_address = payload;
+      router.set_rollup_address(rollup_address, "ether_withdraw");
+      router.set_rollup_address(rollup_address, "erc20_withdraw");
+      router.set_rollup_address(rollup_address, "erc721_withdraw");
+
+      console.log("Setting DApp address");
+      return new Notice(
+        `DApp address set up successfully to ${rollup_address}`
+      );
+    }
+
+    if (
+      msg_sender.toLowerCase() ===
+      deployments.contracts.ERC20Portal.address.toLowerCase()
+    ) {
+      try {
+        return router.process("erc20_deposit", payload);
+      } catch (e) {
+        return new Error_out(`failed ot process ERC20Deposit ${payload} ${e}`);
+      }
+    }
+
+    if (
+      msg_sender.toLowerCase() ===
+      deployments.contracts.ERC721Portal.address.toLowerCase()
+    ) {
+      try {
+        return router.process("erc721_deposit", payload);
+      } catch (e) {
+        return new Error_out(`failed ot process ERC20Deposit ${payload} ${e}`);
+      }
+    }
+    
+    try {
+      const jsonpayload = JSON.parse(payloadStr);
+      console.log("payload is");
+      return router.process(jsonpayload.method, data);
+    } catch (e) {
+      return new Error_out(`failed to process command ${payloadStr} ${e}`);
+    }
+
+  } catch (e) {
+    console.error(e);
+    return new Error_out(`failed to process advance_request ${e}`);
+  }
+}
+
+
+async function handle_inspect(data: any) {
+  console.debug(`received inspect request data${data}`);
+  try {
+    const url = hexToString(data.payload).split("/");
+    console.log("url is ", url);
+    return router.process(<string>url[0], url[1]);
+  } catch (e) {
+    const error_msg = `failed to process inspect request ${e}`;
+    console.debug(error_msg);
+    return new Error_out(error_msg);
+  }
+}
+
+var finish = { status: "accept" };
+
+(async () => {
+  while (true) {
+    const finish_req = await fetch(rollup_server + "/finish", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: "accept" }),
+    });
+
+    console.log("Received finish status " + finish_req.status);
+
+    if (finish_req.status == 202) {
+      console.log("No pending rollup request, trying again");
+    } else {
+      const rollup_req = await finish_req.json();
+
+      var typeq = rollup_req.request_type;
+      var handler: any;
+      if (typeq === "inspect_state") {
+        handler = handlers.inspect_state;
+      } else {
+        handler = handlers.advance_state;
+      }
+      var output = await handler(rollup_req.data);
+      finish.status = "accept";
+      if (output instanceof Error_out) {
+        finish.status = "reject";
+      }
+      console.log(output);
+      console.log(output instanceof Output);
+      await send_request(output);
+    }
+  }
+})();

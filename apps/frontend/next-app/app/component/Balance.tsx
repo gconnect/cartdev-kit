@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ethers } from "ethers";
 import {
     Table,
@@ -13,15 +13,16 @@ import {
     Box,
   } from '@chakra-ui/react'
 import { useInspectCall } from "../cartesi/hooks/useInspectCall";
+import { useAccount } from "wagmi";
 
 export const Balance: React.FC = () => {
     const { decodedReports = {}, reports, inspectCall} = useInspectCall()
-
+    const { address } = useAccount()
     return (
         <Box borderWidth='0.1px' padding='4' borderRadius='lg' overflow='hidden'>
         <TableContainer>
-            <Stack>
-            <Table variant='striped' size="lg">
+            <Stack width="100%">
+            <Table variant='striped' size="lg" width="100%" >
                 <Thead>
                     <Tr>
                         <Th textAlign={'center'} textColor={'slategray'}>Ether</Th>
@@ -50,10 +51,17 @@ export const Balance: React.FC = () => {
                             <div>📍 {String(decodedReports.erc721).split(",")[0]}</div>
                             <div>🆔 {String(decodedReports.erc721).split(",")[1]}</div>
                         </Td> )}
+
+                        {decodedReports && decodedReports.erc721 && (
+                        <Td textAlign={'center'}>
+                            <div>📍 {String(decodedReports.erc1155).split(",")[0]}</div>
+                            <div>🆔 {String(decodedReports.erc1155).split(",")[1]}</div>
+                        </Td>)}
+            
                     </Tr>}
                 </Tbody>
             </Table>
-            <Button backgroundColor={"#9395D3"} onClick={() => inspectCall("balance/0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")}>Get Balance</Button>
+            <Button width="100%"  backgroundColor={"#9395D3"} onClick={() => inspectCall(`balance/${address}`)}>Get Balance</Button>
             </Stack>
         </TableContainer>
         </Box>

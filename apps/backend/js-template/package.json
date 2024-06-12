@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "description": "JS DApp",
   "dependencies": {
-    "ethers": "^6.7.1"
+    "cartesi-router": "^1.0.4",
+    "cartesi-wallet": "^1.0.5",
+    "ethers": "^6.7.1",
+    "viem": "^2.13.8"
   },
   "devDependencies": {
     "esbuild": "^0.19.2"

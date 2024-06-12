@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.10.4",
+    "@calindra/cartesify": "^1.0.0",
     "@cartesi/rollups": "1.0.0",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
@@ -51,9 +52,6 @@
   },
   "scripts": {
     "build": "craco build",
-    "codegen": "run-p codegen:typechain codegen:graphql",
-    "codegen:graphql": "graphql-codegen",
-    "codegen:typechain": "typechain --target ethers-v6 --out-dir src/cartesi/generated/rollups './node_modules/@cartesi/rollups/export/artifacts/**/*.json'",
     "eject": "react-app-rewired eject",
     "start": "craco start start",
     "test": "craco test"

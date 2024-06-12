@@ -60,8 +60,9 @@ export const useInspectCall = () => {
       console.log("Decoded Reports:", decode);
       const reportData: any = JSON.parse(decode);
       console.log("Report data: ", reportData);
+      
       setDecodedReports(reportData);
-      successAlert(reportData)
+      successAlert("Successfully fetched")
     } catch (error: any) {      
       console.error("Error fetching inspect data:", error)
       errorAlert(error)
