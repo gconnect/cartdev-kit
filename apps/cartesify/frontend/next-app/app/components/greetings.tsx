@@ -8,11 +8,13 @@ import { errorAlert, successAlert } from '../utils/customAlert'
 export default function Greetings() {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<string | undefined>('')
+  const [listMessages, setMessageList] = useState<[]>()
   const [fetching, setFetching] = useState(false)
   const [message, setMessage] = useState('')
   const { address } = useAccount()
   const signer = useEthersSigner()
   
+  const messageArray = []
   const handleMessageChange = (e:  React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)
 
   const sendGreeting = async () => {
@@ -20,7 +22,7 @@ export default function Greetings() {
       if(!message) return errorAlert("Field required")
       if(!address) return errorAlert("Ensure your wallet is connect")
         setLoading(true)
-      const res = await createOrUpdateRequest(signer, "POST", "greeting", 
+      const res = await createOrUpdateRequest(signer, "greeting", "POST", 
        JSON.stringify({ message}))
        setLoading(false)
       successAlert(res)
@@ -34,7 +36,7 @@ export default function Greetings() {
   const getGreeting = useCallback( async () => {
     try{
       setFetching(true)
-      await getRequest(setData, "greetings?id=1")
+      await getRequest(signer, "greetings?id=1")
       setFetching(false)
     }catch(error){
       setFetching(false)
@@ -42,10 +44,22 @@ export default function Greetings() {
     }
   }, [])
 
+  const getAllGreeting = useCallback( async () => {
+    try{
+      setFetching(true)
+      const res = await getRequest(signer, "greetings")
+      setMessageList(JSON.parse(res!))
+      setFetching(false)
+    }catch(error){
+      setFetching(false)
+      console.log("error", error)
+    }
+  }, [signer])
 
+  console.log("listMessages", listMessages)
   useEffect(() =>{
-    getGreeting()
-  },[data, getGreeting])
+    getAllGreeting()
+  },[data, getAllGreeting])
 
     return (
       <div className="flex min-h-screen flex-col lg:mb-2 md:mb-8 mb-36 items-center text-black">
@@ -54,13 +68,31 @@ export default function Greetings() {
         <button className='bg-purple-400 p-4 mt-4 lg:w-1/3 md:w-1/2 w-3/4 rounded' onClick={() => sendGreeting()}>     
           {loading ? "Sending message please wait... 💁‍♀️": "Send"}
         </button>
-        {fetching ? (<p className='mt-4 text-gray-400'>Fetching data...</p>) : data ? (
+        {/* {fetching ? (<p className='mt-4 text-gray-400'>Fetching data...</p>) : data ? (
             <div>
               <p className="my-4 font-bold text-gray-400">Output</p>
-              <p className="my-4 font-bold text-gray-400">{data}</p>
+              <p className="my-4 font-bold text-gray-400">{
+               listMessages && listMessages?.length > 0 && (
+                  listMessages.map((item: any, index: any) => <p className='text-gray-400' key={index}>
+                    {item.message}
+                  </p>)
+               )
+              }</p>
             </div>
           ) : <div></div>
-          }
+          } */}
+
+<div>
+              <p className="my-4 font-bold text-gray-400">Output</p>
+              <p className="my-4 font-bold text-gray-400">{
+               listMessages && listMessages.length && (
+                  listMessages.map((item: any, index: any) => <p className='text-gray-400' key={index}>
+                    {item.message}
+                    
+                  </p>)
+               )
+              }</p>
+            </div>
       </div>
   );
 }

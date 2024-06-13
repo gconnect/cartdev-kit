@@ -282,18 +282,19 @@ export const fetchBatchBalance = async (signer: JsonRpcSigner, erc1155address: s
 }
 
 export const getRequest = async (
-  setResponse: Function,
+  signer: JsonRpcSigner | undefined,
   endpoint: string,
 ) => {
   try {
+    const address = await signer?.getAddress()
     const res = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        'x-msg_sender': address!
       },
     })
     const json = await res.json()
-    setResponse(JSON.stringify(json))
     return JSON.stringify(json)
   } catch (error) {
     console.log(error)
@@ -306,10 +307,12 @@ export const createOrUpdateRequest = async (
   method: string,
   body?: string, 
 ) => {
+  const address = await signer?.getAddress()
   const res = await fetch(`${BASE_URL}/${endpoint}`, {
       method,
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-msg_sender': address!
       },
       body,
       signer

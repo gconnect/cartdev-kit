@@ -10,7 +10,6 @@ FROM node:20.8.0-bookworm as build-stage
 
 WORKDIR /opt/cartesi/dapp
 COPY . .
-# RUN npm ci
 RUN yarn install && yarn build
 
 # runtime stage: produces final image that will be executed
@@ -20,17 +19,22 @@ RUN yarn install && yarn build
 # performance when loading the Cartesi Machine.
 FROM --platform=linux/riscv64 cartesi/node:20.8.0-jammy-slim
 
-LABEL io.sunodo.sdk_version=0.2.0
+ARG MACHINE_EMULATOR_TOOLS_VERSION=0.14.1
+ADD https://github.com/cartesi/machine-emulator-tools/releases/download/v${MACHINE_EMULATOR_TOOLS_VERSION}/machine-emulator-tools-v${MACHINE_EMULATOR_TOOLS_VERSION}.deb /
+RUN dpkg -i /machine-emulator-tools-v${MACHINE_EMULATOR_TOOLS_VERSION}.deb \
+  && rm /machine-emulator-tools-v${MACHINE_EMULATOR_TOOLS_VERSION}.deb
+
+LABEL io.cartesi.rollups.sdk_version=0.6.0
 LABEL io.cartesi.rollups.ram_size=128Mi
 
-ARG MACHINE_EMULATOR_TOOLS_VERSION=0.12.0
+ARG DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 set -e
 apt-get update
-apt-get install -y --no-install-recommends busybox-static=1:1.30.1-7ubuntu3 ca-certificates=20230311ubuntu0.22.04.1 curl=7.81.0-1ubuntu1.15
-curl -fsSL https://github.com/cartesi/machine-emulator-tools/releases/download/v${MACHINE_EMULATOR_TOOLS_VERSION}/machine-emulator-tools-v${MACHINE_EMULATOR_TOOLS_VERSION}.tar.gz \
-  | tar -C / --overwrite -xvzf -
-rm -rf /var/lib/apt/lists/*
+apt-get install -y --no-install-recommends \
+  busybox-static=1:1.30.1-7ubuntu3
+rm -rf /var/lib/apt/lists/* /var/log/* /var/cache/*
+useradd --create-home --user-group dapp
 EOF
 
 ENV PATH="/opt/cartesi/bin:${PATH}"
@@ -41,7 +45,4 @@ COPY --from=build-stage /opt/cartesi/dapp/dist .
 ENV ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004"
 
 ENTRYPOINT ["rollup-init"]
-# COPY --from=build-stage /opt/cartesi/dapp/dist .
-
 CMD ["node", "index.js"]
-

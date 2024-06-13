@@ -17,6 +17,6 @@
     "strict": true,
     "target": "ES2022"
   },
-  "include": [""],
+  "include": ["."],
   "exclude": ["dist", "node_modules"]
 }
