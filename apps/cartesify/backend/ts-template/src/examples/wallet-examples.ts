@@ -1,47 +1,13 @@
-import express, { Request, Response } from 'express';
-import { CartesifyBackend } from "@calindra/cartesify-backend";
-import { createWallet } from "@deroll/wallet";
+import  { Request, Response } from 'express';
 import axios from "axios"
 import { appConfig } from "./init-config"
 
 console.log('starting app.js...');
 const { app, wallet, dapp } = appConfig()
 
-// let dapp: any;
-// let wallet: any;
-
-// CartesifyBackend.createDapp().then(initDapp => {
-//     console.log('Dapp started');
-//     initDapp.start().catch((e: Error) => {
-//         console.error(e);
-//         process.exit(1);
-//     });
-
-//     dapp = initDapp;
-//     wallet = createWallet();
-
-//     dapp.addAdvanceHandler((): string => {
-//         console.log('before wallet handler');
-//         return "reject";
-//     });
-
-//     dapp.addAdvanceHandler(wallet.handler);
-
-//     dapp.addAdvanceHandler((): string => {
-//         console.log('final handler');
-//         return "reject";
-//     });
-// });
-
-// const app = express();
-// const port = 8383;
-// app.use(express.json());
-
-
-
 app.get("/wallet/:address", async (req: Request, res: Response) => {
     console.log(`Checking balance ${req.params.address}`);
-    const userWallet = await wallet.getWalletOrNew(req.params.address);
+    const userWallet = wallet.etherBalanceOf(req.params.address!);
     const json = JSON.stringify(userWallet, (_key, value) => {
         if (typeof value === 'bigint') {
             return value.toString();
@@ -59,7 +25,7 @@ app.get("/wallet/:address", async (req: Request, res: Response) => {
 
 app.post("/wallet/ether/transfer", async (req: Request, res: Response) => {
     try {
-        await wallet.transferEther(
+         wallet.transferEther(
             req.get('x-msg_sender') as string,
             req.body.to,
             BigInt(req.body.amount),
@@ -72,8 +38,8 @@ app.post("/wallet/ether/transfer", async (req: Request, res: Response) => {
 
 app.post("/wallet/ether/withdraw", async (req: Request, res: Response) => {
     try {
-        const voucher = await wallet.withdrawEther(
-            req.get('x-msg_sender') as string,
+        const voucher = wallet.withdrawEther(
+            req.get('x-msg_sender') as `0x${string}`,
             BigInt(req.body.amount)
         );
         const voucherResult = await dapp.createVoucher(voucher);
@@ -87,9 +53,9 @@ app.post("/wallet/ether/withdraw", async (req: Request, res: Response) => {
 
 app.post("/wallet/erc-20/withdraw", async (req: Request, res: Response) => {
     try {
-        const voucher = await wallet.withdrawERC20(
+        const voucher = wallet.withdrawERC20(
             req.body.token,
-            req.get('x-msg_sender') as string,
+            req.get('x-msg_sender') as `0x${string}`,
             BigInt(req.body.amount)
         );
         const voucherResult = await dapp.createVoucher(voucher);
@@ -103,11 +69,11 @@ app.post("/wallet/erc-20/withdraw", async (req: Request, res: Response) => {
 
 app.post("/wallet/erc-20/transfer", async (req: Request, res: Response) => {
     try {
-        await wallet.transferERC20(
+        wallet.transferERC20(
             req.body.token,
             req.get('x-msg_sender') as string,
             req.body.to,
-            BigInt(req.body.amount),
+            BigInt(req.body.amount)
         );
         res.send({ ok: 1 });
     } catch (e: any) {
@@ -117,11 +83,11 @@ app.post("/wallet/erc-20/transfer", async (req: Request, res: Response) => {
 
 app.post("/wallet/erc-721/transfer", async (req: Request, res: Response) => {
     try {
-        await wallet.transferERC721(
+        wallet.transferERC721(
             req.body.token,
             req.get('x-msg_sender') as string,
             req.body.to,
-            BigInt(req.body.tokenId),
+            BigInt(req.body.tokenId)
         );
         res.send({ ok: 1 });
     } catch (e: any) {
@@ -131,7 +97,7 @@ app.post("/wallet/erc-721/transfer", async (req: Request, res: Response) => {
 
 app.post("/wallet/erc-1155/transfer", async (req: Request, res: Response) => {
     try {
-        await wallet.transferERC1155(
+        wallet.transferERC1155(
             req.body.token,
             req.get('x-msg_sender') as string,
             req.body.to,
@@ -146,7 +112,7 @@ app.post("/wallet/erc-1155/transfer", async (req: Request, res: Response) => {
                     throw new Error(`BadRequest value ${value} is not a number`);
                 }
                 return BigInt(value);
-            }),
+            })
         );
         res.send({ ok: 1 });
     } catch (e: any) {
@@ -156,9 +122,9 @@ app.post("/wallet/erc-1155/transfer", async (req: Request, res: Response) => {
 
 app.post("/wallet/erc-721/withdraw", async (req: Request, res: Response) => {
     try {
-        const voucher = await wallet.withdrawERC721(
+        const voucher = wallet.withdrawERC721(
             req.body.token,
-            req.get('x-msg_sender') as string,
+            req.get('x-msg_sender') as `0x${string}`,
             BigInt(req.body.tokenId)
         );
         const voucherResult = await dapp.createVoucher(voucher);
@@ -172,9 +138,9 @@ app.post("/wallet/erc-721/withdraw", async (req: Request, res: Response) => {
 
 app.post("/wallet/erc-1155/withdraw", async (req: Request, res: Response) => {
     try {
-        const voucher = await wallet.withdrawERC1155(
+        const voucher = wallet.withdrawERC1155(
             req.body.token,
-            req.get('x-msg_sender') as string,
+            req.get('x-msg_sender') as `0x${string}`,
             req.body.tokenIds.map((id: number) => {
                 if (typeof id !== 'number') {
                     throw new Error('BadRequest');
@@ -187,6 +153,7 @@ app.post("/wallet/erc-1155/withdraw", async (req: Request, res: Response) => {
                 }
                 return BigInt(value);
             }),
+            "0x"
         );
         const voucherResult = await dapp.createVoucher(voucher);
         res.send({
@@ -201,6 +168,4 @@ app.post('/deposit', (req: Request, res: Response) => {
     axios.post('http://deroll/voucher');
   });
 
-// app.listen(port, () => {
-//     console.log(`[server]: Server is running at http://localhost:${port}`);
-// });
+

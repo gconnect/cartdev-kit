@@ -9,7 +9,7 @@ const { app, wallet, dapp } = appConfig();
 
 app.get("/wallet/:address", async (req, res) => {
     console.log(`Checking balance ${req.params.address}`);
-    const userWallet = await wallet.getWalletOrNew(req.params.address);
+    const userWallet = await wallet.etherBalanceOf(req.params.address);
     const json = JSON.stringify(userWallet, (_key, value) => {
         if (typeof value === 'bigint') {
             return value.toString();

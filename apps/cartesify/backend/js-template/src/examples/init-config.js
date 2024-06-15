@@ -5,8 +5,8 @@ const { createWallet } = require("@deroll/wallet");
 let dapp;
 let wallet;
 
-const appConfig = () => {
-  CartesifyBackend.createDapp().then(initDapp => {
+const appConfig =  () => {
+  CartesifyBackend.createDapp().then(async initDapp => {
     console.log('Dapp started');
     initDapp.start().catch((e) => {
         console.error(e);
@@ -14,8 +14,7 @@ const appConfig = () => {
     });
 
     dapp = initDapp;
-    wallet = createWallet();
-
+    wallet = await createWallet();
     dapp.addAdvanceHandler(() => {
         console.log('before wallet handler');
         return "reject";

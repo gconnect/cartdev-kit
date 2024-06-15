@@ -1,139 +1,41 @@
+
 import  { Request, Response } from 'express';
+import axios from "axios"
 import { appConfig } from "./examples/init-config"
+import { createWallet } from "@deroll/wallet";
 
 console.log('starting app.js...');
-const { app } = appConfig()
+const { app, dapp } = appConfig()
 
 interface Greeting {
     id: number;
     message: string;
-    sender: string | undefined;
+    sender: string
 }
 
 let greetings: Greeting[] = [];
 let nextId = 1;
 
 
-// Create a new greeting
-// app.post('/greetings', (req: Request, res: Response) => {
-//     const sender = req.header("x-msg_sender");
-//     const { message } = req.body;
-//     const newGreeting: Greeting = { id: nextId++, message, sender };
-//     greetings.push(newGreeting);
-//     res.status(201).send(newGreeting);
-// });
+const wallet = createWallet();
 
-// // Get all greetings from a specific sender
-// app.get('/greetings', (req: Request, res: Response) => {
-//     const sender = req.header("x-msg_sender");
-//     if (!sender) {
-//         return res.status(400).send({ message: 'Sender not provided' });
-//     }
-//     const senderGreetings = greetings.filter(g => g.sender === sender);
-//     res.send(senderGreetings);
-// });
+// Ensure the wallet object is defined and has the etherBalanceOf method
+if (!wallet || !wallet.etherBalanceOf 
+    || !wallet.transferEther || !wallet.transferERC20 || 
+    !wallet.transferERC721 || !wallet.transferERC1155 || !wallet.getWallet 
+    || !wallet.withdrawEther || !wallet.withdrawERC20 || !wallet.withdrawERC721 
+    || !wallet.withdrawERC1155
+) {
+    throw new Error('Wallet object is not defined');
+}
 
-// // Get a single greeting by ID
-// app.get('/greetings/:id', (req: Request, res: Response) => {
-//     const id = parseInt(req.params.id!, 10);
-//     const sender = req.header("x-msg_sender");
-//     const greeting = greetings.find(g => g.id === id);
-
-//     if (!sender) {
-//         return res.status(400).send({ message: 'Sender not provided' });
-//     }
-
-//     if (greeting) {
-//         if (greeting.sender !== sender) {
-//             return res.status(403).send({ message: 'You can only view your own greetings' });
-//         }
-//         res.send(greeting);
-//     } else {
-//         res.status(404).send({ message: 'Greeting not found' });
-//     }
-// });
-
-// // Update a greeting by ID
-// app.put('/greetings/:id', (req: Request, res: Response) => {
-//     const id = parseInt(req.params.id!, 10);
-//     const { message } = req.body;
-//     const sender = req.header("x-msg_sender");
-//     const greeting = greetings.find(g => g.id === id);
-
-//     if (!sender) {
-//         return res.status(400).send({ message: 'Sender not provided' });
-//     }
-
-//     if (greeting) {
-//         if (greeting.sender !== sender) {
-//             return res.status(403).send({ message: 'You can only update your own greetings' });
-//         }
-//         greeting.message = message;
-//         res.send(greeting);
-//     } else {
-//         res.status(404).send({ message: 'Greeting not found' });
-//     }
-// });
-
-// // Delete a greeting by ID
-// app.delete('/greetings/:id', (req: Request, res: Response) => {
-//     const id = parseInt(req.params.id!, 10);
-//     const sender = req.header("x-msg_sender");
-//     const index = greetings.findIndex(g => g.id === id);
-
-//     if (!sender) {
-//         return res.status(400).send({ message: 'Sender not provided' });
-//     }
-
-//     if (index !== -1) {
-//         if (greetings[index]!.sender !== sender) {
-//             return res.status(403).send({ message: 'You can only delete your own greetings' });
-//         }
-//         greetings.splice(index, 1);
-//         res.status(204).send();
-//     } else {
-//         res.status(404).send({ message: 'Greeting not found' });
-//     }
-// });
-
-// // Delete all greetings from a specific sender
-// app.delete('/greetings/sender', (req: Request, res: Response) => {
-//     const sender = req.header("x-msg_sender");
-
-//     if (!sender) {
-//         return res.status(400).send({ message: 'Sender not provided' });
-//     }
-
-//     const initialLength = greetings.length;
-//     for (let i = greetings.length - 1; i >= 0; i--) {
-//         if (greetings[i]!.sender === sender) {
-//             greetings.splice(i, 1);
-//         }
-//     }
-
-//     const finalLength = greetings.length;
-//     const deletedCount = initialLength - finalLength;
-
-//     res.status(200).send({ message: `${deletedCount} greetings deleted` });
-// });
-
-// // without the sender check
-// // Get all greetings
-// app.get('/greetings', (req: Request, res: Response) => {
-//   res.send(greetings);
-// });
-
-// app.delete('/greetings/all', (req: Request, res: Response) => {
-//   const deletedCount = greetings.length;
-//   greetings.length = 0;
-//   res.status(200).send({ message: `${deletedCount} greetings deleted` });
-// });
-
-app.post('/greeting', (req: Request, res: Response) => {
-    let greet = req.body as Greeting;
-    greetings.push(greet);
-    if (greet) {
-        res.status(200).json({ message: greet });
+app.post('/greetings', (req: Request, res: Response) => {
+    // const sender = req.header("x-msg_sender");
+    const { message, sender } = req.body;
+    const newGreeting: Greeting = { id: nextId++, message, sender };
+    greetings.push(newGreeting);
+    if (message) {
+        res.status(200).json(newGreeting);
     } else {
         res.status(400).json({ error: 'Please provide a greeting' });
     }
@@ -189,3 +91,193 @@ app.delete('/greetings/:id', (req: Request, res: Response) => {
     res.json({ message: 'Item deleted successfully' });
 });
 
+app.delete('/greetings', (req: Request, res: Response) => {
+  const deletedCount = greetings.length;
+  greetings.length = 0;
+  res.status(200).send({ message: `${deletedCount} greetings deleted` });
+});
+
+
+app.get("/wallet/:address", async (req: Request, res: Response) => {
+    console.log(`Checking balance ${req.params.address}`);
+    const userWallet = await wallet.getWallet(req.params.address!);
+    console.log("UserWallet", userWallet)
+    const json = JSON.stringify(userWallet, (_key, value) => {
+        if (typeof value === 'bigint') {
+            return value.toString();
+        } else if (typeof value === 'object' && value instanceof Map) {
+            return Object.fromEntries(value);
+        } else if (typeof value === 'object' && value instanceof Set) {
+            return [...value];
+        } else {
+            return value;
+        }
+    });
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.send(json);
+});
+
+app.post("/wallet/ether/transfer", async (req: Request, res: Response) => {
+    try {
+         wallet.transferEther(
+            req.get('x-msg_sender') as string,
+            req.body.to,
+            BigInt(req.body.amount),
+        );
+        res.send({ ok: 1 });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post("/wallet/ether/withdraw", async (req: Request, res: Response) => {
+    try {
+        const voucher = wallet.withdrawEther(
+            req.get('x-msg_sender') as `0x${string}`,
+            BigInt(req.body.amount)
+        );
+        const voucherResult = await dapp.createVoucher(voucher);
+        res.send({
+            ok: 1, voucherResult, inputIndex: req.get('x-input_index')
+        });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post("/wallet/erc-20/withdraw", async (req: Request, res: Response) => {
+    try {
+        const voucher = wallet.withdrawERC20(
+            req.body.token,
+            req.get('x-msg_sender') as `0x${string}`,
+            BigInt(req.body.amount)
+        );
+        const voucherResult = await dapp.createVoucher(voucher);
+        res.send({
+            ok: 1, voucherResult, inputIndex: req.get('x-input_index')
+        });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post("/wallet/erc-20/transfer", async (req: Request, res: Response) => {
+    try {
+        wallet.transferERC20(
+            req.body.token,
+            req.get('x-msg_sender') as string,
+            req.body.to,
+            BigInt(req.body.amount)
+        );
+        res.send({ ok: 1 });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post("/wallet/erc-721/transfer", async (req: Request, res: Response) => {
+    try {
+        wallet.transferERC721(
+            req.body.token,
+            req.get('x-msg_sender') as string,
+            req.body.to,
+            BigInt(req.body.tokenId)
+        );
+        res.send({ ok: 1 });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post("/wallet/erc-1155/transfer", async (req: Request, res: Response) => {
+    try {
+        wallet.transferERC1155(
+            req.body.token,
+            req.get('x-msg_sender') as string,
+            req.body.to,
+            req.body.tokenIds.map((id: number) => {
+                if (typeof id !== 'number') {
+                    throw new Error(`BadRequest id ${id} is not a number`);
+                }
+                return BigInt(id);
+            }),
+            req.body.values.map((value: number) => {
+                if (typeof value !== 'number') {
+                    throw new Error(`BadRequest value ${value} is not a number`);
+                }
+                return BigInt(value);
+            })
+        );
+        res.send({ ok: 1 });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post("/wallet/erc-721/withdraw", async (req: Request, res: Response) => {
+    try {
+        const voucher = wallet.withdrawERC721(
+            req.body.token,
+            req.get('x-msg_sender') as `0x${string}`,
+            BigInt(req.body.tokenId)
+        );
+        const voucherResult = await dapp.createVoucher(voucher);
+        res.send({
+            ok: 1, voucherResult, inputIndex: req.get('x-input_index')
+        });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post("/wallet/erc-1155/withdraw", async (req: Request, res: Response) => {
+    try {
+        const voucher = wallet.withdrawERC1155(
+            req.body.token,
+            req.get('x-msg_sender') as `0x${string}`,
+            req.body.tokenIds.map((id: number) => {
+                if (typeof id !== 'number') {
+                    throw new Error('BadRequest');
+                }
+                return BigInt(id);
+            }),
+            req.body.values.map((value: number) => {
+                if (typeof value !== 'number') {
+                    throw new Error('BadRequest');
+                }
+                return BigInt(value);
+            }),
+            "0x"
+        );
+        const voucherResult = await dapp.createVoucher(voucher);
+        res.send({
+            ok: 1, voucherResult, inputIndex: req.get('x-input_index')
+        });
+    } catch (e: any) {
+        res.status(400).send({ message: e.message });
+    }
+});
+
+app.post('/deposit', (req: Request, res: Response) => {
+    axios.post('http://deroll/voucher');
+  });
+
+  app.get("/health", (req: Request, res: Response) => {
+    res.send({ some: "response" });
+  });
+  
+  app.post('/echo', (req: Request, res: Response) => {
+    res.send({ myPost: req.body });
+  });
+  
+  app.post('/echo', (req: Request, res: Response) => {
+    res.send({ myPost: req.body });
+  });
+  
+  app.post('/echo/headers', (req: Request, res: Response) => {
+    res.send({ headers: req.headers });
+  });
+  
+  app.get('/echo/headers', (req: Request, res: Response) => {
+    res.send({ headers: req.headers });
+  });

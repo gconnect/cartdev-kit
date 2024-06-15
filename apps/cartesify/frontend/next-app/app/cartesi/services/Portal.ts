@@ -17,7 +17,7 @@ export const balanceERC20 = async (erc20address: string, signer: JsonRpcSigner) 
     try{
         const contract = IERC20__factory.connect(erc20address, signer)
         const balance = await contract.balanceOf(signer.address)
-        return balance
+        return balance 
     }catch(error){
         console.log(error)
     }
@@ -102,7 +102,8 @@ export const depositERC20 = async (dappAddress: string, erc20address: string,
         const portal = ERC20Portal__factory.connect(portalAddress, signer)
         const tx = await portal.depositERC20Tokens(erc20address, dappAddress, parseUnits(erc20value, 6), '0x')
         const receipt = await (tx as any).wait()
-        successAlert(`${explorer/+"tx"/receipt.hash}`)
+        console.log(explorer)
+        successAlert(`Successfully deposited`)
     } catch (error) {
         console.log(error)
         errorAlert(error)
@@ -116,7 +117,7 @@ export const depositERC721 = async (dappAddress: string, erc721address: string,
     const explorer = config[toHex(chain.id)].explorer
     const contract = IERC721__factory.connect(erc721address, signer)
     await contract.approve(portalAddress, erc721id)
-    const portal = ERC721Portal__factory.connect(portalAddress, signer)
+    const portal =  ERC721Portal__factory.connect(portalAddress, signer)
     const tx = await portal.depositERC721Token(erc721address, dappAddress, erc721id, '0x', '0x')
     const receipt = await (tx as any).wait()
     successAlert(`${explorer/+"tx"/receipt.hash}`)
@@ -191,7 +192,9 @@ export const callDAppAddressRelay = async (signer: JsonRpcSigner | undefined, ch
         const relay = DAppAddressRelay__factory.connect(portalAddress, signer)
         const tx = await relay.relayDAppAddress(DAPP_ADDRESS)
         const receipt = await (tx as any).wait()
-        console.log('Executed!', receipt)
+        console.log('Executed!', receipt.hash)
+        console.log("hash", receipt.hash)
+        console.log("explorer", explorer)
         successAlert(`${explorer/+"tx"/receipt.hash}`)
     } catch (error) {
         errorAlert(error)

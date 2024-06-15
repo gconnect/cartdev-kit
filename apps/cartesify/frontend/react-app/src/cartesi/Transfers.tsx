@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import { Tabs, TabList, TabPanels, TabPanel, Tab, Card, CardBody, Checkbox } from "@chakra-ui/react";
 import { Button, Box } from "@chakra-ui/react";
@@ -101,14 +102,9 @@ const clear1155Batch = () => {
 };
 
   return (
-    <Box borderWidth='0.1px' padding='4' borderRadius='lg' overflow='hidden'>
+    <Box borderWidth='0.1px' padding='4' mb={36} borderRadius='lg' overflow='hidden'>
     <Tabs variant="enclosed" size="lg" align="center">
       <TabList >
-      <Tab sx={{
-            "&:not([aria-selected=true])": {
-              color: "gray.500", // Setting the color for inactive tabs
-            },
-          }}> 🚀 REST Example</Tab>
         <Tab sx={{
             "&:not([aria-selected=true])": {
               color: "gray.500", // Setting the color for inactive tabs
@@ -127,10 +123,6 @@ const clear1155Batch = () => {
       </TabList>
       <Box p={4} display="flex">
         <TabPanels>
-          <TabPanel>
-              <RestExample/>
-              <br/>
-          </TabPanel>
           <TabPanel>
             <Text fontSize="sm" color="slategray">
               Cartesi dApps recieve asset deposits via Portal smart contracts on
@@ -457,195 +449,195 @@ const clear1155Batch = () => {
                 </div>
                 <AccordionPanel>
                 <Stack>
-  <Input
-    required
-    type="text"
-    borderWidth="0.1px"
-    borderColor="slategrey"
-    color="slategrey"
-    variant="outline"
-    placeholder="Token Address"
-    onChange={(e) => setErc1155(String(e.target.value))}
-    value={erc1155}
-  />
-  {isL2transfer && (
-    <Input
-      borderWidth="0.1px"
-      borderColor="slategrey"
-      type="text"
-      color="slategrey"
-      variant="outline"
-      placeholder="Recipient address required for L2 transfer"
-      onChange={(e) => setToAddress(e.target.value)}
-      value={toAddress}  // Fixed the value to use toAddress instead of erc20Token
-    />
-  )}
-  <Input
-    type="number"
-    borderWidth="0.1px"
-    borderColor="slategrey"
-    color="slategrey"
-    variant="outline"
-    placeholder="Token ID"
-    onChange={(e) => setErc1155Id(e.target.value)}
-    value={erc1155Id}
-  />
-  <Input
-    type="number"
-    borderWidth="0.1px"
-    borderColor="slategrey"
-    color="slategrey"
-    variant="outline"
-    placeholder="Amount"
-    onChange={(e) => setErc1155Amount(e.target.value)}
-    value={erc1155Amount}
-  />
-  {!isChecked && !isL2transfer && (
-    <div className="flex flex-col">
-      <Button
-        className="mb-2"
-        disabled={!address}
-        colorScheme="blue"
-        size="sm"
-        onClick={async () => {
-          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
-          setLoadERC1155(true);
-          await depositSingleERC1155(DAPP_ADDRESS, erc1155, erc1155Id, Number(erc1155Amount), signer!, chain!);
-          setLoadERC1155(false);
-        }}
-      >
-        {loadERC1155 ? "Depositing please wait..🤑" : "Deposit"}
-      </Button>
-      <Button
-        disabled={!address}
-        className="bg-light-purple"
-        colorScheme=""
-        size="sm"
-        onClick={async () => {
-          if(!erc1155 || !erc1155Id) return errorAlert("Token address and id required!")
-          setLoadERC1155Balance(true);
-          await getERC1155Balance(signer!, erc1155, Number(erc1155Id), setErc1155balanceL1, setErc1155balanceL2);
-          setLoadERC1155Balance(false);
-        }}
-      >
-        {loadERC1155Balance ? "Fetching balance please wait..🤑" : "Get Balance"}
-      </Button>
-      <div className="mt-2 text-slate-400">
-        <p>L1 Balance: {erc1155balanceL1}</p>
-        <p>L2 Balance: {erc1155balanceL2}</p>
-      </div>
-    </div>
+                  <Input
+                    required
+                    type="text"
+                    borderWidth="0.1px"
+                    borderColor="slategrey"
+                    color="slategrey"
+                    variant="outline"
+                    placeholder="Token Address"
+                    onChange={(e) => setErc1155(String(e.target.value))}
+                    value={erc1155}
+                  />
+                  {isL2transfer && (
+                    <Input
+                      borderWidth="0.1px"
+                      borderColor="slategrey"
+                      type="text"
+                      color="slategrey"
+                      variant="outline"
+                      placeholder="Recipient address required for L2 transfer"
+                      onChange={(e) => setToAddress(e.target.value)}
+                      value={toAddress}  // Fixed the value to use toAddress instead of erc20Token
+                    />
+                  )}
+                  <Input
+                    type="number"
+                    borderWidth="0.1px"
+                    borderColor="slategrey"
+                    color="slategrey"
+                    variant="outline"
+                    placeholder="Token ID"
+                    onChange={(e) => setErc1155Id(e.target.value)}
+                    value={erc1155Id}
+                  />
+                  <Input
+                    type="number"
+                    borderWidth="0.1px"
+                    borderColor="slategrey"
+                    color="slategrey"
+                    variant="outline"
+                    placeholder="Amount"
+                    onChange={(e) => setErc1155Amount(e.target.value)}
+                    value={erc1155Amount}
+                  />
+                  {!isChecked && !isL2transfer && (
+                    <div className="flex flex-col">
+                      <Button
+                        className="mb-2"
+                        disabled={!address}
+                        colorScheme="blue"
+                        size="sm"
+                        onClick={async () => {
+                          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
+                          setLoadERC1155(true);
+                          await depositSingleERC1155(DAPP_ADDRESS, erc1155, erc1155Id, Number(erc1155Amount), signer!, chain!);
+                          setLoadERC1155(false);
+                        }}
+                      >
+                        {loadERC1155 ? "Depositing please wait..🤑" : "Deposit"}
+                      </Button>
+                      <Button
+                        disabled={!address}
+                        className="bg-light-purple"
+                        colorScheme=""
+                        size="sm"
+                        onClick={async () => {
+                          if(!erc1155 || !erc1155Id) return errorAlert("Token address and id required!")
+                          setLoadERC1155Balance(true);
+                          await getERC1155Balance(signer!, erc1155, Number(erc1155Id), setErc1155balanceL1, setErc1155balanceL2);
+                          setLoadERC1155Balance(false);
+                        }}
+                      >
+                        {loadERC1155Balance ? "Fetching balance please wait..🤑" : "Get Balance"}
+                      </Button>
+                      <div className="mt-2 text-slate-400">
+                        <p>L1 Balance: {erc1155balanceL1}</p>
+                        <p>L2 Balance: {erc1155balanceL2}</p>
+                      </div>
+                    </div>
 
-  )}
-  {isL2transfer && !isChecked && (
-    <div className="flex flex-col">
-      <Button
-        disabled={!address}
-        size="sm"
-        onClick={async () => {
-          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
-          setLoadWithdrawERC1155(true);
-          await withdrawErc1155(signer!, erc1155, Number(erc1155Id), Number(erc1155Amount));
-          setLoadWithdrawERC1155(false);
-        }}
-      >
-        {loadWithdrawERC1155 ? "Withdrawing Please wait..🤑" : "Withdraw"}
-      </Button>
-      <Button
-        disabled={!address}
-        className="bg-custom-orange mt-2"
-        colorScheme=""
-        size="sm"
-        onClick={async () => {
-          if(!erc1155 || !erc1155Id || !erc1155Amount || !toAddress) return errorAlert("Fields required!")
-          setL2LoadERC1155(true);
-          await transferErc1155(signer!, erc1155, toAddress, batch);
-          setL2LoadERC1155(false);
-        }}
-      >
-        {loadL2ERC1155 ? "Transferring please wait..🤑" : "L2 Transfer"}
-      </Button>
-    </div>
-  )}
-  {isChecked && !isL2transfer && (
-    <div className="flex flex-col">
-     
-      {/* <div className="mt-2 text-slate-400">
-        <p>L1 Balance: {erc1155balanceL1}</p>
-        <p>L2 Balance: {erc1155balanceL2}</p>
-      </div> */}
-      <span className="text-slate-400">
-        Ids: {erc1155IdsStr} - Amounts: {erc1155AmountsStr}
-      </span>
-      <Button 
-      disabled={!address} 
-      className="mt-2"
-      onClick={clear1155Batch}
-      >
-        Clear Batch
-      </Button>
-      <Button
-        disabled={!address}
-        className="my-2 bg-light-purple"
-        colorScheme=""
-        size="sm"
-        onClick={ () => {
-          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
-          addTo1155Batch
-        }}
-      >
-        Add to Batch
-      </Button>
-      <Button
-        disabled={!address}
-        colorScheme="blue"
-        size="sm"
-        onClick = {() => {
-          setLoadERC1155Batch(true)
-          depositBatchERC1155(DAPP_ADDRESS, erc1155, erc1155Ids, erc1155Amounts, signer!, chain!)
-          setLoadERC1155Batch(false)
-        }}
-      >
-        {loadERC1155Batch ? "Transferring please wait..🤑" : "Batch Transfer"}
-      </Button>
-      {/* <Button
-        className="mt-2"
-        disabled={!address}
-        size="sm"
-        onClick={async () => {
-          const batchItem: Batch[] = [
-            {
-              tokenId: erc1155,
-              value: Number(erc1155Amount),
-              balance: erc1155balanceL1,
-              balanceL2: erc1155balanceL2,
-            },
-          ];
-          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
-          setLoadBatchWithdrawERC1155(true);
-          setBatch(batchItem);
-          await batchWithdraw(signer!, erc1155, batch);
-          setLoadBatchWithdrawERC1155(false);
-        }}
-      >
-        {loadBatchWithdrawERC1155 ? "Withdrawing Please wait..🤑" : "Batch Withdraw"}
-      </Button> */}
-      {/* <Button
-        disabled={!address}
-        className="bg-light-purple mt-2"
-        colorScheme=""
-        size="sm"
-        onClick={async () => {
-          setLoadERC1155Balance(true);
-          await getERC1155Balance(signer!, erc1155, Number(erc1155Id), setErc1155balanceL1, setErc1155balanceL2);
-          setLoadERC1155Balance(false);
-        }}
-      >
-        {loadERC1155Balance ? "Fetching balance please wait..🤑" : "Get Balance"}
-      </Button> */}
-    </div>
-  )}
-</Stack>
+                  )}
+                  {isL2transfer && !isChecked && (
+                    <div className="flex flex-col">
+                      <Button
+                        disabled={!address}
+                        size="sm"
+                        onClick={async () => {
+                          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
+                          setLoadWithdrawERC1155(true);
+                          await withdrawErc1155(signer!, erc1155, Number(erc1155Id), Number(erc1155Amount));
+                          setLoadWithdrawERC1155(false);
+                        }}
+                      >
+                        {loadWithdrawERC1155 ? "Withdrawing Please wait..🤑" : "Withdraw"}
+                      </Button>
+                      <Button
+                        disabled={!address}
+                        className="bg-custom-orange mt-2"
+                        colorScheme=""
+                        size="sm"
+                        onClick={async () => {
+                          if(!erc1155 || !erc1155Id || !erc1155Amount || !toAddress) return errorAlert("Fields required!")
+                          setL2LoadERC1155(true);
+                          await transferErc1155(signer!, erc1155, toAddress, batch);
+                          setL2LoadERC1155(false);
+                        }}
+                      >
+                        {loadL2ERC1155 ? "Transferring please wait..🤑" : "L2 Transfer"}
+                      </Button>
+                    </div>
+                  )}
+                  {isChecked && !isL2transfer && (
+                    <div className="flex flex-col">
+                    
+                      {/* <div className="mt-2 text-slate-400">
+                        <p>L1 Balance: {erc1155balanceL1}</p>
+                        <p>L2 Balance: {erc1155balanceL2}</p>
+                      </div> */}
+                      <span className="text-slate-400">
+                        Ids: {erc1155IdsStr} - Amounts: {erc1155AmountsStr}
+                      </span>
+                      <Button 
+                      disabled={!address} 
+                      className="mt-2"
+                      onClick={clear1155Batch}
+                      >
+                        Clear Batch
+                      </Button>
+                      <Button
+                        disabled={!address}
+                        className="my-2 bg-light-purple"
+                        colorScheme=""
+                        size="sm"
+                        onClick={ () => {
+                          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
+                          addTo1155Batch()
+                        }}
+                      >
+                        Add to Batch
+                      </Button>
+                      <Button
+                        disabled={!address}
+                        colorScheme="blue"
+                        size="sm"
+                        onClick = {() => {
+                          setLoadERC1155Batch(true)
+                          depositBatchERC1155(DAPP_ADDRESS, erc1155, erc1155Ids, erc1155Amounts, signer!, chain!)
+                          setLoadERC1155Batch(false)
+                        }}
+                      >
+                        {loadERC1155Batch ? "Transferring please wait..🤑" : "Batch Transfer"}
+                      </Button>
+                      {/* <Button
+                        className="mt-2"
+                        disabled={!address}
+                        size="sm"
+                        onClick={async () => {
+                          const batchItem: Batch[] = [
+                            {
+                              tokenId: erc1155,
+                              value: Number(erc1155Amount),
+                              balance: erc1155balanceL1,
+                              balanceL2: erc1155balanceL2,
+                            },
+                          ];
+                          if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
+                          setLoadBatchWithdrawERC1155(true);
+                          setBatch(batchItem);
+                          await batchWithdraw(signer!, erc1155, batch);
+                          setLoadBatchWithdrawERC1155(false);
+                        }}
+                      >
+                        {loadBatchWithdrawERC1155 ? "Withdrawing Please wait..🤑" : "Batch Withdraw"}
+                      </Button> */}
+                      {/* <Button
+                        disabled={!address}
+                        className="bg-light-purple mt-2"
+                        colorScheme=""
+                        size="sm"
+                        onClick={async () => {
+                          setLoadERC1155Balance(true);
+                          await getERC1155Balance(signer!, erc1155, Number(erc1155Id), setErc1155balanceL1, setErc1155balanceL2);
+                          setLoadERC1155Balance(false);
+                        }}
+                      >
+                        {loadERC1155Balance ? "Fetching balance please wait..🤑" : "Get Balance"}
+                      </Button> */}
+                    </div>
+                  )}
+                </Stack>
                 </AccordionPanel>
               </AccordionItem>
 

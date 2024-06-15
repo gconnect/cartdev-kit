@@ -1,9 +1,9 @@
 import express from 'express';
 import { CartesifyBackend } from "@calindra/cartesify-backend";
-import { createWallet } from "@deroll/wallet";
+import { WalletApp, createWallet } from "@deroll/wallet";
 
 let dapp: any;
-let wallet: any;
+let wallet: WalletApp;
 
 export const appConfig = () => {
   CartesifyBackend.createDapp().then(initDapp => {
@@ -15,7 +15,6 @@ export const appConfig = () => {
 
     dapp = initDapp;
     wallet = createWallet();
-
     dapp.addAdvanceHandler((): string => {
         console.log('before wallet handler');
         return "reject";

@@ -6,6 +6,7 @@ import { Button } from "@chakra-ui/react"
 import { DAPP_ADDRESS } from "../utils/constants"
 import { useEthersSigner } from "../utils/useEtherSigner"
 import { executeVoucher } from "./services/Portal"
+import { useAccount } from "wagmi" 
 
 export default function VoucherView() {
     
@@ -48,14 +49,14 @@ export default function VoucherView() {
 
 function VoucherERC1155({ voucher }: { voucher: Voucher }) {
     const signer = useEthersSigner()
-
+    const { chain } = useAccount()
     const hasProof = !!voucher.proof?.validity
     return (
         <>
             {voucher.destination}
             {hasProof ? (
                 <Button className="bg-yellow-500 p-2 rounded m-2" onClick={async () => {
-                    await executeVoucher(voucher, DAPP_ADDRESS, signer)
+                    await executeVoucher(voucher, DAPP_ADDRESS, signer, chain!)
                 }}>Execute</Button>
             ) : (
                 <span> waiting for proof </span>
