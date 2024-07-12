@@ -1,10 +1,10 @@
 const { hexToString } = require("viem");
-const { AdvanceRoute, DefaultRoute, Router } = require("cartesi-router");
+const { Router } = require("cartesi-router");
 const { Wallet, Notice, Output, Error_out, Report } = require("cartesi-wallet");
 const viem = require("viem");
 const deployments = require("./rollups.json");
-const { CreateGreeting } = require("./greetings");
-const { CreateGreetingRoute, DeleteGreetingRoute, DeleteGreetingsRoute, GreetingRoute, GreetingsRoute, UpdateGreetingRoute } = require("./routes");
+const { CreateGreeting } = require("./examples/greetings");
+const { CreateGreetingRoute, DeleteGreetingRoute, DeleteGreetingsRoute, GreetingRoute, GreetingsRoute, UpdateGreetingRoute } = require("./examples/routes");
 
 let rollup_address = "";
 const rollup_server = process.env.ROLLUP_HTTP_SERVER_URL;

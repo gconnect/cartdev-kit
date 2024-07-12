@@ -170,7 +170,7 @@ export default function Greetings() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {listMessages.map((item: any, index: any) => (
+                  {listMessages && listMessages.map((item: any, index: any) => (
                     <Tr key={index} className='mb-2  flex justify-between'>
                       <Td className='text-gray-400'>{item.id}</Td>
                       <Td onClick={async () => {

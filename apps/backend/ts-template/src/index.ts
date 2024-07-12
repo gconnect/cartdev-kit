@@ -3,8 +3,8 @@ import { AdvanceRoute, DefaultRoute, Router } from "cartesi-router";
 import { Wallet, Notice, Output, Error_out, Report } from "cartesi-wallet";
 import viem from "viem"
 import deployments from "./rollups.json";
-import { CreateGreeting } from "./greetings";
-import { CreateGreetingRoute, DeleteGreetingRoute, DeleteGreetingsRoute, GreetingRoute, GreetingsRoute, UpdateGreetingRoute } from "./routes";
+import { CreateGreeting } from "./examples/greetings";
+import { CreateGreetingRoute, DeleteGreetingRoute, DeleteGreetingsRoute, GreetingRoute, GreetingsRoute, UpdateGreetingRoute } from "./examples/routes";
 
 let rollup_address = "";
 const rollup_server: string = <string>process.env.ROLLUP_HTTP_SERVER_URL;
