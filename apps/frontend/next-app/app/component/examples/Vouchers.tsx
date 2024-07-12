@@ -13,7 +13,6 @@ import {
     Button,
     Text
   } from '@chakra-ui/react'
-import { useEthersSigner } from "../../utils/useEtherSigner";
 import { Voucher, useVouchers } from "../../cartesi/hooks/useVouchers";
 import { errorAlert, successAlert } from "../../utils/customAlert";
 import {  executeVoucher } from "../../cartesi/Portals";
@@ -85,7 +84,7 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
                            const res: any = await executeVoucher(voucherToExecute, rollups!)
                            successAlert(res)
                         }}>{voucherToExecute &&
-                         voucherToExecute.executed ? "Voucher executed" : "Execute Voucher"}
+                            voucherToExecute.executed && voucherToExecute.executed ? "Voucher executed" : "Execute Voucher"}
                         </Button>
                     </Td>
                     <Td>{voucherToExecute && voucherToExecute.index}</Td> 
