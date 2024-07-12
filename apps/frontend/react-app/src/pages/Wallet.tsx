@@ -1,7 +1,7 @@
 import { FC, useState } from "react"
 import { Input, Box, InputGroup, InputLeftAddon, Stack, SimpleGrid} from "@chakra-ui/react"
-import { Balance } from "../components/Balance";
-import Transfers from "../components/Transfers";
+import { Balance } from "../components/examples/Balance";
+import Transfers from "../components/examples/Transfers";
 import { DAPP_ADDRESS } from "../utils/constants";
 
 const WalletExamples: FC = () => {

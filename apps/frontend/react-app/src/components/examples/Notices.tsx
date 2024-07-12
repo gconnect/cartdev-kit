@@ -1,5 +1,3 @@
-"use client"
-
 import React, {useEffect} from "react";
 import { useNotices } from "../../cartesi/hooks/useNotices";
 import { ethers } from "ethers";
@@ -7,14 +5,11 @@ import {
     Table,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
     Button,
     Badge,
-    TableCaption,
-    TableContainer,
     Box
 } from '@chakra-ui/react'
 

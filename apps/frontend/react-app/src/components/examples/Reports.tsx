@@ -1,6 +1,3 @@
-"use client"
-
-import { ethers } from "ethers";
 import React, { useEffect } from "react";
 import { useReports } from "../../cartesi/hooks/useReports";
 

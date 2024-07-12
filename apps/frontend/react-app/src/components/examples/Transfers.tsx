@@ -1,7 +1,6 @@
-"use client"
 import React, { useState } from "react";
 import { useRollups } from "../../cartesi/hooks/useRollups";
-import { Tabs, TabList, TabPanels, TabPanel, Tab, Card, CardBody, Checkbox } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, TabPanel, Tab} from "@chakra-ui/react";
 import { Button, Box } from "@chakra-ui/react";
 import { Input, Stack } from "@chakra-ui/react";
 import {
@@ -21,7 +20,7 @@ import { sendAddress, depositErc20ToPortal, depositEtherToPortal,
   transferErc1155SingleToPortal,
   transferErc1155BatchToPortal} 
   from "../../cartesi/Portals";
-import { errorAlert, successAlert } from "@/app/utils/customAlert";
+import { errorAlert, successAlert } from "../../utils/customAlert";
 
 interface IProps {
   dappAddress: string;
