@@ -1,4 +1,4 @@
-import { ethers, JsonRpcApiProvider, JsonRpcSigner, parseEther, Provider } from "ethers";
+import { ethers, JsonRpcApiProvider, JsonRpcSigner, parseEther, Provider, toBigInt } from "ethers";
 import { RollupsContracts } from "../cartesi/hooks/useRollups";
 import {
   IERC1155__factory,
@@ -7,6 +7,8 @@ import {
 } from "../cartesi/generated/rollups";
 import { successAlert, errorAlert } from "../utils/customAlert";
 import { DAPP_ADDRESS } from "../utils/constants";
+import { Report } from "./hooks/useReports";
+import { getVoucherWithProof, createUrqlClient} from "./VoucherService";
 
 export const sendAddress = async (rollups: RollupsContracts | undefined, setDappRelayedAddress: Function) => {
   if (rollups) {
@@ -25,22 +27,18 @@ export const sendAddress = async (rollups: RollupsContracts | undefined, setDapp
 
 export const addInput = async (
   rollups: RollupsContracts | undefined, 
-  setLoading: Function,
-  jsonPayload: string
+  jsonPayload: string,
+  dappAddress: string,
  ) => {
   if (rollups) {
       try {
-        setLoading(true)
-        const data = JSON.stringify(jsonPayload);
-        let payload = ethers.toUtf8Bytes(data);
-        const tx = await rollups.inputContract.addInput(DAPP_ADDRESS, payload);
+        let payload = ethers.toUtf8Bytes(jsonPayload);
+        const tx = await rollups.inputContract.addInput(dappAddress, payload);
         const receipt = await tx?.wait()
-        setLoading(false)
         successAlert(receipt?.hash)
         console.log(receipt?.hash)
         return receipt?.hash
       } catch (e) {
-        setLoading(false)
         errorAlert(e)
         console.log(`${e}`);
       }
@@ -101,25 +99,27 @@ export const depositErc20ToPortal = async (rollups: RollupsContracts | undefined
           erc20PortalAddress,
           parseEther(`${amount}`)
         );
-        const receipt = await tx.wait(1);
-        const event = (
-          await tokenContract.queryFilter(
-            tokenContract.filters.Approval(),
-            receipt?.hash
-          )
-        ).pop();
-        if (!event) {
-          throw Error(
-            `could not approve ${amount} tokens for DAppERC20Portal(${erc20PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
-          );
-        }
+
+        // const receipt = await tx.wait(1);
+        // if(!receipt) return errorAlert("Error approving")
+        //   const event = (
+        //     await tokenContract.queryFilter(
+        //       tokenContract.filters.Approval(),
+        //       receipt.blockHash
+        //     )
+        //   ).pop();
+        //   if (!event) {
+        //     throw Error(
+        //       `could not approve ${amount} tokens for DAppERC20Portal(${erc20PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
+        //     );
+        //   }
       }
 
      const deposit = await rollups.erc20PortalContract.depositERC20Tokens(
         token,
         DAPP_ADDRESS,
         ethers.parseEther(`${amount}`),
-        data
+        "0x"
       );
       const transReceipt = await deposit.wait(1);
       setLoadERC20(false)
@@ -143,7 +143,7 @@ export const withdrawEther = async (rollups: RollupsContracts | undefined,
       const input_obj = {
         method: "ether_withdraw",
         args: {
-          amount: ether_amount,
+          amount: ether_amount
         },
       };
       const data = JSON.stringify(input_obj);
@@ -200,7 +200,7 @@ export const withdrawErc721 = async (rollups: RollupsContracts | undefined,
       let erc721_id = String(id);
       console.log("erc721 after parsing: ", erc721_id);
       const input_obj = {
-        method: "erc721_withdrawal",
+        method: "erc721_withdraw",
         args: {
           erc721: address,
           token_id: id,
@@ -249,18 +249,18 @@ export const transferNftToPortal = async (
       if (currentApproval !== erc721PortalAddress) {
         // Allow portal to withdraw `amount` tokens from signer
         const tx = await tokenContract.approve(erc721PortalAddress, nftid);      
-        const receipt = await tx.wait(1);
-        const event = (
-          await tokenContract.queryFilter(
-            tokenContract.filters.Approval(),
-            receipt?.hash
-          )
-        ).pop();
-        if (!event) {
-          throw Error(
-            `could not approve ${nftid} for DAppERC721Portal(${erc721PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
-          );
-        }
+        // const receipt = await tx.wait(1);
+        // const event = (
+        //   await tokenContract.queryFilter(
+        //     tokenContract.filters.Approval(),
+        //     receipt?.hash
+        //   )
+        // ).pop();
+        // if (!event) {
+        //   throw Error(
+        //     `could not approve ${nftid} for DAppERC721Portal(${erc721PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
+        //   );
+        // }
       }
 
       // Transfer
@@ -376,27 +376,51 @@ export const transferErc1155BatchToPortal = async (
   }
 };
 
-export const executeVoucher = async (
-  rollups: RollupsContracts | undefined, 
-  setVoucherToExecute: Function,
-  voucher: any
-  ) => {
-  if (rollups && !!voucher.proof) {
+export const executeVoucher = async (voucher: any, rollups: RollupsContracts) => {
+  const client = createUrqlClient();
 
-      const newVoucherToExecute = {...voucher};
-      try {
-          const tx = await rollups.dappContract.executeVoucher( voucher.destination,voucher.payload,voucher.proof);
-          const receipt = await tx?.wait(1);
-          newVoucherToExecute.msg = `voucher executed! (tx="${receipt?.hash}")`;
-          const event = (await rollups.dappContract.queryFilter(rollups.dappContract.filters.VoucherExecuted(), receipt?.blockHash)).pop();
-          if (event) {
-              newVoucherToExecute.msg = `${newVoucherToExecute.msg} - resulting events: ${JSON.stringify(receipt?.hash)}`;
-              newVoucherToExecute.executed = await rollups.dappContract.wasVoucherExecuted(toBigInt(voucher.input.index),toBigInt(voucher.index));
-          }
-      } catch (e) {
-          newVoucherToExecute.msg = `COULD NOT EXECUTE VOUCHER: ${JSON.stringify(e)}`;
-          console.log(`COULD NOT EXECUTE VOUCHER: ${JSON.stringify(e)}`);
+  try {
+    if (!rollups) throw new Error("Rollups contract is required");
+
+    const isExecuted = await rollups.dappContract.wasVoucherExecuted(
+      BigInt(voucher.input.index),
+      BigInt(voucher.index)
+    );
+
+    if (isExecuted) return errorAlert('Fund already withdrawn');
+
+    const voucherWithProof = await getVoucherWithProof(client, voucher.index, voucher.input.index);
+
+    if (voucherWithProof) {
+      const tx = await rollups.dappContract.executeVoucher(
+        voucherWithProof.destination,
+        voucherWithProof.payload,
+        voucherWithProof.proof
+      );
+
+      const receipt = await tx.wait();
+      if (receipt) {
+        console.log('Voucher receipt', receipt);
+        successAlert('Congratulations! Funds successfully withdrawn');
       }
-      setVoucherToExecute(newVoucherToExecute);
+
+      console.log("Voucher executed successfully", voucherWithProof);
+    }
+  } catch (error) {
+    console.error('Error executing voucher:', error);
+    errorAlert(`Could not execute voucher ${error}`);
   }
-}
+};
+
+export const fetchData = async (inspectUrl: string, endpoint: string) => {
+  const result = await fetch(`${inspectUrl}/${endpoint}`);
+  if (!result.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const data = await result.json()
+  const decode = data.reports.map((report: Report) => {
+    return ethers.toUtf8String(report.payload);
+  });
+  const reportData: any = JSON.parse(decode);
+  return reportData;
+};

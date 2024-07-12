@@ -7,7 +7,7 @@ import {
 } from "../cartesi/generated/rollups";
 import { successAlert, errorAlert } from "../utils/customAlert";
 import { DAPP_ADDRESS } from "../utils/constants";
-
+import { createUrqlClient, getVoucherWithProof } from "./VoucherService"
 export const sendAddress = async (rollups: RollupsContracts | undefined, signer: JsonRpcSigner | undefined, setDappRelayedAddress: Function) => {
   if (rollups) {
     try {
@@ -77,12 +77,11 @@ export const depositErc20ToPortal = async (rollups: RollupsContracts | undefined
           erc20PortalAddress,
           parseEther(`${amount}`)
         );
-        const trans = await signer.sendTransaction(tx)
-        const receipt = await trans.wait(1);
+      
         const event = (
           await tokenContract.queryFilter(
             tokenContract.filters.Approval(),
-            receipt?.hash
+            tx?.hash
           )
         ).pop();
         if (!event) {
@@ -98,10 +97,10 @@ export const depositErc20ToPortal = async (rollups: RollupsContracts | undefined
         ethers.parseEther(`${amount}`),
         data
       );
-      const depositTx = await signer.sendTransaction(deposit)
-      const transReceipt = await depositTx.wait(1);
+   
+      const transReceipt = await deposit.wait(1);
       setLoadERC20(false)
-      successAlert(transReceipt!.hash)
+      successAlert(transReceipt?.hash)
       return transReceipt?.hash
     }
   } catch (e) {
@@ -130,10 +129,8 @@ export const depositEtherToPortal = async (rollups: RollupsContracts | undefined
         data,
         txOverrides
       );
-      const signer = await provider.getSigner();
-      const tx = await signer.sendTransaction(trans)
       setLoadEther(false)
-      const receipt = await tx.wait(1)
+      const receipt = await trans.wait(1)
       successAlert(receipt!.hash)
       return receipt!.hash
     }
@@ -253,12 +250,11 @@ export const transferNftToPortal = async (
       );
       //const data = `Deposited ${args.amount} tokens (${args.token}) for DAppERC20Portal(${portalAddress}) (signer: ${address})`;
       const signer = await provider.getSigner();
-      const signerAddress = await signer.getAddress();
 
       const erc721PortalAddress = await rollups.erc721PortalContract.getAddress();
 
       const tokenContract = signer
-        ? IERC721__factory.connect(contractAddress, await signer)
+        ? IERC721__factory.connect(contractAddress, signer)
         : IERC721__factory.connect(contractAddress, signer);
 
       // query current approval
@@ -266,19 +262,17 @@ export const transferNftToPortal = async (
       if (currentApproval !== erc721PortalAddress) {
         // Allow portal to withdraw `amount` tokens from signer
         const tx = await tokenContract.approve(erc721PortalAddress, nftid);
-        const trans = await (await signer).sendTransaction(tx)
-        const receipt = await trans.wait(1);
-        const event = (
-          await tokenContract.queryFilter(
-            tokenContract.filters.Approval(),
-            receipt?.hash
-          )
-        ).pop();
-        if (!event) {
-          throw Error(
-            `could not approve ${nftid} for DAppERC721Portal(${erc721PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
-          );
-        }
+        // const event = (
+        //   await tokenContract.queryFilter(
+        //     tokenContract.filters.Approval(),
+        //     receipt?.hash
+        //   )
+        // ).pop();
+        // if (!event) {
+        //   throw Error(
+        //     `could not approve ${nftid} for DAppERC721Portal(${erc721PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
+        //   );
+        // }
       }
 
       // Transfer
@@ -290,11 +284,10 @@ export const transferNftToPortal = async (
         data
       );
 
-      const tx = await (await signer).sendTransaction(trans)
-      const receipt = await tx.wait(1)
+      // const receipt = await trans.wait(1)
       setLoadTransferNFT(false)
-      successAlert(receipt?.hash)
-      return receipt?.hash
+      successAlert("Success")
+      return trans
     }
   } catch (e) {
     setLoadTransferNFT(false)
@@ -302,7 +295,6 @@ export const transferNftToPortal = async (
     errorAlert(e)
   }
 };
-
 
 export const transferErc1155SingleToPortal = async (
   rollups: RollupsContracts | undefined, 
@@ -398,29 +390,38 @@ export const transferErc1155BatchToPortal = async (
   }
 };
 
-export const executeVoucher = async (
-  rollups: RollupsContracts | undefined, 
-  signer: JsonRpcSigner | undefined,
-  setVoucherToExecute: Function,
-  voucher: any
-  ) => {
-  if (rollups && !!voucher.proof) {
+export const executeVoucher = async (voucher: any, rollups: RollupsContracts) => {
+  const client = createUrqlClient();
 
-      const newVoucherToExecute = {...voucher};
-      try {
-          const tx = await rollups.dappContract.executeVoucher( voucher.destination,voucher.payload,voucher.proof);
-          const trans = await signer?.sendTransaction(tx)
-          const receipt = await trans?.wait(1);
-          newVoucherToExecute.msg = `voucher executed! (tx="${receipt?.hash}")`;
-          const event = (await rollups.dappContract.queryFilter(rollups.dappContract.filters.VoucherExecuted(), receipt?.blockHash)).pop();
-          if (event) {
-              newVoucherToExecute.msg = `${newVoucherToExecute.msg} - resulting events: ${JSON.stringify(receipt?.hash)}`;
-              newVoucherToExecute.executed = await rollups.dappContract.wasVoucherExecuted(toBigInt(voucher.input.index),toBigInt(voucher.index));
-          }
-      } catch (e) {
-          newVoucherToExecute.msg = `COULD NOT EXECUTE VOUCHER: ${JSON.stringify(e)}`;
-          console.log(`COULD NOT EXECUTE VOUCHER: ${JSON.stringify(e)}`);
+  try {
+    if (!rollups) throw new Error("Rollups contract is required");
+
+    const isExecuted = await rollups.dappContract.wasVoucherExecuted(
+      BigInt(voucher.input.index),
+      BigInt(voucher.index)
+    );
+
+    if (isExecuted) return errorAlert('Fund already withdrawn');
+
+    const voucherWithProof = await getVoucherWithProof(client, voucher.index, voucher.input.index);
+
+    if (voucherWithProof) {
+      const tx = await rollups.dappContract.executeVoucher(
+        voucherWithProof.destination,
+        voucherWithProof.payload,
+        voucherWithProof.proof
+      );
+
+      const receipt = await tx.wait();
+      if (receipt) {
+        console.log('Voucher receipt', receipt);
+        successAlert('Congratulations! Funds successfully withdrawn');
       }
-      setVoucherToExecute(newVoucherToExecute);
+
+      console.log("Voucher executed successfully", voucherWithProof);
+    }
+  } catch (error) {
+    console.error('Error executing voucher:', error);
+    errorAlert('Could not execute voucher');
   }
-}
+};

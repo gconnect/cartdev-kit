@@ -1,5 +1,5 @@
 "use client"
-import Greetings from "./greetings/page";
+import Greetings from "./cartesi/examples/greetings/page";
 
 const Home: React.FC = () => {
     return(

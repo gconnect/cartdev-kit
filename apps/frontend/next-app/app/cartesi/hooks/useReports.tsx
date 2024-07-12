@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import { gql } from 'urql'
-import { ReportsByInputDocument } from '../generated/graphql'
+import { ReportsByInputDocument, ReportsDocument } from '../generated/graphql'
 
 export type Report = {
   id: string;
@@ -14,7 +14,7 @@ export type Report = {
 
 export const useReports = () => {
   const [cursor] = useState(null)
-  const { loading, error, data, refetch } = useQuery(ReportsByInputDocument, {
+  const { loading, error, data, refetch } = useQuery(ReportsDocument, {
     variables: { cursor },
     pollInterval: 0,
   })

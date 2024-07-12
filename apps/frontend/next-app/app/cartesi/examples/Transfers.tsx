@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { useRollups } from "../cartesi/hooks/useRollups";
+import { useRollups } from "../hooks/useRollups";
 import { Tabs, TabList, TabPanels, TabPanel, Tab, Card, CardBody, Checkbox } from "@chakra-ui/react";
 import { Button, Box } from "@chakra-ui/react";
 import { Input, Stack } from "@chakra-ui/react";
@@ -12,15 +12,15 @@ import {
   AccordionIcon,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { Vouchers } from "./../cartesi/Vouchers";
-import { Notices } from "./../cartesi/Notices";
-import { Reports } from "./../cartesi/Reports";
-import { useEthersSigner } from "../utils/useEtherSigner";
+import { Vouchers } from "./Vouchers";
+import { Notices } from "./Notices";
+import { Reports } from "./Reports";
+import { useEthersSigner } from "../../utils/useEtherSigner";
 import { sendAddress, depositErc20ToPortal, depositEtherToPortal, 
   withdrawErc20, withdrawErc721, withdrawEther, transferNftToPortal, 
   transferErc1155SingleToPortal,
   transferErc1155BatchToPortal} 
-  from "../cartesi/Portals";
+  from "../Portals";
 
 interface IInputProps {
   dappAddress: string;
@@ -45,7 +45,6 @@ const Transfers: React.FC<IInputProps> = (props) => {
   const [erc1155Amounts, setErc1155Amounts] = useState<number[]>([]);
   const [erc1155IdsStr, setErc1155IdsStr] = useState<string>("[]");
   const [erc1155AmountsStr, setErc1155AmountsStr] = useState<string>("[]");
-
   const [loadEther, setLoadEther] = useState(false)
   const [loadERC20, setLoadERC20] = useState(false)
   const [loadWithdrawEther, setLoadWithdrawEther] = useState(false)

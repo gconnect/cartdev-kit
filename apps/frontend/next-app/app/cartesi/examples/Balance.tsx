@@ -12,7 +12,7 @@ import {
     Stack,
     Box,
   } from '@chakra-ui/react'
-import { useInspectCall } from "../cartesi/hooks/useInspectCall";
+import { useInspectCall } from "../hooks/useInspectCall";
 import { useAccount } from "wagmi";
 
 export const Balance: React.FC = () => {

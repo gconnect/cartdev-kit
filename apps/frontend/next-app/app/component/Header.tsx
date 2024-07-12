@@ -24,7 +24,7 @@ const Header: React.FC = () => {
       </Link>
       <div className="flex items-center">
         <div className="hidden md:flex">
-          <Link href={"/wallet"}>
+          <Link href={"/cartesi/examples/wallet"}>
             <p className="mx-2 my-4 text-slate-400">Wallet</p>
           </Link>
           <div className="my-2">
@@ -48,7 +48,7 @@ const Header: React.FC = () => {
           </div>
           }       
           <div className="flex flex-col mt-16">
-            <Link href={"/wallet"}>
+            <Link href={"/cartesi/examples/wallet"}>
               <p className="my-4 text-slate-400" onClick={toggleMenu}>Wallet</p>
             </Link>
             <div className="my-4">

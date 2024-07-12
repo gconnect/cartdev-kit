@@ -3,6 +3,9 @@ import { AdvanceRoute, DefaultRoute, Router } from "cartesi-router";
 import { Wallet, Notice, Output, Error_out, Report } from "cartesi-wallet";
 import viem from "viem"
 import deployments from "./rollups.json";
+import { CreateGreeting } from "./greetings";
+import { CreateGreetingRoute, DeleteGreetingRoute, DeleteGreetingsRoute, GreetingRoute, GreetingsRoute, UpdateGreetingRoute } from "./routes";
+
 let rollup_address = "";
 const rollup_server: string = <string>process.env.ROLLUP_HTTP_SERVER_URL;
 
@@ -20,18 +23,15 @@ var handlers: any = {
   inspect_state: handle_inspect,
 };
 
+const greeting = new CreateGreeting()
 
-// class AddGreeting extends AdvanceRoute {
-//   execute = (request: any) => {
-//     this.parse_request(request)
-//     const user = this.msg_sender;
-//     if (user == undefined) {
-//       return new Error_out(`User with id:${user} not found`);
-//     }
-//     return new Notice(this.request_args.message);;
-//   };
-// }
-// router.addRoute("sendgreeting", new AddGreeting())
+router.addRoute("create_greeting", new CreateGreetingRoute(greeting))
+router.addRoute("update_greeting", new UpdateGreetingRoute(greeting))
+router.addRoute("get_greeting", new GreetingRoute(greeting))
+router.addRoute("get_greetings", new GreetingsRoute(greeting))
+router.addRoute("delete_greeting", new DeleteGreetingRoute(greeting))
+router.addRoute("delete_greetings", new DeleteGreetingsRoute(greeting))
+
 
 const send_request = async (output: Output | Set<Output>) => {
   if (output instanceof Output) {
@@ -57,7 +57,8 @@ const send_request = async (output: Output | Set<Output>) => {
     console.debug(
       `received ${output.payload} status ${response.status} body ${response.body}`
     );
-  } else {
+  }
+   else {
     output.forEach((value: Output) => {
       send_request(value);
     });
@@ -72,7 +73,7 @@ async function handle_advance(data: any) {
     const msg_sender: string = data.metadata.msg_sender;
     console.log("msg sender is", msg_sender.toLowerCase());
     const payloadStr = hexToString(payload);
-
+    
     if (
       msg_sender.toLowerCase() ===
       deployments.contracts.EtherPortal.address.toLowerCase()
@@ -122,7 +123,7 @@ async function handle_advance(data: any) {
     
     try {
       const jsonpayload = JSON.parse(payloadStr);
-      console.log("payload is");
+      console.log("payload is ", data);
       return router.process(jsonpayload.method, data);
     } catch (e) {
       return new Error_out(`failed to process command ${payloadStr} ${e}`);
