@@ -17,6 +17,7 @@ import { useEthersSigner } from "../../utils/useEtherSigner";
 import { Voucher, useVouchers } from "../hooks/useVouchers";
 import { errorAlert, successAlert } from "../../utils/customAlert";
 import {  executeVoucher } from "../Portals";
+import toast from "react-hot-toast";
 
 
 interface IVoucherProps {
@@ -43,6 +44,9 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
 
     },[rollups, voucherToExecute])
 
+    useEffect(() => {
+        refetch({ requestPolicy: 'network-only' });  
+    },[refetch])
 
     if (loading) return <p className="text-slate-400">Loading...</p>;
     if (error) return <p className="text-slate-400">Oh no... {error.message}</p>;
@@ -76,8 +80,12 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
                     <Td>
                         <Button size='sm' colorScheme={"green"}
                          isDisabled={voucherToExecute.executed}
-                         onClick={() => executeVoucher(voucherToExecute, rollups!)}>{voucherToExecute && voucherToExecute.proof &&
-                         voucherToExecute.executed ? "Voucher executed" : "Voucher Executed"}
+                         onClick={ async () => {
+
+                           const res: any = await executeVoucher(voucherToExecute, rollups!)
+                           successAlert(res)
+                        }}>{voucherToExecute &&
+                         voucherToExecute.executed ? "Voucher executed" : "Execute Voucher"}
                         </Button>
                     </Td>
                     <Td>{voucherToExecute && voucherToExecute.index}</Td> 

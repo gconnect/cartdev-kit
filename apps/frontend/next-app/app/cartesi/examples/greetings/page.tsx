@@ -41,15 +41,15 @@ export default function Greetings() {
       if (!message) return errorAlert("Field required");
       if (!address) return errorAlert("Ensure your wallet is connected");
       setLoading(true);
-      await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS)
+      const res: any  = await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS)
+      if(!res.hash) return errorAlert(res);
       setMessage("");
       setLoading(false);
-      successAlert("Successfully sent!");
+      successAlert(res.hash);
       await getGreetings();
     } catch (error) {
       setLoading(false);
       console.log(error);
-      errorAlert(error);
     }
   };
 
@@ -65,15 +65,15 @@ export default function Greetings() {
       if (!message) return errorAlert("Field required");
       if (!address) return errorAlert("Ensure your wallet is connected");
       setLoading(true);
-      await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS)
+      const res: any =await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS)
+      if(!res.hash) return errorAlert(res);
       setMessage("");
       setLoading(false);
-      successAlert("Successfully sent!");
+      successAlert(res.hash);
       setEdit(false);
       await getGreetings();
     } catch (error) {
       setLoading(false);
-      errorAlert(error);
     }
   };
 
@@ -109,7 +109,9 @@ export default function Greetings() {
       }
     }
     try {
-      await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS);
+      const res: any = await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS);
+      if(!res.hash) return errorAlert(res);
+      successAlert(res.hash)
       await getGreetings()
     } catch (error) {
       console.log("error", error);
@@ -121,7 +123,9 @@ export default function Greetings() {
       "method": "delete_greetings",
     }
     try {
-      await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS);
+      const res: any  = await addInput(rollups, JSON.stringify(payload), DAPP_ADDRESS);
+      if(!res.hash) return errorAlert(res);
+      successAlert(res.hash)
       await getGreetings()
     } catch (error) {
       console.log("error", error);
