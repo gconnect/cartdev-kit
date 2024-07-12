@@ -1,10 +1,10 @@
 import { ethers, JsonRpcApiProvider, JsonRpcSigner, parseEther, Provider, toBigInt } from "ethers";
-import { RollupsContracts } from "../cartesi/hooks/useRollups";
+import { RollupsContracts } from "./hooks/useRollups";
 import {
   IERC1155__factory,
   IERC20__factory,
   IERC721__factory,
-} from "../cartesi/generated/rollups";
+} from "./generated/rollups";
 import { successAlert, errorAlert } from "../utils/customAlert";
 import { Report } from "./hooks/useReports";
 import { getVoucherWithProof, createUrqlClient} from "./VoucherService";
@@ -397,7 +397,7 @@ export const executeVoucher = async (voucher: any, rollups: RollupsContracts) =>
   }
 };
 
-export const fetchData = async (inspectUrl: string, endpoint: string) => {
+export const inspectCall = async (inspectUrl: string, endpoint: string) => {
   try {
     const result = await fetch(`${inspectUrl}/${endpoint}`);
     if (!result.ok) {

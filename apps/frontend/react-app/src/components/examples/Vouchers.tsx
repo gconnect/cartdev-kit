@@ -2,7 +2,7 @@
 
 import { ethers, toBigInt } from "ethers";
 import React, { useCallback, useEffect, useState } from "react";
-import { useRollups } from "../hooks/useRollups";
+import { useRollups } from "../../cartesi/hooks/useRollups";
 import {
     Table,
     Thead,
@@ -14,9 +14,9 @@ import {
     Text
   } from '@chakra-ui/react'
 import { useEthersSigner } from "../../utils/useEtherSigner";
-import { Voucher, useVouchers } from "../hooks/useVouchers";
+import { Voucher, useVouchers } from "../../cartesi/hooks/useVouchers";
 import { errorAlert, successAlert } from "../../utils/customAlert";
-import {  executeVoucher } from "../Portals";
+import {  executeVoucher } from "../../cartesi/Portals";
 import toast from "react-hot-toast";
 
 

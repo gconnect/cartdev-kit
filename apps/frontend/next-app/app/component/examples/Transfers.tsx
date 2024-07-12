@@ -1,5 +1,6 @@
+"use client"
 import React, { useState } from "react";
-import { useRollups } from "../cartesi/hooks/useRollups";
+import { useRollups } from "../../cartesi/hooks/useRollups";
 import { Tabs, TabList, TabPanels, TabPanel, Tab, Card, CardBody, Checkbox } from "@chakra-ui/react";
 import { Button, Box } from "@chakra-ui/react";
 import { Input, Stack } from "@chakra-ui/react";
@@ -11,23 +12,24 @@ import {
   AccordionIcon,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { Vouchers } from "../cartesi/Vouchers";
-import { Notices } from "../cartesi/Notices";
-import { Reports } from "../cartesi/Reports";
-import { useEthersSigner } from "../utils/useEtherSigner";
+import { Vouchers } from "./Vouchers";
+import { Notices } from "./Notices";
+import { Reports } from "./Reports";
+import { useEthersSigner } from "../../utils/useEtherSigner";
 import { sendAddress, depositErc20ToPortal, depositEtherToPortal, 
   withdrawErc20, withdrawErc721, withdrawEther, transferNftToPortal, 
   transferErc1155SingleToPortal,
   transferErc1155BatchToPortal} 
-  from "../cartesi/Portals";
+  from "../../cartesi/Portals";
+import { errorAlert, successAlert } from "@/app/utils/customAlert";
 
-interface IInputProps {
+interface IProps {
   dappAddress: string;
 }
 
-const Transfers: React.FC<IInputProps> = (props) => {
+const Transfers: React.FC<IProps> = ({ dappAddress }: IProps) => {
 
-  const rollups = useRollups(props.dappAddress);
+  const rollups = useRollups(dappAddress);
   const signer = useEthersSigner()
   const provider = signer?.provider
   const [dappRelayedAddress, setDappRelayedAddress] = useState<boolean>(false)
@@ -38,13 +40,12 @@ const Transfers: React.FC<IInputProps> = (props) => {
   const [etherAmount, setEtherAmount] = useState<number>(0);
 
   const [erc1155, setErc1155] = useState<string>("");
-  const [erc1155Id, setErc1155Id] = useState<number>(0);
-  const [erc1155Amount, setErc1155Amount] = useState<number>(0);
+  const [erc1155Id, setErc1155Id] = useState<number>();
+  const [erc1155Amount, setErc1155Amount] = useState<number>();
   const [erc1155Ids, setErc1155Ids] = useState<number[]>([]);
   const [erc1155Amounts, setErc1155Amounts] = useState<number[]>([]);
   const [erc1155IdsStr, setErc1155IdsStr] = useState<string>("[]");
   const [erc1155AmountsStr, setErc1155AmountsStr] = useState<string>("[]");
-
   const [loadEther, setLoadEther] = useState(false)
   const [loadERC20, setLoadERC20] = useState(false)
   const [loadWithdrawEther, setLoadWithdrawEther] = useState(false)
@@ -60,10 +61,10 @@ const Transfers: React.FC<IInputProps> = (props) => {
   }
   const addTo1155Batch = () => {
     const newIds = erc1155Ids;
-    newIds.push(erc1155Id);
+    newIds.push(erc1155Id!);
     setErc1155Ids(newIds);
     const newAmounts = erc1155Amounts;
-    newAmounts.push(erc1155Amount);
+    newAmounts.push(erc1155Amount!);
     setErc1155Amounts(newAmounts);
     setErc1155IdsStr("["+erc1155Ids.join(',')+"]");
     setErc1155AmountsStr("["+erc1155Amounts.join(',')+"]");
@@ -107,7 +108,7 @@ const clear1155Batch = () => {
             <Accordion size="xl" border="#09324C" borderWidth="0.1px" defaultIndex={[0]}>
             <AccordionItem>
               <h2>
-                <AccordionButton>
+                <AccordionButton textColor="white">
                     Ether
                     <AccordionIcon />
                   </AccordionButton>
@@ -124,21 +125,41 @@ const clear1155Batch = () => {
                       variant="outline"
                       placeholder="Enter amount"
                       onChange={(e) => setEtherAmount(Number(e.target.value))}
-                      value={etherAmount}
+                      value={etherAmount}  
                     />
                     <Button
                       colorScheme="blue"
                       size="sm"
-                      onClick={() => {
-                        depositEtherToPortal(rollups, provider, setLoadEther, etherAmount);
+                      onClick={async () => {
+                      try {
+                        if(!etherAmount) return errorAlert("Amount field required!")
+                        setLoadEther(true)
+                        const res = await depositEtherToPortal(rollups, provider, etherAmount, dappAddress);
+                        if(!res.hash) {
+                          setLoadEther(false)
+                          return errorAlert(res)
+                        }
+                        setLoadEther(false)
+                        successAlert(res.hash)
+                      } catch (error) {
+                        errorAlert(error)
+                      }
                       }}
                       disabled={!rollups}
                     > {loadEther ? "Depositing please wait..🤑" :"Deposit"}
                     </Button>
                     <Button
                       size="sm"
-                      onClick={() => {
-                        withdrawEther(rollups, provider, setLoadWithdrawEther, etherAmount);
+                      onClick={async () => {
+                          if(!etherAmount) return errorAlert("Amount fields required!")
+                          setLoadWithdrawEther(true)
+                          const res: any = await withdrawEther(rollups, provider, etherAmount, dappAddress);
+                          if(!res.hash) {
+                            setLoadWithdrawEther(false)
+                            return errorAlert(res)
+                          }
+                          setLoadWithdrawEther(false)
+                          successAlert(res.hash)
                       }}
                       disabled={!rollups}
                     >
@@ -181,14 +202,39 @@ const clear1155Batch = () => {
                     <Button
                     colorScheme="blue"
                     size="sm"
-                    onClick={() => depositErc20ToPortal(rollups,provider, setLoadERC20, erc20Token, erc20Amount)}
+                    onClick={async () => {
+                      if(!erc20Amount || !erc20Token) return errorAlert("Fields required!")
+                      setLoadERC20(true)
+                      const res: any = await depositErc20ToPortal(
+                            rollups,provider, 
+                            erc20Token, 
+                            erc20Amount,
+                            dappAddress
+                          )
+                        if(!res.hash) {
+                          setLoadERC20(false)
+                          return errorAlert(res)
+                        }
+                        setLoadERC20(false)
+                        successAlert(res.hash)
+                  
+                    }}
                     >
                    {loadERC20 ? "Depositing please wait..🤑" : "Deposit"}
                     </Button>
                     <Button
                     size="sm"
-                    onClick={() => {
-                        withdrawErc20(rollups, provider, setLoadWithdrawERC20, erc20Amount, erc20Token);
+                    onClick={async () => {
+                        if(!erc20Amount || !erc20Token) return errorAlert("Fields required!")
+                        setLoadWithdrawERC20(true)
+                        const res: any = await withdrawErc20(rollups, provider, erc20Amount, erc20Token, dappAddress);
+                        if(!res.hash) {   
+                          setLoadWithdrawERC20(false)
+                          return errorAlert(res)
+                        }
+                        setLoadWithdrawERC20(false)
+                        successAlert(res.hash)
+              
                     }}
                     disabled={!rollups}
                     >
@@ -231,15 +277,36 @@ const clear1155Batch = () => {
                     <Button
                       colorScheme="blue"
                       size="sm"
-                      onClick={() => transferNftToPortal(rollups, provider, setLoadTransferNFT, erc721, erc721Id)}
+                      onClick={ async () => 
+                      {
+                      if(!erc721 || !erc721Id) return errorAlert("Fields required!")
+                      setLoadTransferNFT(true)
+                      const res: any = await transferNftToPortal(rollups, provider, erc721, erc721Id, dappAddress)
+                      if(!res.hash) {
+                        setLoadTransferNFT(false)
+                        return errorAlert(res)
+                      }
+                      setLoadTransferNFT(false)
+                      successAlert(res.hash)
+                      }
+                    }
                       disabled={!rollups}
                     >
                       { loadTransferNFT ? "Transferring NFT please wait..🤑" : "Transfer"}
                     </Button>
                     <Button
                       size="sm"
-                      onClick={() => {
-                        withdrawErc721(rollups, provider, setLoadWithdrawERC721, erc721, erc721Id);
+                      onClick={async () => {
+                        if(!erc721 || !erc721Id) return errorAlert("Fields required!")
+                        setLoadWithdrawERC721(true)
+                        const res: any = await withdrawErc721(rollups, provider, erc721, erc721Id, dappAddress);
+                        if(!res.hash){
+                          setLoadWithdrawERC721(false)
+                          return errorAlert(res)
+                        }
+                        setLoadWithdrawERC721(false)
+                        successAlert(res.hash)
+                  
                       }}
                       disabled={!rollups}
                     >
@@ -251,7 +318,7 @@ const clear1155Batch = () => {
                 </AccordionPanel>
               </AccordionItem>
 
-              <AccordionItem>
+              {/* <AccordionItem>
                 <div className="flex justify-between">
                 <h2>
                   <AccordionButton textColor="white">
@@ -301,7 +368,18 @@ const clear1155Batch = () => {
                     <Button
                       colorScheme="blue"
                       size="sm"
-                      onClick={() => transferErc1155SingleToPortal(rollups, provider, setLoadERC1155, erc1155, erc1155Id, erc1155Amount)}
+                      onClick={async () => {
+                        if(!erc1155 || !erc1155Id || !erc1155Amount) return errorAlert("Fields required!")
+                        setLoadERC1155(true)
+                        const res: any = await transferErc1155SingleToPortal(rollups, provider, erc1155, erc1155Id!, erc1155Amount!, dappAddress)
+                        if(!res.hash) {
+                          setLoadERC1155(false) 
+                          return errorAlert(res)
+                        }
+                        setLoadERC1155(false)
+                        successAlert(res.hash)        
+                        }
+                      }
                       disabled={!rollups}
                     > 
                       { loadERC1155 ? "Transferring please wait..🤑" : "Transfer"}
@@ -325,7 +403,23 @@ const clear1155Batch = () => {
                     <Button
                       colorScheme="blue"
                       size="sm"
-                      onClick={() => transferErc1155BatchToPortal(rollups, provider, setLoadERC1155Batch, erc1155, erc1155Ids, erc1155Amounts)}
+                      onClick={ async () => 
+                        {
+                        try {
+                        if(!erc1155 || !erc1155Ids || !erc1155Amounts) return errorAlert("Fields required!")
+                         setLoadERC1155Batch(true)
+                         const res: any = await transferErc1155BatchToPortal(rollups, provider, erc1155, erc1155Ids, erc1155Amounts, dappAddress)
+                         if(!res.hash){
+                          setLoadERC1155Batch(false)
+                          return errorAlert(res)
+                         }
+                         setLoadERC1155Batch(false)
+                         successAlert(res.hash)
+                        } catch (error) {
+                          errorAlert(error)
+                        }
+                        }
+                      }
                       disabled={!rollups}
                     >
                       { loadERC1155Batch ? "Transferring please wait..🤑" : "Batch Transfer"}
@@ -333,7 +427,7 @@ const clear1155Batch = () => {
                     </div> }
                   </Stack>
                 </AccordionPanel>
-              </AccordionItem>
+              </AccordionItem> */}
 
             </Accordion>
           </TabPanel>
@@ -350,7 +444,16 @@ const clear1155Batch = () => {
                 <Button
                 className="mt-4"
                   size="sm"
-                  onClick={() => sendAddress(rollups, signer, setDappRelayedAddress)}
+                  onClick={ async () => {
+                    try{
+                      const tx =  await sendAddress(rollups, dappAddress)
+                      setDappRelayedAddress(true)
+                      successAlert(tx)
+                    }catch(err){
+                      errorAlert(err)
+                    }
+               
+                  }}
                   disabled={!rollups}
                 >
                   Relay Address
@@ -359,7 +462,7 @@ const clear1155Batch = () => {
                 <br />
               </div>
               }
-              {dappRelayedAddress &&  <Vouchers dappAddress={props.dappAddress} />}
+              {dappRelayedAddress &&  <Vouchers dappAddress={dappAddress} />}
             </Accordion>
           </TabPanel>
           <TabPanel>

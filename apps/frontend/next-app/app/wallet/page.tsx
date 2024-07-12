@@ -1,9 +1,9 @@
 'use client'
 import { FC, useState } from "react"
 import { Input, Box, InputGroup, InputLeftAddon, Stack, SimpleGrid} from "@chakra-ui/react"
-import { Balance } from "../Balance";
-import Transfers from "../Transfers";
-import { DAPP_ADDRESS } from "../../../utils/constants";
+import { Balance } from "../component/examples/Balance";
+import Transfers from "../component/examples/Transfers";
+import { DAPP_ADDRESS } from "../utils/constants";
 
 const Payment: FC = () => {
   const [dappAddress, setDappAddress] = useState<string>(DAPP_ADDRESS);

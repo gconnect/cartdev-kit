@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { useRollups } from "../hooks/useRollups";
+import { useRollups } from "../../cartesi/hooks/useRollups";
 import { Tabs, TabList, TabPanels, TabPanel, Tab, Card, CardBody, Checkbox } from "@chakra-ui/react";
 import { Button, Box } from "@chakra-ui/react";
 import { Input, Stack } from "@chakra-ui/react";
@@ -20,7 +20,7 @@ import { sendAddress, depositErc20ToPortal, depositEtherToPortal,
   withdrawErc20, withdrawErc721, withdrawEther, transferNftToPortal, 
   transferErc1155SingleToPortal,
   transferErc1155BatchToPortal} 
-  from "../Portals";
+  from "../../cartesi/Portals";
 import { errorAlert, successAlert } from "@/app/utils/customAlert";
 
 interface IProps {
@@ -318,7 +318,7 @@ const clear1155Batch = () => {
                 </AccordionPanel>
               </AccordionItem>
 
-              <AccordionItem>
+              {/* <AccordionItem>
                 <div className="flex justify-between">
                 <h2>
                   <AccordionButton textColor="white">
@@ -427,7 +427,7 @@ const clear1155Batch = () => {
                     </div> }
                   </Stack>
                 </AccordionPanel>
-              </AccordionItem>
+              </AccordionItem> */}
 
             </Accordion>
           </TabPanel>

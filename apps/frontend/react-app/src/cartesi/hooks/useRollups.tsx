@@ -1,7 +1,10 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { useAccount } from 'wagmi';
 import { Chain, toHex } from "viem";
 import { useEthersSigner } from "../../utils/useEtherSigner";
+
 import {
     CartesiDApp,
     CartesiDApp__factory,
@@ -41,16 +44,17 @@ export const useRollups = (dAddress: string): RollupsContracts | undefined => {
     const [dappAddress] = useState<string>(dAddress);
     const { address, chain } = useAccount();
     const signer = useEthersSigner();
+   
 
     useEffect(() => {
         const connect = async (
             chain: Chain
             ): Promise<RollupsContracts> => {
             let dappRelayAddress = "";
-            if(config[toHex(chain.id)].DAppRelayAddress) {
+            if(config[toHex(chain.id)]?.DAppRelayAddress) {
                 dappRelayAddress = config[toHex(chain.id)].DAppRelayAddress;
             } else {
-                console.error(`No dapp relay address address defined for chain ${toHex(chain.id)} ${chain.id}`);
+                console.error(`No dapp relay address address defined for chain ${toHex(chain.id)}`);
             }
 
             let inputBoxAddress = "";

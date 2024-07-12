@@ -1,6 +1,8 @@
+"use client"
+
 import { ethers, toBigInt } from "ethers";
-import React, { useEffect } from "react";
-import { useRollups } from "./hooks/useRollups";
+import React, { useCallback, useEffect, useState } from "react";
+import { useRollups } from "../../cartesi/hooks/useRollups";
 import {
     Table,
     Thead,
@@ -11,41 +13,40 @@ import {
     Button,
     Text
   } from '@chakra-ui/react'
-  import { useEthersSigner } from "../utils/useEtherSigner";
-import { Voucher, useVouchers } from "./hooks/useVouchers";
-import { executeVoucher } from "./Portals";
+import { useEthersSigner } from "../../utils/useEtherSigner";
+import { Voucher, useVouchers } from "../../cartesi/hooks/useVouchers";
+import { errorAlert, successAlert } from "../../utils/customAlert";
+import {  executeVoucher } from "../../cartesi/Portals";
+import toast from "react-hot-toast";
+
+
 interface IVoucherProps {
     dappAddress: string 
 }
 
 export const Vouchers: React.FC<IVoucherProps> = (props) => {
-    const {loading, error, data, vouchers, voucherResult, refetch } = useVouchers()
-
-    const [voucherToFetch, setVoucherToFetch] = React.useState([0,0]);
-
-    const [voucherToExecute, setVoucherToExecute] = React.useState<any>();
+    const {loading, error, data, vouchers, refetch } = useVouchers()
+    const [voucherToExecute, setVoucherToExecute] = useState<any>();
     const rollups = useRollups(props.dappAddress);
-    const signer = useEthersSigner()
     
     const getProof = async (voucher: Voucher) => {
-        setVoucherToFetch([voucher.index, voucher.input.index]);
+        setVoucher(voucher)
         refetch({ requestPolicy: 'network-only' });
     };
 
-    useEffect( () => {
-        const setVoucher = async (voucher: Voucher) => {
-            if (rollups) {
-                voucher.executed = await rollups.dappContract.wasVoucherExecuted(toBigInt(voucher.input.index),toBigInt(voucher.index));
-            }
-            console.log( voucher.executed)
-            setVoucherToExecute(voucher);
+    const setVoucher = useCallback(async (voucher: any) => {
+        if (rollups) {
+            voucher.executed = await rollups.dappContract.wasVoucherExecuted(toBigInt(voucher.input.index),toBigInt(voucher.index));
         }
-    
-        if (!voucherResult?.executed && voucherResult){
-            setVoucher(voucherResult);
-        }
-    },[voucherResult, voucherToFetch, rollups]);
-    
+        setVoucherToExecute(voucher);
+        console.log(voucherToExecute)
+        console.log(voucherToExecute.executed)
+
+    },[rollups, voucherToExecute])
+
+    useEffect(() => {
+        refetch({ requestPolicy: 'network-only' });  
+    },[refetch])
 
     if (loading) return <p className="text-slate-400">Loading...</p>;
     if (error) return <p className="text-slate-400">Oh no... {error.message}</p>;
@@ -53,7 +54,7 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
     if (!data || !data.vouchers) return <p className="text-slate-400">No vouchers</p>;
 
     return (
-        <div className="text-slate-400">
+        <div className="text-slate-200">
             <p></p>
         <Button marginTop={'15px'} float={'right'} size='sm' onClick={() => refetch({ requestPolicy: 'network-only' })}>
             Reload 🔃
@@ -77,9 +78,14 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
                      <Td>{voucherToExecute && voucherToExecute.input.index}</Td>
                     {/*<Td>{voucherToExecute.destination}</Td> */}
                     <Td>
-                        <Button size='sm' isDisabled={voucherToExecute && !voucherToExecute.proof || voucherToExecute && voucherToExecute.executed}
-                         onClick={() => executeVoucher(rollups, signer, setVoucherToExecute, voucherToExecute)}>{voucherToExecute && voucherToExecute.proof ? 
-                         (voucherToExecute.executed ? "Voucher executed" : "Execute voucher") : "No proof yet"}
+                        <Button size='sm' colorScheme={"green"}
+                         isDisabled={voucherToExecute.executed}
+                         onClick={ async () => {
+
+                           const res: any = await executeVoucher(voucherToExecute, rollups!)
+                           successAlert(res)
+                        }}>{voucherToExecute &&
+                         voucherToExecute.executed ? "Voucher executed" : "Execute Voucher"}
                         </Button>
                     </Td>
                     <Td>{voucherToExecute && voucherToExecute.index}</Td> 
@@ -115,10 +121,10 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
                             <Td>{n.index}</Td>
                             <Td>{n.destination}</Td> */}
                             <Td>
-                                <Button size='sm' onClick={() => getProof(n)}>Info</Button>
+                                <Button size='sm' onClick={() => getProof(n)}>Get Proof</Button>
                             </Td>
                             {/* <td>{n.input.payload}</td> */}
-                            <Td color={'grey'}>{n.payload}</Td>
+                            <Td color={'slategray'}>{n.payload}</Td>
                             {/* <td>
                                 <button disabled={!!n.proof} onClick={() => executeVoucher(n)}>Execute voucher</button>
                             </td> */}

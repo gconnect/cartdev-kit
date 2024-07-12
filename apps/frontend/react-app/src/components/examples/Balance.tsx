@@ -12,12 +12,12 @@ import {
     Stack,
     Box,
   } from '@chakra-ui/react'
-import { useInspectCall } from "../hooks/useInspectCall";
+import { useInspectCall } from "../../cartesi/hooks/useInspectCall";
 import { useAccount } from "wagmi";
 
 export const Balance: React.FC = () => {
-    const { decodedReports = {}, reports, inspectCall} = useInspectCall()
     const { address } = useAccount()
+    const { reports, decodedReports, inspectCall } = useInspectCall()
     return (
         <Box borderWidth='0.1px' padding='4' borderRadius='lg' overflow='hidden'>
         <TableContainer>
@@ -28,7 +28,7 @@ export const Balance: React.FC = () => {
                         <Th textAlign={'center'} textColor={'slategray'}>Ether</Th>
                         <Th textAlign={'center'} textColor={'slategray'}>ERC-20</Th>
                         <Th textAlign={'center'} textColor={'slategray'}>ERC-721</Th>
-                        <Th textAlign={'center'} textColor={'slategray'}>ERC-1155</Th>
+                        {/* <Th textAlign={'center'} textColor={'slategray'}>ERC-1155</Th> */}
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -52,11 +52,11 @@ export const Balance: React.FC = () => {
                             <div>🆔 {String(decodedReports.erc721).split(",")[1]}</div>
                         </Td> )}
 
-                        {decodedReports && decodedReports.erc721 && (
+                        {/* {decodedReports && decodedReports.erc721 && (
                         <Td textAlign={'center'}>
                             <div>📍 {String(decodedReports.erc1155).split(",")[0]}</div>
                             <div>🆔 {String(decodedReports.erc1155).split(",")[1]}</div>
-                        </Td>)}
+                        </Td>)} */}
             
                     </Tr>}
                 </Tbody>

@@ -1,9 +1,10 @@
+"use client"
 import { useQuery } from '@apollo/client'
 import { ethers } from 'ethers'
 import { useState } from 'react'
-import { NoticesByInputDocument } from '../generated/graphql'
+import {  NoticesDocument } from '../generated/graphql'
 
-export type TNotice = {
+export type Notice = {
   id: string
   index: number
   input: any //{index: number; epoch: {index: number; }
@@ -12,12 +13,12 @@ export type TNotice = {
 
 export const useNotices = () => {
   const [cursor] = useState(null)
-  const { loading, error, data, refetch } = useQuery(NoticesByInputDocument, {
+  const { loading, error, data, refetch } = useQuery(NoticesDocument, {
     variables: { cursor },
     pollInterval: 0,
   })
 
-  const notices: TNotice[] = data?.notices.edges
+  const notices: Notice[] = data?.notices.edges
     .map((node: any) => {
       const n = node.node
       let inputPayload = n?.input.payload

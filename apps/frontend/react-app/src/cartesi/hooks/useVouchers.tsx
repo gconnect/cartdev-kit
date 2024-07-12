@@ -1,9 +1,12 @@
+"use client"
 import { useQuery } from '@apollo/client'
 import { ethers } from 'ethers'
 import { useState } from 'react'
-import { VouchersByInputDocument } from '../generated/graphql'
+import { VouchersDocument } from '../generated/graphql'
 
 export type Voucher = {
+  fetching: any
+  data: boolean
   id: string;
   index: number;
   destination: string;
@@ -15,7 +18,7 @@ export type Voucher = {
 
 export const useVouchers = () => {
   const [cursor] = useState(null)
-  const { loading, error, data, refetch } = useQuery(VouchersByInputDocument, {
+  const { loading, error, data, refetch } = useQuery(VouchersDocument, {
     variables: { cursor },
     pollInterval: 0,
   })
@@ -113,6 +116,5 @@ export const useVouchers = () => {
         return b.input.index - a.input.index;
     }
 });
-  const voucherResult =  vouchers && vouchers[0]
-  return { loading, error, data, vouchers, voucherResult, refetch }
+  return { loading, error, data, vouchers, refetch }
 }

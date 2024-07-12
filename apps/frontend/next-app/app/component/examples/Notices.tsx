@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useEffect} from "react";
-import { useNotices } from "../hooks/useNotices";
+import { useNotices } from "../../cartesi/hooks/useNotices";
 import { ethers } from "ethers";
 import {
     Table,

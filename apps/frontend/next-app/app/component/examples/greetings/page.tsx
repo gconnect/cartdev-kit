@@ -12,8 +12,8 @@ import {
   TableCaption,
   TableContainer
 } from '@chakra-ui/react';
-import { addInput, fetchData } from '../../Portals';
-import { useRollups } from '../../hooks/useRollups';
+import { addInput, inspectCall } from '../../../cartesi/Portals';
+import { useRollups } from '../../../cartesi/hooks/useRollups';
 import { DAPP_ADDRESS, INSPECT_BASE_URL } from '../../../utils/constants';
 
 export default function Greetings() {
@@ -80,7 +80,7 @@ export default function Greetings() {
   const getGreeting = useCallback(async (id: number) => {
     try {
       setFetching(true);
-      await fetchData(INSPECT_BASE_URL, "get_greeting");
+      await inspectCall(INSPECT_BASE_URL, "get_greeting");
       setFetching(false);
     } catch (error) {
       setFetching(false);
@@ -91,7 +91,7 @@ export default function Greetings() {
   const getGreetings = useCallback(async () => {
     try {
       setFetching(true);
-      const res = await fetchData(INSPECT_BASE_URL, "get_greetings");
+      const res = await inspectCall(INSPECT_BASE_URL, "get_greetings");
       console.log("res", res);
       setMessageList(res); // Assuming res is JSON string
       setFetching(false);

@@ -1,5 +1,8 @@
+"use client"
+
+import { ethers } from "ethers";
 import React, { useEffect } from "react";
-import { useReports } from "./hooks/useReports";
+import { useReports } from "../../cartesi/hooks/useReports";
 
 import {
     Table,
@@ -20,7 +23,7 @@ export const Reports: React.FC = () => {
 
     useEffect(() => {
         refetch({ requestPolicy: 'network-only' });
-    }, []);
+    }, [refetch]);
     
     if (loading) return <p className="text-slate-400">Loading...</p>;
     if (error) return <p className="text-slate-400">Oh no... {error.message}</p>;
@@ -28,13 +31,13 @@ export const Reports: React.FC = () => {
     if (!data || !data.reports) return <p className="text-slate-400">No reports</p>;
 
     return (
-        <div>
+        <div className="overflow-x-auto">
             <Table>
                 <Thead>
                     <Tr>
                         {/* <Th>Input Index</Th>
-                        <Th>Notice Index</Th> */}
-                        {/* <th>Input Payload</th> */}
+                        <Th>Notice Index</Th> 
+                        <th>Input Payload</th> */}
                         <Th className="text-slate-200">Reports <Button size='xs' onClick={() => refetch({ requestPolicy: 'network-only' })}>
                              🔃 </Button>
                         </Th>
@@ -49,9 +52,9 @@ export const Reports: React.FC = () => {
                     {reports && reports.map((n: any) => (
                         <Tr key={`${n.input.index}-${n.index}`}>
                             {/* <Td>{n.input.index}</Td>
-                            <Td>{n.index}</Td> */}
-                            {/* <td>{n.input.payload}</td> */}
-                            <Td color={'grey'}>{n.payload}</Td>
+                            <Td>{n.index}</Td>  */}
+                             {/* <td>{n.input.payload}</td> */}
+                            <Td color={'slategray'}>{n.payload}</Td>
                         </Tr>
                     ))}
                 </Tbody>
