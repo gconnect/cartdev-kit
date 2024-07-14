@@ -8,6 +8,9 @@ const fs = require("fs-extra")
   fs.ensureDir(destinationDir)
   console.log(destinationDir)
   process.chdir(destinationDir);
+
+  // npm install -g lerna && npm install -g yarn && lerna init
+
   exec('npm install', (error, stdout, stderr) => {
       if (error) {
           console.error(`Error installing dependencies: ${error.message}`);
@@ -25,3 +28,7 @@ const fs = require("fs-extra")
 module.exports = { 
   installDependencies
 }
+
+
+
+

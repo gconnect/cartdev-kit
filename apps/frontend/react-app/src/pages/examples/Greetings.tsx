@@ -1,8 +1,7 @@
-'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { useEthersSigner } from '../../../utils/useEtherSigner';
-import { errorAlert, successAlert } from '../../../utils/customAlert';
+import { useEthersSigner } from '../../utils/useEtherSigner';
+import { errorAlert, successAlert } from '../../utils/customAlert';
 import {
   Table,
   Thead,
@@ -12,9 +11,9 @@ import {
   TableCaption,
   TableContainer
 } from '@chakra-ui/react';
-import { addInput, inspectCall } from '../../../cartesi/Portals';
-import { useRollups } from '../../../cartesi/hooks/useRollups';
-import { DAPP_ADDRESS, INSPECT_BASE_URL } from '../../../utils/constants';
+import { addInput, inspectCall } from '../../cartesi/Portals';
+import { useRollups } from '../../cartesi/hooks/useRollups';
+import { DAPP_ADDRESS, INSPECT_BASE_URL } from '../../utils/constants';
 
 export default function Greetings() {
   const [loading, setLoading] = useState(false);
@@ -153,7 +152,7 @@ export default function Greetings() {
       </button>
       {fetching && (<p className='mt-4 text-gray-400'>Fetching data...</p>)}
 
-      {listMessages && listMessages.length === 0 ? "" :
+      {(!listMessages || listMessages.length === 0) ? (<div></div>):
         (
           <div>
             <p className="my-4 font-bold text-gray-400">Output</p>

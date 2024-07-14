@@ -1,5 +1,5 @@
 {
-  "name": "cartesikit",
+  "name": "cartdevkit",
   "version": "1.0.7",
   "description": "Custom template",
   "author": "gconnect",
@@ -10,11 +10,14 @@
   },
   "homepage": "https://github.com/gconnect/cartesi-kit/blob/master/README.md",
   "keywords": [
-    "cartesikit",
+    "cartdevkit",
     "cartesi"
   ],
+  "workspaces": [
+    "packages/*"
+  ],
   "bin": {
-    "cartesikit": "./bin/index.js"
+    "cartdevkit": "./bin/index.js"
   },
   "dependencies": {
     "chalk": "^5.3.0",

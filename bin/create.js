@@ -8,7 +8,8 @@ const { promptTemplateSelection, promptInclude } = require('../helper/promptUtil
 const { copyTemplateFiles } = require('../helper/copy-template-files');
 const  { figletText } = require( "../utils/ascii-image");
 const { copyGitTemplateFiles } = require("../helper/fetch-git-repo")
-const { installDependencies } = require("../helper/install-dependencies")
+const { installDependencies } = require("../helper/install-dependencies");
+const { generateMonorepo } = require("../helper/generate-monorepo");
 
 
 async function createProject(projectName) {
@@ -27,7 +28,8 @@ async function createProject(projectName) {
   
   console.log(await figletText)
   
-    const projectDir = path.resolve(process.cwd(), projectName);
+    const projectDir = path.resolve(process.cwd(), `${projectName}/packages`);
+
     await ensureDirectory(projectDir);
 
     const selectedTemplateType = await promptTemplateSelection('project', [
@@ -48,6 +50,7 @@ async function createProject(projectName) {
         if (include.includeBackend) {
           selectedBackend = await promptTemplateSelection( 'backend', templates.backend);
         }
+        await generateMonorepo(projectDir)
         break;
       case 'backend':
         selectedBackend = await promptTemplateSelection('backend', templates.backend);
@@ -60,6 +63,7 @@ async function createProject(projectName) {
         if(includeConsole.includeConsole){
           selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole )
         }
+        await generateMonorepo(projectDir)
         break;
       case 'mobileApp':
         selectedMobile = await promptTemplateSelection('mobileApp', templates.mobileApp);
@@ -67,13 +71,16 @@ async function createProject(projectName) {
         if (includeBackend.includeBackend) {
           selectedBackend = await promptTemplateSelection( 'backend', templates.backend);
         }
+        await generateMonorepo(projectDir)
         break;
       case 'cartesify':
         selectedCartesifyBackend = await promptTemplateSelection('cartesify', templates.cartesify.backend)
         selectedCartesifyFrontend = await promptTemplateSelection('cartesify', templates.cartesify.frontend)
+        await generateMonorepo(projectDir)
         break
       case 'frontendConsole':
         selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole)
+        await generateMonorepo(projectDir) 
         break
     }
   
@@ -85,18 +92,28 @@ async function createProject(projectName) {
     if (selectedFrontend) {
       console.log(selectedFrontend)
       await copyTemplateFiles(selectedFrontend, frontendProjectDir, "apps/frontend");
+      // await installDependencies(selectedFrontend, frontendProjectDir, "apps/frontend");
+
     }
     if (selectedBackend) {
       await copyTemplateFiles(selectedBackend, backendProjectDir, "apps/backend");
+      // await installDependencies(selectedBackend, backendProjectDir, "apps/backend");
+
     }
     if(selectedCartesifyBackend){
       await copyTemplateFiles(selectedCartesifyBackend, backendProjectDir, "apps/cartesify/backend"); 
+      // await installDependencies(selectedCartesifyBackend, backendProjectDir, "apps/cartesify/backend"); 
+
     }
     if(selectedCartesifyFrontend){
       await copyTemplateFiles(selectedCartesifyFrontend, frontendProjectDir, "apps/cartesify/frontend"); 
+      // await installDependencies(selectedCartesifyFrontend, frontendProjectDir, "apps/cartesify/frontend"); 
+
     }
     if(selectedMobile){
-      await copyTemplateFiles(selectedMobile, mobileProjectDir, "apps/mobileApp"); 
+      await copyTemplateFiles(selectedMobile, mobileProjectDir, "apps/mobileApp");
+      // await installDependencies(selectedMobile, mobileProjectDir, "apps/mobileApp"); 
+ 
     }
     if(selectedConsole){
       const giturl = "https://github.com/Mugen-Builders/sunodo-frontend-console.git"

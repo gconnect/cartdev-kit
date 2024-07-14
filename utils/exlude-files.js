@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 
 
-const filesToExclude = ['.git', '.env', 'node_modules', 'package-lock.json'];
+const filesToExclude = ['.git', '.env', 'node_modules', 'package-lock.json', 'yarn-lock'];
 
 const exludeFiles = (sourceDir, destDir) => {
   // Check if the source directory exists

@@ -109,7 +109,7 @@ export default function Greetings() {
       </button>
       {fetching && (<p className='mt-4 text-gray-400'>Fetching data...</p>)}
 
-      {listMessages && listMessages.length === 0 ? "" :
+      {(!listMessages || listMessages.length === 0) ? (<div></div>):
         (
           <div>
             <p className="my-4 font-bold text-gray-400">Output</p>
@@ -133,7 +133,7 @@ export default function Greetings() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {listMessages.map((item: any, index: any) => (
+                  { listMessages && listMessages.map((item: any, index: any) => (
                     <Tr key={index} className='mb-2  flex justify-between'>
                       <Td className='text-gray-400'>{item.id}</Td>
                       <Td onClick={async () => {

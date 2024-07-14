@@ -1,6 +1,6 @@
 const figlet = require('figlet');
 
-const figletText = figlet('Cartesi Kit',
+const figletText = figlet('CartDev Kit',
 {
   font: "Colossal",
   horizontalLayout: "default",

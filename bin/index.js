@@ -22,7 +22,7 @@ program
   createProject(projectName)
 });
 
-program.command('help').description('Display help for cartesikit')
+program.command('help').description('Display help for cartdevkit')
 program.option('--help', 'display help for command')
 
 // Parse command-line arguments
