@@ -36,8 +36,6 @@ export const Vouchers: React.FC<IVoucherProps> = (props) => {
         }
         setVoucherToExecute(voucher);
         console.log(voucherToExecute)
-        console.log(voucherToExecute.executed)
-
     },[rollups, voucherToExecute])
 
     useEffect(() => {
