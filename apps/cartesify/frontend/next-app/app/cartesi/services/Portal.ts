@@ -80,7 +80,7 @@ export const loadBatchBalances = async (signer: JsonRpcSigner, erc1155address: s
 }
 
 export const depositEther = async (
-    amount: number, 
+    amount: string, 
     signer: JsonRpcSigner | undefined, 
     chain: Chain
     ) => {
@@ -106,12 +106,12 @@ export const depositEther = async (
 }
 
 export const depositERC20 = async (dappAddress: string, erc20address: string, 
-    erc20value: number, signer: JsonRpcSigner, chain: Chain) => {
+    erc20value: string, signer: JsonRpcSigner, chain: Chain) => {
     try {
         const portalAddress = config[toHex(chain.id)].Erc20PortalAddress
         const explorer = config[toHex(chain.id)].explorer
         const contract = IERC20__factory.connect(erc20address, signer)
-        await contract.approve(portalAddress, parseEther(erc20value.toString()))
+        await contract.approve(portalAddress, parseEther(erc20value))
         const portal = ERC20Portal__factory.connect(portalAddress, signer)
         const tx = await portal.depositERC20Tokens(erc20address, dappAddress, parseEther(erc20value.toString()), '0x')
         const receipt = await (tx as any).wait()
@@ -191,7 +191,7 @@ try {
             console.log(tx)
             const receipt = await (tx as any).wait()
             console.log('Executed!', receipt)
-            successAlert(`${explorer/+"tx"/receipt.hash}`)
+            successAlert(`voucher successfully executed!`)
         }
     return executed
     } catch (error) {

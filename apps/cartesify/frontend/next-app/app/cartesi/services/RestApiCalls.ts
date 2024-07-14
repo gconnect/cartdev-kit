@@ -1,5 +1,5 @@
-import { JsonRpcSigner, parseEther } from "ethers";
-import { RPC_URL, BASE_URL, DAPP_ADDRESS } from "../../utils/constants";
+import { JsonRpcSigner } from "ethers";
+import { RPC_URL, BASE_URL } from "../../utils/constants";
 import { fetch } from '../../utils/cartersify-init'
 import { Batch } from "../model";
 import { balanceERC1155, balanceERC20, balanceERC721, loadBatchBalances } from './Portal'
@@ -47,7 +47,7 @@ export const transferErc20 = async (
       body: JSON.stringify({
           token: erc20address,
           to: toAddress,
-          amount: erc20value.toString()
+          amount: erc20value
       }),
       signer,
   })
@@ -123,7 +123,7 @@ export  const transferErc1155 = async (signer: JsonRpcSigner, erc1155address: st
 
 export const withdrawEther = async (
   signer: JsonRpcSigner | undefined, 
-  etherValue: number,
+  etherValue: number
  ) => {
   const res = await fetch(`${BASE_URL}/wallet/ether/withdraw`, {
       method: 'POST',
@@ -131,7 +131,7 @@ export const withdrawEther = async (
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-          amount: etherValue.toString()
+          amount: etherValue
       }),
       signer,
   })
@@ -160,7 +160,7 @@ export const withdrawErc20 = async (
       },
       body: JSON.stringify({
           token: erc20address,
-          amount: erc20value.toString() 
+          amount: erc20value
       }),
       signer,
   })
@@ -182,6 +182,8 @@ export const withdrawErc20 = async (
   erc721address: string,
   erc721id: number
  ) => {
+  // await Cartesify.withdrawERC721(erc721address, address, tokenId)
+
   const res = await fetch(`${BASE_URL}/wallet/erc-721/withdraw`, {
       method: 'POST',
       headers: {
@@ -210,6 +212,8 @@ export const withdrawErc1155 = async (
   erc1155id: number,
   tokenAmount: number
  ) => {
+  // await Cartesify.withdrawERC721(erc721address, address, tokenId)
+
   const res = await fetch(`${BASE_URL}/wallet/erc-1155/withdraw`, {
       method: 'POST',
       headers: {
@@ -234,7 +238,7 @@ export const withdrawErc1155 = async (
 }
 
 
-export const batchWithdraw = async (
+export  const batchWithdraw = async (
   signer: JsonRpcSigner, erc1155address: string, 
   batch: Batch[]
   ) => {
@@ -338,18 +342,11 @@ export const createOrUpdateRequest = async (
 
 }
 
-export const fetchWallet = async (address: string, 
+export const fetchWallet = async (signer: JsonRpcSigner | undefined, 
   setResponse: Function
 ) => {
   try {
-    const res = await fetch(`${BASE_URL}/wallet/${address}`, { 
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        }, 
-    })
-      console.log("res", res.status)
-
+    const res = await fetch(`${BASE_URL}/wallet/${signer?.address}`)
     if (!res.ok) {
       console.log(res.status, res.text())
       return errorAlert(`${res.status}, ${await res.text()}`)
@@ -404,7 +401,6 @@ export const getERC20Balance = async (
       const json = await res.json()
       setErc20balanceL2(json.erc20[erc20address] ?? '0')
       const balance = await balanceERC20(erc20address, signer)
-      console.log(balance)
       setErc20balanceL1(balance.toString())
       console.log('Success!')
       successAlert("Success")

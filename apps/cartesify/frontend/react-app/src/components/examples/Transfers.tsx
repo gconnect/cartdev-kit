@@ -65,7 +65,6 @@ const Transfers: React.FC = () => {
   const [isL2transfer, setL2Transfer] = useState(false)
   const [etherBalanceL1, setEtherBalanceL1] = useState<number>(0)
   const [etherBalanceL2, setEtherBalanceL2] = useState<number>(0)
-
   const [toAddress, setToAddress] = useState('')
   const [erc20balanceL1, setErc20balanceL1] = useState('0')
   const [erc20balanceL2, setErc20balanceL2] = useState('0')
@@ -184,10 +183,16 @@ const clear1155Batch = () => {
                      <Button disabled={!address}
                       size="sm"
                       onClick={ async () => {
-                        if(!etherAmount) return errorAlert("Field required!")
-                        setLoadWithdrawEther(true)
-                        await withdrawEther(signer, Number(parseEther(etherAmount)))
-                        setLoadWithdrawEther(false)
+                        try{
+                          if(!etherAmount) return errorAlert("Field required!")
+                          setLoadWithdrawEther(true)
+                          await withdrawEther(signer, Number(parseEther(etherAmount)))
+                          setLoadWithdrawEther(false)
+                        }catch(err){
+                          setLoadWithdrawEther(false)
+                          errorAlert(err)
+                        }
+                 
                       }}
                     >
                      { loadWithdrawEther ? "Withdrawing please wait..🤑" : "Voucher Withdraw" }
@@ -198,10 +203,16 @@ const clear1155Batch = () => {
                       colorScheme=""
                       size="sm"
                       onClick={async () => {
-                        if(!toAddress) return errorAlert("Receipient Address required!")
-                        setL2LoadEther(true)
-                        await transferEther(signer, toAddress, Number(parseEther(etherAmount)))
-                        setL2LoadEther(false)
+                        try{
+                          if(!toAddress) return errorAlert("Receipient Address required!")
+                          setL2LoadEther(true)
+                          await transferEther(signer, toAddress, Number(parseEther(etherAmount)))
+                          setL2LoadEther(false)
+                        }catch(err){
+                          setL2LoadEther(false)
+                          errorAlert(err)
+                        }
+                    
                       }}
                     > {l2LoadEther ? "Transferring please wait..🤑" :"L2 Transfer"}
                     </Button>
@@ -291,10 +302,16 @@ const clear1155Batch = () => {
                      <Button disabled={!address}
                     size="sm"
                     onClick={ async () => {
-                      if(!erc20Token || !erc20Amount) return errorAlert("Field required!")
-                      setLoadWithdrawERC20(true)
-                      await withdrawErc20(signer, erc20Token, Number(parseEther(erc20Amount)))
-                      setLoadWithdrawERC20(false)
+                      try{
+                        if(!erc20Token || !erc20Amount) return errorAlert("Field required!")
+                          setLoadWithdrawERC20(true)
+                          await withdrawErc20(signer, erc20Token, Number(parseEther(erc20Amount)))
+                          setLoadWithdrawERC20(false)
+                      }catch(err){
+                        setLoadWithdrawERC20(false)
+                        errorAlert(err)
+                      }
+    
                     }}
                     >
                     {loadWithdrawERC20 ? "Withdrawing please wait..🤑" : "Voucher Withdraw"}
@@ -305,10 +322,16 @@ const clear1155Batch = () => {
                       colorScheme=""
                       size="sm"
                       onClick={async () => {
-                        if(!erc20Token || !erc20Amount || !toAddress) return errorAlert("Field required!")
-                        setLoadL2ERC20(true)
-                        await transferErc20(signer, erc20Token, toAddress, Number(parseEther(erc20Amount)))
-                        setLoadL2ERC20(false)
+                        try{
+                          if(!erc20Token || !erc20Amount || !toAddress) return errorAlert("Field required!")
+                          setLoadL2ERC20(true)
+                          await transferErc20(signer, erc20Token, toAddress, Number(parseEther(erc20Amount)))
+                          setLoadL2ERC20(false)
+                        }catch(err){
+                          setLoadL2ERC20(false)
+                          errorAlert(err)
+                        }
+                      
                       }}
                       > {loadL2ERC20 ? "Transferring please wait..🤑" :"L2 Transfer"}
                     </Button>
@@ -398,10 +421,14 @@ const clear1155Batch = () => {
                      <Button disabled={!address}
                       size="sm"
                       onClick={ async () => {
-                        if(!erc721 || !erc721Id ) return errorAlert("Field required")   
-                        setLoadWithdrawERC721(true)
-                        await withdrawErc721(signer, erc721, Number(erc721Id))
-                        setLoadWithdrawERC721(false)
+                        try{
+                          if(!erc721 || !erc721Id ) return errorAlert("Field required")   
+                          setLoadWithdrawERC721(true)
+                          await withdrawErc721(signer, erc721, Number(erc721Id))
+                          setLoadWithdrawERC721(false)
+                        }catch(err){
+                          errorAlert(err)
+                        }            
                       }}
                     >
                      { loadWithdrawERC721 ? "Withdrawing NFT Please wait..🤑" : "Withdraw"}
@@ -412,10 +439,16 @@ const clear1155Batch = () => {
                         colorScheme=""
                         size="sm"
                         onClick={ async () => {
-                          if(!erc721 || !erc721Id || toAddress) return errorAlert("Field required")
-                          setLoadTransferNFT(true)
-                          await transferErc721(signer,erc721,toAddress, Number(erc721Id))
-                          setLoadTransferNFT(false)
+                          try{
+                            if(!erc721 || !erc721Id) return errorAlert("Field required")
+                            setLoadTransferNFT(true)
+                            await transferErc721(signer,erc721,toAddress, Number(erc721Id))
+                            setLoadTransferNFT(false)
+                          }catch(err){
+                            setLoadTransferNFT(false)
+                            errorAlert(err)
+                          }
+                 
                         }}
                       > {loadTransferNFT ? "Transferring please wait..🤑" :"L2 Transfer"}
                       </Button>
@@ -557,7 +590,7 @@ const clear1155Batch = () => {
                         colorScheme=""
                         size="sm"
                         onClick={async () => {
-                          if(!erc1155 || !erc1155Id || !erc1155Amount || !toAddress) return errorAlert("Fields required!")
+                          if(!erc1155 || !erc1155Id || !erc1155Amount ) return errorAlert("Fields required!")
                           setL2LoadERC1155(true);
                           await transferErc1155(signer!, erc1155, toAddress, batch);
                           setL2LoadERC1155(false);

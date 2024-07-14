@@ -170,13 +170,14 @@ try {
     const executed = await cartesiDApp.wasVoucherExecuted(voucher.input.index, voucher.index)
         if (executed) {
             console.log('Voucher was executed!!!')
+            errorAlert("Voucher already executed!")
         } else {
             console.log('executing voucher...')
             const tx = await cartesiDApp.executeVoucher(voucher.destination, voucher.payload, voucher.proof)
             console.log(tx)
             const receipt = await (tx as any).wait()
             console.log('Executed!', receipt)
-            successAlert(`${explorer/+"tx"/receipt.hash}`)
+            successAlert(`voucher successfully executed!`)
 
         }
     } catch (error) {
