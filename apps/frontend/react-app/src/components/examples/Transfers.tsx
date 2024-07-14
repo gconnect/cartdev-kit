@@ -32,15 +32,15 @@ const Transfers: React.FC<IProps> = ({ dappAddress }: IProps) => {
   const signer = useEthersSigner()
   const provider = signer?.provider
   const [dappRelayedAddress, setDappRelayedAddress] = useState<boolean>(false)
-  const [erc20Amount, setErc20Amount] = useState<number>(0);
+  const [erc20Amount, setErc20Amount] = useState<string>("");
   const [erc20Token, setErc20Token] = useState<string>("");
-  const [erc721Id, setErc721Id] = useState<number>(0);
+  const [erc721Id, setErc721Id] = useState<string>("");
   const [erc721, setErc721] = useState<string>("");
-  const [etherAmount, setEtherAmount] = useState<number>(0);
+  const [etherAmount, setEtherAmount] = useState<string>("");
 
   const [erc1155, setErc1155] = useState<string>("");
-  const [erc1155Id, setErc1155Id] = useState<number>();
-  const [erc1155Amount, setErc1155Amount] = useState<number>();
+  const [erc1155Id, setErc1155Id] = useState<string>("");
+  const [erc1155Amount, setErc1155Amount] = useState<string>("");
   const [erc1155Ids, setErc1155Ids] = useState<number[]>([]);
   const [erc1155Amounts, setErc1155Amounts] = useState<number[]>([]);
   const [erc1155IdsStr, setErc1155IdsStr] = useState<string>("[]");
@@ -60,10 +60,10 @@ const Transfers: React.FC<IProps> = ({ dappAddress }: IProps) => {
   }
   const addTo1155Batch = () => {
     const newIds = erc1155Ids;
-    newIds.push(erc1155Id!);
+    newIds.push(Number(erc1155Id!));
     setErc1155Ids(newIds);
     const newAmounts = erc1155Amounts;
-    newAmounts.push(erc1155Amount!);
+    newAmounts.push(Number(erc1155Amount!));
     setErc1155Amounts(newAmounts);
     setErc1155IdsStr("["+erc1155Ids.join(',')+"]");
     setErc1155AmountsStr("["+erc1155Amounts.join(',')+"]");
@@ -123,7 +123,7 @@ const clear1155Batch = () => {
                       type="number"
                       variant="outline"
                       placeholder="Enter amount"
-                      onChange={(e) => setEtherAmount(Number(e.target.value))}
+                      onChange={(e) => setEtherAmount(e.target.value)}
                       value={etherAmount}  
                     />
                     <Button
@@ -133,7 +133,7 @@ const clear1155Batch = () => {
                       try {
                         if(!etherAmount) return errorAlert("Amount field required!")
                         setLoadEther(true)
-                        const res = await depositEtherToPortal(rollups, provider, etherAmount, dappAddress);
+                        const res = await depositEtherToPortal(rollups, provider, Number(etherAmount), dappAddress);
                         if(!res.hash) {
                           setLoadEther(false)
                           return errorAlert(res)
@@ -152,7 +152,7 @@ const clear1155Batch = () => {
                       onClick={async () => {
                           if(!etherAmount) return errorAlert("Amount fields required!")
                           setLoadWithdrawEther(true)
-                          const res: any = await withdrawEther(rollups, provider, etherAmount, dappAddress);
+                          const res: any = await withdrawEther(rollups, provider, Number(etherAmount), dappAddress);
                           if(!res.hash) {
                             setLoadWithdrawEther(false)
                             return errorAlert(res)
@@ -189,13 +189,14 @@ const clear1155Batch = () => {
                       value={erc20Token}
                     />
                     <Input
+                      min={0}
                       borderWidth="0.1px"
                       borderColor="slategrey" 
                       color="slategrey"                   
                       type="number"
                       variant="outline"
                       placeholder="Amount"
-                      onChange={(e) => setErc20Amount(Number(e.target.value))}
+                      onChange={(e) => setErc20Amount(e.target.value)}
                       value={erc20Amount}
                     />
                     <Button
@@ -207,7 +208,7 @@ const clear1155Batch = () => {
                       const res: any = await depositErc20ToPortal(
                             rollups,provider, 
                             erc20Token, 
-                            erc20Amount,
+                            Number(erc20Amount),
                             dappAddress
                           )
                         if(!res.hash) {
@@ -226,7 +227,7 @@ const clear1155Batch = () => {
                     onClick={async () => {
                         if(!erc20Amount || !erc20Token) return errorAlert("Fields required!")
                         setLoadWithdrawERC20(true)
-                        const res: any = await withdrawErc20(rollups, provider, erc20Amount, erc20Token, dappAddress);
+                        const res: any = await withdrawErc20(rollups, provider, Number(erc20Amount), erc20Token, dappAddress);
                         if(!res.hash) {   
                           setLoadWithdrawERC20(false)
                           return errorAlert(res)
@@ -264,13 +265,14 @@ const clear1155Batch = () => {
                       value={erc721}
                     />
                     <Input
+                      min={0}
                       type="number"
                       borderWidth="0.1px"
                       borderColor="slategrey"
                       color="slategrey"
                       variant="outline"
                       placeholder="ID"
-                      onChange={(e) => setErc721Id(Number(e.target.value))}
+                      onChange={(e) => setErc721Id(e.target.value)}
                       value={erc721Id}
                     />
                     <Button
@@ -280,7 +282,7 @@ const clear1155Batch = () => {
                       {
                       if(!erc721 || !erc721Id) return errorAlert("Fields required!")
                       setLoadTransferNFT(true)
-                      const res: any = await transferNftToPortal(rollups, provider, erc721, erc721Id, dappAddress)
+                      const res: any = await transferNftToPortal(rollups, provider, erc721, Number(erc721Id), dappAddress)
                       if(!res.hash) {
                         setLoadTransferNFT(false)
                         return errorAlert(res)
@@ -298,7 +300,7 @@ const clear1155Batch = () => {
                       onClick={async () => {
                         if(!erc721 || !erc721Id) return errorAlert("Fields required!")
                         setLoadWithdrawERC721(true)
-                        const res: any = await withdrawErc721(rollups, provider, erc721, erc721Id, dappAddress);
+                        const res: any = await withdrawErc721(rollups, provider, erc721, Number(erc721Id), dappAddress);
                         if(!res.hash){
                           setLoadWithdrawERC721(false)
                           return errorAlert(res)
@@ -342,6 +344,7 @@ const clear1155Batch = () => {
                       value={erc1155}
                     />
                     <Input
+                      min={0}
                       type="number"
                       borderWidth="0.1px"
                       borderColor="slategrey"
