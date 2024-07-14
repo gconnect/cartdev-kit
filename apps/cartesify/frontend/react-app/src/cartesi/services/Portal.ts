@@ -193,7 +193,7 @@ export const callDAppAddressRelay = async (signer: JsonRpcSigner | undefined, ch
         const tx = await relay.relayDAppAddress(DAPP_ADDRESS)
         const receipt = await (tx as any).wait()
         console.log('Executed!', receipt)
-        successAlert(`${explorer/+"tx"/receipt.hash}`)
+        successAlert(`Succesfully fetched dapp address`)
     } catch (error) {
         errorAlert(error)
     }

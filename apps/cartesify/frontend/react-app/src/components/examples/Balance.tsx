@@ -19,7 +19,7 @@ import {
 export const Balance: React.FC = () => {
     const [backendResponse, setResponse] = useState('')
     const signer = useEthersSigner()
-    const { chain } = useAccount()
+    const { address, chain } = useAccount()
     console.log(backendResponse)
     return (
         <div>
@@ -45,7 +45,7 @@ export const Balance: React.FC = () => {
                 </Tbody>
             </Table>
             <Button colorScheme="blue" className=" p-2 " onClick={async () => {
-                    await fetchWallet(signer, setResponse)
+                    await fetchWallet(address!, setResponse)
                 }}>Get Wallet Balance</Button>
              <Button  onClick={async () => {
                     await callDAppAddressRelay(signer, chain!)

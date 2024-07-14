@@ -342,11 +342,11 @@ export const createOrUpdateRequest = async (
 
 }
 
-export const fetchWallet = async (signer: JsonRpcSigner | undefined, 
+export const fetchWallet = async (address: string, 
   setResponse: Function
 ) => {
   try {
-    const res = await fetch(`${BASE_URL}/wallet/${signer?.address}`)
+    const res = await fetch(`${BASE_URL}/wallet/${address}`)
     if (!res.ok) {
       console.log(res.status, res.text())
       return errorAlert(`${res.status}, ${await res.text()}`)

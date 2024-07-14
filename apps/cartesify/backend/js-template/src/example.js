@@ -1,7 +1,7 @@
 const express = require("express");
 const axios = require("axios");
-const { createWallet, WalletApp } = require("@deroll/wallet");
-const CartesifyBackend = require("@calindra/cartesify-backend");
+const { createWallet } = require("@deroll/wallet");
+const { CartesifyBackend } = require("@calindra/cartesify-backend")
 
 console.log('starting app.js...');
 
@@ -11,9 +11,8 @@ app.use(express.json());
 
 let greetings = [];
 let nextId = 1;
-
-let dapp;
-let wallet;
+let dapp
+let wallet
 
 CartesifyBackend.createDapp().then(initDapp => {
     console.log('Dapp started');
@@ -104,6 +103,8 @@ app.delete('/greetings', (req, res) => {
 });
 
 app.get("/wallet/:address", async (req, res) => {
+  try{
+    if(!wallet || !wallet.getWallet) throw new Error("Wallet not accessible!");
     console.log(`Checking balance ${req.params.address}`);
     const userWallet = await wallet.getWallet(req.params.address);
     console.log("UserWallet", userWallet)
@@ -120,6 +121,10 @@ app.get("/wallet/:address", async (req, res) => {
     });
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.send(json);
+  }catch(e){
+    res.status(400).send({ message: e.message });
+  }
+   
 });
 
 app.post("/wallet/ether/transfer", async (req, res) => {

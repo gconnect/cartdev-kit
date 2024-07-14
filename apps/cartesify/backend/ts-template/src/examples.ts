@@ -116,22 +116,28 @@ CartesifyBackend.createDapp().then(initDapp => {
     
     
     app.get("/wallet/:address", async (req: Request, res: Response) => {
-        console.log(`Checking balance ${req.params.address}`);
-        const userWallet = await wallet.getWallet(req.params.address!);
-        console.log("UserWallet", userWallet)
-        const json = JSON.stringify(userWallet, (_key, value) => {
-            if (typeof value === 'bigint') {
-                return value.toString();
-            } else if (typeof value === 'object' && value instanceof Map) {
-                return Object.fromEntries(value);
-            } else if (typeof value === 'object' && value instanceof Set) {
-                return [...value];
-            } else {
-                return value;
-            }
-        });
-        res.setHeader('Content-Type', 'application/json; charset=utf-8');
-        res.send(json);
+        try{
+            wallet = createWallet()
+            console.log(`Checking balance ${req.params.address}`);
+            const userWallet = wallet.getWallet(req.params.address!);
+            console.log("UserWallet", userWallet)
+            const json = JSON.stringify(userWallet, (_key, value) => {
+                if (typeof value === 'bigint') {
+                    return value.toString();
+                } else if (typeof value === 'object' && value instanceof Map) {
+                    return Object.fromEntries(value);
+                } else if (typeof value === 'object' && value instanceof Set) {
+                    return [...value];
+                } else {
+                    return value;
+                }
+            });
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            res.send(json);
+        }catch(e: any){
+            res.status(400).send({ message: e.message });  
+        }
+
     });
     
     app.post("/wallet/ether/transfer", async (req: Request, res: Response) => {
