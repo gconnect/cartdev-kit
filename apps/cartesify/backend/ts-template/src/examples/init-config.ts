@@ -6,6 +6,7 @@ let dapp: any;
 let wallet: WalletApp;
 
 export const appConfig = () => {
+
   CartesifyBackend.createDapp().then(initDapp => {
     console.log('Dapp started');
     initDapp.start().catch((e: Error) => {
@@ -15,6 +16,7 @@ export const appConfig = () => {
 
     dapp = initDapp;
     wallet = createWallet();
+    
     dapp.addAdvanceHandler((): string => {
         console.log('before wallet handler');
         return "reject";
@@ -27,7 +29,7 @@ export const appConfig = () => {
         return "reject";
     });
 });
-
+  const express = require("express");
   const app = express();
   const port = 8383;
   app.use(express.json());

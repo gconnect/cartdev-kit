@@ -1,5 +1,5 @@
 "use client"
-import Greetings from './components/Greetings';
+import Greetings from './components/examples/Greetings';
 
 const Home: React.FC = () => {
 

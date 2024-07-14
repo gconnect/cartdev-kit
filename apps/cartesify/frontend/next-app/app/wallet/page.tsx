@@ -1,8 +1,8 @@
 'use client'
 import { DAPP_ADDRESS } from "@/app/utils/constants";
-import Transfers from "../cartesi/Transfers";
+import Transfers from "../components/examples/Transfers";
 import { SimpleGrid } from "@chakra-ui/react";
-import { Balance } from "../cartesi/Balance";
+import { Balance } from "../components/examples/Balance";
 const WalletExample = () => {
 
   return (

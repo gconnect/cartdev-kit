@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom"
-import Greetings from "./pages/Greetings"
-import WalletExamples from "./pages/Wallet"
+import Greetings from "./pages/examples/Greetings"
+import WalletExamples from "./pages/examples/Wallet"
 
 const PageRoutes = () => {
   return (

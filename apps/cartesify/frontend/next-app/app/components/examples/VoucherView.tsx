@@ -1,26 +1,28 @@
 'use client'
 import { useEffect, useState } from "react"
-import { Voucher } from "./model"
-import { VoucherService } from "./services/VoucherService"
+import { Voucher } from "../../cartesi/model"
+import { VoucherService } from "../../cartesi/services/VoucherService"
 import { Button } from "@chakra-ui/react"
-import { DAPP_ADDRESS } from "../utils/constants"
-import { useEthersSigner } from "../utils/useEtherSigner"
-import { executeVoucher } from "./services/Portal"
-import { useAccount } from "wagmi"
+import { DAPP_ADDRESS } from "../../utils/constants"
+import { useEthersSigner } from "../../utils/useEtherSigner"
+import { executeVoucher } from "../../cartesi/services/Portal"
+import { useAccount } from "wagmi" 
+import { CartesiDApp__factory } from "@cartesi/rollups";
+import { BigNumberish } from "ethers"
 
 export default function VoucherView() {
+   const signer = useEthersSigner()
     const [vouchers, setVouchers] = useState<Voucher[] | undefined>()
+
     async function loadVouchers() {
         setVouchers(undefined)
         const res = await VoucherService.findAll()
         const vouchers = res.data.vouchers.edges.map((e: any) => e.node)
         setVouchers(vouchers)
-    }
+     }
 
-    useEffect(() => {
-        if(vouchers){
-         loadVouchers()
-        }
+    useEffect(() => { 
+        loadVouchers()
     }, [])
 
     return (
@@ -51,15 +53,14 @@ export default function VoucherView() {
 function VoucherERC1155({ voucher }: { voucher: Voucher }) {
     const signer = useEthersSigner()
     const { chain } = useAccount()
-
     const hasProof = !!voucher.proof?.validity
     return (
         <>
             {voucher.destination}
             {hasProof ? (
                 <Button className="bg-yellow-500 p-2 rounded m-2" onClick={async () => {
-                    await executeVoucher(voucher, DAPP_ADDRESS, signer, chain!)
-                }}>Execute</Button>
+                   const execute = await executeVoucher(voucher, DAPP_ADDRESS, signer, chain!)
+                }}>Execute </Button>
             ) : (
                 <span> waiting for proof </span>
             )}

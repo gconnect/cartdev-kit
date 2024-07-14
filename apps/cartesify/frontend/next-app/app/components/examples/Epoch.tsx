@@ -1,7 +1,7 @@
 'use client'
 import { Button } from "@chakra-ui/react";
 
-import { sendRPCCommand } from "./services/RestApiCalls";
+import { sendRPCCommand } from "../../cartesi/services/RestApiCalls";
 import { useState } from "react";
 
 export function Epoch() {

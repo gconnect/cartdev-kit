@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { fetchWallet } from "./services/RestApiCalls"
-import { callDAppAddressRelay } from "./services/Portal"
+import { fetchWallet } from "../../cartesi/services/RestApiCalls"
+import { callDAppAddressRelay } from "../../cartesi/services/Portal"
 import {
     Table,
     Thead,
@@ -14,12 +14,12 @@ import {
     Box,
   } from '@chakra-ui/react'
   import { useAccount } from "wagmi"
-  import { useEthersSigner } from "../utils/useEtherSigner"
+  import { useEthersSigner } from "../../utils/useEtherSigner"
 
 export const Balance: React.FC = () => {
     const [backendResponse, setResponse] = useState('')
     const signer = useEthersSigner()
-    const { chain } = useAccount()
+    const { address, chain } = useAccount()
     console.log(backendResponse)
     return (
         <div>
@@ -32,7 +32,7 @@ export const Balance: React.FC = () => {
                         <Th textAlign={'center'} textColor={'slategray'}>Ether</Th>
                         <Th textAlign={'center'} textColor={'slategray'}>ERC-20</Th>
                         <Th textAlign={'center'} textColor={'slategray'}>ERC-721</Th>
-                        <Th textAlign={'center'} textColor={'slategray'}>ERC-1155</Th>
+                        {/* <Th textAlign={'center'} textColor={'slategray'}>ERC-1155</Th> */}
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -45,7 +45,7 @@ export const Balance: React.FC = () => {
                 </Tbody>
             </Table>
             <Button colorScheme="blue" className=" p-2 " onClick={async () => {
-                    await fetchWallet(signer, setResponse)
+                    await fetchWallet(address!, setResponse)
                 }}>Get Wallet Balance</Button>
              <Button  onClick={async () => {
                     await callDAppAddressRelay(signer, chain!)

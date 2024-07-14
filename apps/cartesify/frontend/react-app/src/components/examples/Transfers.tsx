@@ -1,4 +1,3 @@
-"use client"
 import React, { useState, useEffect } from "react";
 import { Tabs, TabList, TabPanels, TabPanel, Tab, Card, CardBody, Checkbox } from "@chakra-ui/react";
 import { Button, Box } from "@chakra-ui/react";
@@ -11,16 +10,15 @@ import {
   AccordionIcon,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { useEthersSigner } from "../utils/useEtherSigner";
+import { useEthersSigner } from "../../utils/useEtherSigner";
 import { useAccount } from "wagmi";
-import VoucherView from "./VoucherView";
-import { DAPP_ADDRESS } from "../utils/constants";
+import VoucherView from "../../components/examples/VoucherView";
+import { DAPP_ADDRESS } from "../../utils/constants";
 import { Epoch } from "./Epoch";
-import { RestExample } from "./RestExample";
-import { depositBatchERC1155, depositERC20, depositERC721, depositEther, depositSingleERC1155 } from "./services/Portal";
-import { batchWithdraw, getERC1155Balance, getERC20Balance, getERC721Balance, getEtherBalance, transferErc1155, transferErc20, transferErc721, transferEther, withdrawErc1155, withdrawErc20, withdrawErc721, withdrawEther } from "./services/RestApiCalls";
-import { Batch } from "./model";
-import { errorAlert } from "../utils/customAlert";
+import { depositBatchERC1155, depositERC20, depositERC721, depositEther, depositSingleERC1155 } from "../../cartesi/services/Portal";
+import { batchWithdraw, getERC1155Balance, getERC20Balance, getERC721Balance, getEtherBalance, transferErc1155, transferErc20, transferErc721, transferEther, withdrawErc1155, withdrawErc20, withdrawErc721, withdrawEther } from "../../cartesi/services/RestApiCalls";
+import { Batch } from "../../cartesi/model";
+import { errorAlert } from "../../utils/customAlert";
 import { parseEther } from "ethers";
 
 
@@ -174,6 +172,7 @@ const clear1155Batch = () => {
                       colorScheme="blue"
                       size="sm"
                       onClick={async () => {
+                        if(!etherAmount) return errorAlert("Field required!")
                         setLoadEther(true)
                         await depositEther(etherAmount.toString(), signer, chain!)
                         setLoadEther(false)
@@ -185,8 +184,9 @@ const clear1155Batch = () => {
                      <Button disabled={!address}
                       size="sm"
                       onClick={ async () => {
+                        if(!etherAmount) return errorAlert("Field required!")
                         setLoadWithdrawEther(true)
-                        await withdrawEther(signer, Number(etherAmount))
+                        await withdrawEther(signer, Number(parseEther(etherAmount)))
                         setLoadWithdrawEther(false)
                       }}
                     >
@@ -198,8 +198,9 @@ const clear1155Batch = () => {
                       colorScheme=""
                       size="sm"
                       onClick={async () => {
+                        if(!toAddress) return errorAlert("Receipient Address required!")
                         setL2LoadEther(true)
-                        await transferEther(signer, toAddress, Number(etherAmount))
+                        await transferEther(signer, toAddress, Number(parseEther(etherAmount)))
                         setL2LoadEther(false)
                       }}
                     > {l2LoadEther ? "Transferring please wait..🤑" :"L2 Transfer"}
@@ -276,6 +277,7 @@ const clear1155Batch = () => {
                       colorScheme="blue"
                       size="sm"
                       onClick={ async () => {
+                        if(!erc20Token || !erc20Amount) return errorAlert("Field required!")
                         setLoadERC20(true)
                         await depositERC20(DAPP_ADDRESS, erc20Token, erc20Amount, signer!, chain!)
                         setLoadERC20(false)
@@ -289,8 +291,9 @@ const clear1155Batch = () => {
                      <Button disabled={!address}
                     size="sm"
                     onClick={ async () => {
+                      if(!erc20Token || !erc20Amount) return errorAlert("Field required!")
                       setLoadWithdrawERC20(true)
-                      await withdrawErc20(signer, erc20Token, Number(erc20Amount))
+                      await withdrawErc20(signer, erc20Token, Number(parseEther(erc20Amount)))
                       setLoadWithdrawERC20(false)
                     }}
                     >
@@ -302,8 +305,9 @@ const clear1155Batch = () => {
                       colorScheme=""
                       size="sm"
                       onClick={async () => {
+                        if(!erc20Token || !erc20Amount || !toAddress) return errorAlert("Field required!")
                         setLoadL2ERC20(true)
-                        await transferErc20(signer, erc20Token, toAddress, erc20Amount)
+                        await transferErc20(signer, erc20Token, toAddress, Number(parseEther(erc20Amount)))
                         setLoadL2ERC20(false)
                       }}
                       > {loadL2ERC20 ? "Transferring please wait..🤑" :"L2 Transfer"}
@@ -315,10 +319,9 @@ const clear1155Batch = () => {
                       colorScheme=""
                       size="sm"
                       onClick={async () => {
-                        if(!erc20Token) return errorAlert("Token field required")
                         setLoadERC20Balance(true)
-                        await getERC20Balance(signer!, erc20Token, setErc20balanceL1, setErc20balanceL2 )
-                        setLoadERC20Balance(false)
+                        await getERC20Balance(signer!, erc20Token,setErc20balanceL1, setErc20balanceL2 )
+                        setLoadERC20Balance(true)
                       }}
                     > {loadERC20Balance ? "Fetching balance please wait..🤑" :"Get Balance"}
                     </Button>
@@ -363,8 +366,8 @@ const clear1155Batch = () => {
                       color="slategrey"
                       variant="outline"
                       placeholder="Receipient address required for L2 transfer"
-                      onChange={(e) => setToAddress(String(e.target.value))}
-                      value={toAddress}
+                      onChange={(e) => setErc20Token(String(e.target.value))}
+                      value={erc20Token}
                     />
                     )}
                      
@@ -383,6 +386,7 @@ const clear1155Batch = () => {
                       colorScheme="blue"
                       size="sm"
                       onClick={ async () => {
+                        if(!erc721 || !erc721Id ) return errorAlert("Field required")
                         setLoadERC721(true)
                         await depositERC721(DAPP_ADDRESS,erc721,erc721Id,signer!, chain!)
                         setLoadERC721(false)
@@ -394,6 +398,7 @@ const clear1155Batch = () => {
                      <Button disabled={!address}
                       size="sm"
                       onClick={ async () => {
+                        if(!erc721 || !erc721Id ) return errorAlert("Field required")   
                         setLoadWithdrawERC721(true)
                         await withdrawErc721(signer, erc721, Number(erc721Id))
                         setLoadWithdrawERC721(false)
@@ -407,6 +412,7 @@ const clear1155Batch = () => {
                         colorScheme=""
                         size="sm"
                         onClick={ async () => {
+                          if(!erc721 || !erc721Id || toAddress) return errorAlert("Field required")
                           setLoadTransferNFT(true)
                           await transferErc721(signer,erc721,toAddress, Number(erc721Id))
                           setLoadTransferNFT(false)
@@ -436,7 +442,7 @@ const clear1155Batch = () => {
                 </AccordionPanel>
               </AccordionItem>
 
-              <AccordionItem>
+              {/* <AccordionItem>
                 <div className="flex justify-between">
                 <h2>
                   <AccordionButton textColor="white">
@@ -564,10 +570,10 @@ const clear1155Batch = () => {
                   {isChecked && !isL2transfer && (
                     <div className="flex flex-col">
                     
-                      {/* <div className="mt-2 text-slate-400">
+                      <div className="mt-2 text-slate-400">
                         <p>L1 Balance: {erc1155balanceL1}</p>
                         <p>L2 Balance: {erc1155balanceL2}</p>
-                      </div> */}
+                      </div>
                       <span className="text-slate-400">
                         Ids: {erc1155IdsStr} - Amounts: {erc1155AmountsStr}
                       </span>
@@ -602,7 +608,7 @@ const clear1155Batch = () => {
                       >
                         {loadERC1155Batch ? "Transferring please wait..🤑" : "Batch Transfer"}
                       </Button>
-                      {/* <Button
+                      <Button
                         className="mt-2"
                         disabled={!address}
                         size="sm"
@@ -623,8 +629,8 @@ const clear1155Batch = () => {
                         }}
                       >
                         {loadBatchWithdrawERC1155 ? "Withdrawing Please wait..🤑" : "Batch Withdraw"}
-                      </Button> */}
-                      {/* <Button
+                      </Button>
+                      <Button
                         disabled={!address}
                         className="bg-light-purple mt-2"
                         colorScheme=""
@@ -636,12 +642,12 @@ const clear1155Batch = () => {
                         }}
                       >
                         {loadERC1155Balance ? "Fetching balance please wait..🤑" : "Get Balance"}
-                      </Button> */}
+                      </Button>
                     </div>
                   )}
                 </Stack>
                 </AccordionPanel>
-              </AccordionItem>
+              </AccordionItem> */}
 
             </Accordion>
           </TabPanel>

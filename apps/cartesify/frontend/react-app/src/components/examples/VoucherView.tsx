@@ -1,15 +1,14 @@
 'use client'
 import { useEffect, useState } from "react"
-import { Voucher } from "./model"
-import { VoucherService } from "./services/VoucherService"
+import { Voucher } from "../../cartesi/model"
+import { VoucherService } from "../../cartesi/services/VoucherService"
 import { Button } from "@chakra-ui/react"
-import { DAPP_ADDRESS } from "../utils/constants"
-import { useEthersSigner } from "../utils/useEtherSigner"
-import { executeVoucher } from "./services/Portal"
-import { useAccount } from "wagmi" 
+import { DAPP_ADDRESS } from "../../utils/constants"
+import { useEthersSigner } from "../../utils/useEtherSigner"
+import { executeVoucher } from "../../cartesi/services/Portal"
+import { useAccount } from "wagmi"
 
 export default function VoucherView() {
-    
     const [vouchers, setVouchers] = useState<Voucher[] | undefined>()
     async function loadVouchers() {
         setVouchers(undefined)
@@ -19,7 +18,9 @@ export default function VoucherView() {
     }
 
     useEffect(() => {
-        loadVouchers()
+        if(vouchers){
+         loadVouchers()
+        }
     }, [])
 
     return (
@@ -34,7 +35,7 @@ export default function VoucherView() {
                         {vouchers.map((voucher, i) => {
                             return (
                                 <div key={`${i}`}>
-                                    <VoucherERC1155 voucher={voucher} />
+                                    <VoucherItem voucher={voucher} />
                                 </div>
                             )
                         })}
@@ -47,9 +48,10 @@ export default function VoucherView() {
     )
 }
 
-function VoucherERC1155({ voucher }: { voucher: Voucher }) {
+function VoucherItem({ voucher }: { voucher: Voucher }) {
     const signer = useEthersSigner()
     const { chain } = useAccount()
+
     const hasProof = !!voucher.proof?.validity
     return (
         <>

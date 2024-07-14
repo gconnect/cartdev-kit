@@ -20,6 +20,7 @@ export const balanceERC20 = async (erc20address: string, signer: JsonRpcSigner) 
         return balance 
     }catch(error){
         console.log(error)
+        return error
     }
 }
 
@@ -30,11 +31,12 @@ export const balanceERC721 = async (erc721address: string, signer: JsonRpcSigner
         console.warn(`The contract erc-721 ${erc721address} does not exist`)
         return toBigInt(0)
     }
-    const contract = IERC721__factory.connect(erc721address, signer)
-    const balance = await contract.balanceOf(signer.address)
-    return balance
+        const contract = IERC721__factory.connect(erc721address, signer)
+        const balance = await contract.balanceOf(signer.address)
+        return balance
     }catch(error){
         console.log(error)
+        return error
     }
 }
 
@@ -45,9 +47,9 @@ export const balanceERC1155 = async (erc1155address: string, signer: JsonRpcSign
         console.warn(`The contract erc-1155 ${erc1155address} does not exist`)
         return toBigInt(0)
     }
-    const contract = IERC1155__factory.connect(erc1155address, signer)
-    const balance = await contract.balanceOf(signer.address, tokenId)
-    return balance
+        const contract = IERC1155__factory.connect(erc1155address, signer)
+        const balance = await contract.balanceOf(signer.address, tokenId)
+        return balance
     }catch(error){
         console.log(error)
     }
@@ -55,34 +57,45 @@ export const balanceERC1155 = async (erc1155address: string, signer: JsonRpcSign
 
 export const loadBatchBalances = async (signer: JsonRpcSigner, erc1155address: string,
     batch: Batch[], setBatch: Function) => {
-try {
-    const bytecode = await signer.provider.getCode(erc1155address)
-    if (bytecode === '0x') {
-        console.log('Token does not exist')
-        return
+    try {
+        const bytecode = await signer.provider.getCode(erc1155address)
+        if (bytecode === '0x') {
+            console.log('Token does not exist')
+            return
+        }
+        if (!batch?.length) {
+            return
+        }
+        const userAddress = await signer?.getAddress()
+        const contract = IERC1155__factory.connect(erc1155address, signer)
+        const balances = await contract.balanceOfBatch(batch.map(() => userAddress), batch.map(b => b.tokenId))
+        balances.forEach((b, i) => {
+            batch[i].balance = b.toString()
+        })
+        setBatch(batch)
+    } catch (error) {
+        console.log(error)
+        return error
     }
-    if (!batch?.length) {
-        return
-    }
-    const userAddress = await signer?.getAddress()
-    const contract = IERC1155__factory.connect(erc1155address, signer)
-    const balances = await contract.balanceOfBatch(batch.map(() => userAddress), batch.map(b => b.tokenId))
-    balances.forEach((b, i) => {
-        batch[i].balance = b.toString()
-    })
-    setBatch(batch)
-} catch (error) {
-    console.log(error)
-}
 }
 
-export const depositEther = async (etherValue: string, 
-    signer: JsonRpcSigner | undefined, chain: Chain) => {
+export const depositEther = async (
+    amount: number, 
+    signer: JsonRpcSigner | undefined, 
+    chain: Chain
+    ) => {
     try {
+    const data = ethers.toUtf8Bytes(`Deposited (${amount}) ether.`);
+    const txOverrides = { 
+        value: parseEther(`${amount}`),
+        // gasLimit: ethers.hexlify(3000000), // Example gas limit
+        gasPrice: ethers.parseUnits('10', 'gwei') // Example gas pr
+    };
+
     const portalAddress = config[toHex(chain.id)].EtherPortalAddress
     const explorer = config[toHex(chain.id)].explorer
     const portal = EtherPortal__factory.connect(portalAddress, signer!)
-    const tx = await portal.depositEther(DAPP_ADDRESS, '0x', { value: parseEther(etherValue)})
+    const tx = await portal.depositEther(DAPP_ADDRESS, data, txOverrides)
     const receipt = await (tx as any).wait(1)
     const transactionHash = `${explorer + "tx/" + receipt.hash}`;
     successAlert(transactionHash);
@@ -93,14 +106,14 @@ export const depositEther = async (etherValue: string,
 }
 
 export const depositERC20 = async (dappAddress: string, erc20address: string, 
-    erc20value: string, signer: JsonRpcSigner, chain: Chain) => {
+    erc20value: number, signer: JsonRpcSigner, chain: Chain) => {
     try {
         const portalAddress = config[toHex(chain.id)].Erc20PortalAddress
         const explorer = config[toHex(chain.id)].explorer
         const contract = IERC20__factory.connect(erc20address, signer)
-        await contract.approve(portalAddress, parseUnits(erc20value, 6))
+        await contract.approve(portalAddress, parseEther(erc20value.toString()))
         const portal = ERC20Portal__factory.connect(portalAddress, signer)
-        const tx = await portal.depositERC20Tokens(erc20address, dappAddress, parseUnits(erc20value, 6), '0x')
+        const tx = await portal.depositERC20Tokens(erc20address, dappAddress, parseEther(erc20value.toString()), '0x')
         const receipt = await (tx as any).wait()
         console.log(explorer)
         successAlert(`Successfully deposited`)
@@ -171,6 +184,7 @@ try {
     const executed = await cartesiDApp.wasVoucherExecuted(voucher.input.index, voucher.index)
         if (executed) {
             console.log('Voucher was executed!!!')
+            errorAlert('Voucher already executed!')
         } else {
             console.log('executing voucher...')
             const tx = await cartesiDApp.executeVoucher(voucher.destination, voucher.payload, voucher.proof)
@@ -178,8 +192,8 @@ try {
             const receipt = await (tx as any).wait()
             console.log('Executed!', receipt)
             successAlert(`${explorer/+"tx"/receipt.hash}`)
-
         }
+    return executed
     } catch (error) {
         errorAlert(error)
     }

@@ -1,9 +1,9 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { useEthersSigner } from '../utils/useEtherSigner';
-import { createOrUpdateRequest, getRequest } from '../cartesi/services/RestApiCalls';
-import { errorAlert, successAlert } from '../utils/customAlert';
+import { useEthersSigner } from '../../utils/useEtherSigner';
+import { createOrUpdateRequest, getRequest } from '../../cartesi/services/RestApiCalls';
+import { errorAlert, successAlert } from '../../utils/customAlert';
 import {
   Table,
   Thead,

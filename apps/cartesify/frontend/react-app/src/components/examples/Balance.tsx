@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { fetchWallet } from "./services/RestApiCalls"
-import { callDAppAddressRelay } from "./services/Portal"
+import { fetchWallet } from "../../cartesi/services/RestApiCalls"
+import { callDAppAddressRelay } from "../../cartesi/services/Portal"
 import {
     Table,
     Thead,
@@ -14,7 +14,7 @@ import {
     Box,
   } from '@chakra-ui/react'
   import { useAccount } from "wagmi"
-  import { useEthersSigner } from "../utils/useEtherSigner"
+  import { useEthersSigner } from "../../utils/useEtherSigner"
 
 export const Balance: React.FC = () => {
     const [backendResponse, setResponse] = useState('')
