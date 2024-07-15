@@ -36,6 +36,11 @@ Once you have successfully install the package globally on your machine, you are
 ```bash
 npx cartdevikit create myapp
 ```
+
+Alternatively you can create a project this way without global installation
+```bash 
+npx cartdevikit@latest create myapp
+```
 You should see something like this
 ![prompt image](images/prompt-ui.png)
 
@@ -75,7 +80,7 @@ If all goes well you should see this
 For quick troubleshooting incase you run into any issue you can quickly check the status using
 
 ```bash
-sunodo doctor
+cartesi doctor
 ```
 This will start the development server
 
