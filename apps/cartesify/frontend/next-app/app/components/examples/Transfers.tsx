@@ -291,7 +291,7 @@ const clear1155Batch = () => {
                       onClick={ async () => {
                         if(!erc20Token || !erc20Amount) return errorAlert("Field required!")
                         setLoadERC20(true)
-                        await depositERC20(DAPP_ADDRESS, erc20Token, erc20Amount, signer!, chain!)
+                        await depositERC20(DAPP_ADDRESS, erc20Token, parseEther(erc20Amount).toString(), signer!, chain!)
                         setLoadERC20(false)
                       }
                       }
