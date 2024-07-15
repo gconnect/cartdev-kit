@@ -106,16 +106,28 @@ More details on each individual project setup base on selected template will be 
 - Cartesify (Backend and Frontend)
 - Mobile (React Native with Expo and without Expo, Flutter)
 
-## Backend Templates:
-CartdevKit supports backend templates in various programming languages, including Python, JavaScript, TypeScript, Rust, and Go. Each backend template comes with a basic project structure and configuration files.
 
-## Frontend Templates
-Frontend templates are available for popular frameworks such as React, NestJS, Vue.js, Angular, and Sundo Console. These templates include components, routing, and styling to kickstart front-end development.
+## Template Documentation
+Checkout the individual docs to learn more about the template.
 
-## Cartesify Templates
+### Backend Templates:
+
+CartdevKit supports backend templates in various programming languages, including Python, [JavaScript Template](), [TypeScript Template](), Rust, and Go. Each backend template comes with a basic project structure and configuration files. 
+
+
+### Frontend Templates
+
+Frontend templates are available for popular frameworks such as [React App Template](), [NestJS Template](), Vue.js, Angular, and Sundo Console. These templates include components, routing, and styling to kickstart front-end development.
+
+### Cartesify Templates
 Cartesify templates integrate the Cartesi platform for both backend and frontend development. These templates enable developers to build scalable and secure applications using Cartesi's REST API technology.
 
-## Mobile Templates
+The Cartesify template has support for both backend and frontend integration.
+
+- **Frontend** : [React App Template](), [Nextjs App Template]()
+- **Backend** : [Javascript Template](), [Typescript Template]()
+
+### Mobile Templates
 CartesiKit offers templates for mobile app development using React Native (with and without Expo) and Flutter. These templates include navigation, state management, and UI components for building cross-platform mobile applications utilizing Cartesi's Rollup features.
 
 # Built With
@@ -133,10 +145,22 @@ CartesiKit offers templates for mobile app development using React Native (with 
 # Official CartesiKit Documentaion
 To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartdevkit)
 
-# Contributing Guide
-This will be provided soon
+# Additional Helpful Resources
+- [Cartesi Doc]()
+- [Sunodo]()
+
+# Contact & Support
+Join the Cartesi [Discord]() server. You can also connect with the team here [@africinnovate]()
+
+# Roadmap
+See the open issues for a full list of proposed features (and known issues).
+
+
+# Contributing
+We welcome contributions from the community.
 
 # LICENSE
-CartdevKit is licensed under the Apache License. Refer to the [LICENSE](https://github.com/gconnect/cartesi-kit/blob/master/LICENSE) file for more details
+CartdevKit is licensed under the Apache License. Refer to the [LICENSE](https://github.com/gconnect/cartdev-kit/blob/master/LICENSE) file for more details
+
 
 
