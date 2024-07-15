@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+CartDevkit support React boilerplate template with TailwindCSS and ChakraUI. This is a starter kit with no additional boilerplate code. It's a perfect starter kit to get your project started on Cartesi.
+
 ## Getting Started
 
 First, run the development server:
@@ -19,6 +21,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+# Architecture
+- /app/components/examples includes the example components used in the template
+- /app/components/ includes other components like header, footer and customButton
+- /app/wallet is an example wallet page
+- /app/cartesi includes Cartesi specific contract interaction code that you can easily call/import from anywhere in your component. These functions are specially arranged in Portals.ts file
+- /app includes other components, utils and helper functions
+- /public includes static files
 
 ## Learn More
 
