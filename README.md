@@ -57,12 +57,12 @@ npm install -g cartdevikit
 Once you have successfully install the package globally on your machine, you are now set to create your first project using the template by running the below command
 
 ```bash
-npx cartdevikit create myapp
+npx cartdevikit create myexampleApp
 ```
 
 Alternatively you can create a project this way without global installation
 ```bash 
-npx cartdevikit@latest create myapp
+npx cartdevikit@latest create myexampleApp
 ```
 You should see something like this
 ![prompt image](images/prompt-ui.png)
