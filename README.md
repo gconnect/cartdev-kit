@@ -1,34 +1,34 @@
-# CartesiKit
+# CartDevKit CLI
 An all in one package to help you get started building your project on Cartesi
 
 ![CartesiKit Architecture](images/architecture.png)
 
 Building on the blockchain doesn't have to hard. With CartesiKit you are one click away from bringing your ideas to life and launching your product while utilizing the full potentials of the Cartesi Rollup.
 
-The CartesiKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
+The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
 
 With the template, you can easily create your frontend and backend project by selecting the template(s) you need in just one click of a command line.
 
-CartesiKit aims to address common challenges faced by developers when setting up new projects or working with various technologies and frameworks.
+CartDevKit aims to address common challenges faced by developers when setting up new projects or working with various technologies and frameworks.
 
 This project is specially designed to meet the development needs of the Cartesi Developers. It aims to ease the onboarding of new developers into the [Cartesi](cartesi.io) ecosystem.
 
 # System Requirements and Prerequisites
-CartesiKit requires Node.js and npm to be installed on your system. Ensure that you have the latest versions of Node.js and npm installed before proceeding with the installation.
+CartDevKit requires Node.js and npm to be installed on your system. Ensure that you have the latest versions of Node.js and npm installed before proceeding with the installation.
 
 # Installation Guide
 
 ### Npm Installation:  
-To install CartesiKit globally via npm, run the following command:
+To install CartDevKit globally via npm, run the following command:
 
 ```bash 
-npm install -g cartesikit
+npm install -g cartdevikit
 ```
 
 Once you have successfully install the package globally on your machine, you are now set to create your first project using the template by running the below command
 
 ```bash
-npx cartesikit create myapp
+npx cartdevikit create myapp
 ```
 You should see something like this
 ![prompt image](images/prompt-ui.png)
@@ -39,7 +39,7 @@ Replace myapp with the desired name of your project. This command will prompt yo
 View available command-line options and flags by running  
 
 ```bash
-cartesikit --help
+cartdevikit --help
 ```` 
 
 ### Backend Setup
@@ -52,7 +52,7 @@ But if you are only working on the frontend and you are not interacting with the
 - First navigate to the backend directory of your created project and run the below command, keep in mind also ensure your docker is all setup and up and running.
    
   ```bash
-    sunodo build
+    cartesi build
   ```
 This will help build the image and run the Cartesi machine. Once this step is completed you should see something like this
 ![sunodo build](images/build-output.png)
@@ -60,7 +60,7 @@ This will help build the image and run the Cartesi machine. Once this step is co
 The next step will be to start the local server by running
 
 ```bash
-  sunodo run
+  cartesi run
 ```
 If all goes well you should see this
 ![sunodo run](images/sunodo-run-output.png)
