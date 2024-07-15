@@ -14,7 +14,7 @@
     "cartesi"
   ],
   "workspaces": [
-    "packages/*"
+    "bin/*"
   ],
   "bin": {
     "cartdevkit": "./bin/index.js"

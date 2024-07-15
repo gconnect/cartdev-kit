@@ -7,7 +7,7 @@ import { Voucher, Batch } from "../model";
 import { DAPP_ADDRESS } from "@/app/utils/constants";
 import { errorAlert, successAlert } from "@/app/utils/customAlert";
 // import { Chain } from "@rainbow-me/rainbowkit";
-import configFile from "../../cartesi/config.json"
+import configFile from "../config.json"
 import { toHex } from "viem";
 import { Chain } from "viem";
 

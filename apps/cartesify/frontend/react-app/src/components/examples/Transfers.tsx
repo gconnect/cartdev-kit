@@ -12,7 +12,7 @@ import {
 import { Text } from "@chakra-ui/react";
 import { useEthersSigner } from "../../utils/useEtherSigner";
 import { useAccount } from "wagmi";
-import VoucherView from "../../components/examples/VoucherView";
+import VoucherView from "./VoucherView";
 import { DAPP_ADDRESS } from "../../utils/constants";
 import { Epoch } from "./Epoch";
 import { depositBatchERC1155, depositERC20, depositERC721, depositEther, depositSingleERC1155 } from "../../cartesi/services/Portal";

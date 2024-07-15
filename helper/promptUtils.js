@@ -1,3 +1,5 @@
+const { generateReadme } = require("../helper/generate-readme")
+
 const inquirer = require('inquirer');
 // let inquirer
 // Function to prompt user for template selection

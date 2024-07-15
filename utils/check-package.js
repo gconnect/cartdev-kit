@@ -1,3 +1,4 @@
+const { ensureDir, copy } = require("fs-extra");
 
 function isPackageInstalled(packageName) {
     try {
@@ -12,5 +13,5 @@ function isPackageInstalled(packageName) {
 }
 
 module.exports = {
-  isPackageInstalled
+  isPackageInstalled,
 }
