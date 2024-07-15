@@ -48,7 +48,7 @@ nonodo
 Start the backend
 
 ```shell
-node src/index.js
+node src/index.ts
 ```
 
 ### Success build output:
