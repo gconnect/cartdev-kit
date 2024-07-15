@@ -3,16 +3,35 @@
 </p>
 <h1 align="center">CartDevKit CLI</h1>
 
-<!-- <table>
-  <th> Heading 1</th>
-  <th> Heading 2</th>
-  <tr> 
-    <td>
-     Hello
-    </td>
-  </tr>
-</table> -->
+<details>
+  <summary>Table of Contents</summary>
 
+- [About CartDevKit](#about-cartdevkit)
+- [System Requirements and Prerequisites](#system-requirements-and-prerequisites)
+- [Installation Guide](#installation-guide)
+  - [Npm Installation:](#npm-installation)
+  - [CLI Options:](#cli-options)
+  - [Backend Setup](#backend-setup)
+  - [Debugging](#debugging)
+  - [Frontend Setup](#frontend-setup)
+  - [Note](#note)
+- [Supported Templates](#supported-templates)
+- [Template Documentation](#template-documentation)
+  - [Backend Templates:](#backend-templates)
+  - [Frontend Templates](#frontend-templates)
+  - [Cartesify Templates](#cartesify-templates)
+  - [Mobile Templates](#mobile-templates)
+- [Built With](#built-with)
+- [Official CartesiKit Documentaion](#official-cartesikit-documentaion)
+- [Additional Helpful Resources](#additional-helpful-resources)
+- [Contact \& Support](#contact--support)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [LICENSE](#license)
+
+</details>
+
+## About CartDevKit
 CartDevKit is an all in one package to help you get started building your project on Cartesi.
 
 The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
@@ -21,10 +40,10 @@ The CartDevKit CLI tool is designed to streamline the process of setting up new 
 
 
 
-# System Requirements and Prerequisites
-CartDevKit requires Node.js and npm to be installed on your system. Ensure that you have the latest versions of Node.js and npm installed before proceeding with the installation.
+## System Requirements and Prerequisites
+CartDevKit requires Node.js minimum version requirement is Node v.20+ and npm to be installed on your system. Ensure that you have the latest versions of Node.js and npm installed before proceeding with the installation.
 
-# Installation Guide
+## Installation Guide
 
 ### Npm Installation:  
 To install CartDevKit globally via npm, run the following command:
@@ -64,7 +83,7 @@ But if you are only working on the frontend and you are not interacting with the
 
 - First navigate to the backend directory of your created project and run the below command, keep in mind also ensure your docker is all setup and up and running.
    
-  ```bash
+  ```shell
     cartesi build
   ```
 This will help build the image and run the Cartesi machine. Once this step is completed you should see something like this
@@ -72,7 +91,7 @@ This will help build the image and run the Cartesi machine. Once this step is co
 
 The next step will be to start the local server by running
 
-```bash
+```shell
   cartesi run
 ```
 If all goes well you should see this
@@ -81,7 +100,7 @@ If all goes well you should see this
 ### Debugging 
 For quick troubleshooting incase you run into any issue you can quickly check the status using
 
-```bash
+```shell
 cartesi doctor
 ```
 This will start the development server
@@ -89,12 +108,12 @@ This will start the development server
 ### Frontend Setup
 If you are working on the frontend, all you need to do is to navigate into the frontend project directory
 
-```bash
+```shell
 npm run dev 
 ```
 or 
 
-```bash
+```shell
 npm start 
 ```
 Depending on the selected template!
@@ -102,7 +121,7 @@ Depending on the selected template!
 ### Note 
 More details on each individual project setup base on selected template will be provide soon.
 
-# Supported Templates
+## Supported Templates
 - Backend (Python, JavaScript, TypeScript, Rust, Go)
 - Frontend (React, NestJS, Vue.js, Angular, Sundo Console)
 - Cartesify (Backend and Frontend)
@@ -132,7 +151,7 @@ The Cartesify template has support for both backend and frontend integration.
 ### Mobile Templates
 CartesiKit offers templates for mobile app development using React Native (with and without Expo) and Flutter. These templates include navigation, state management, and UI components for building cross-platform mobile applications utilizing Cartesi's Rollup features.
 
-# Built With
+## Built With
 - Cartesi Rollup
 - Sunodo
 - Deroll/Cartesi Wallet
@@ -144,24 +163,24 @@ CartesiKit offers templates for mobile app development using React Native (with 
 - React, Nextjs, Vuejs and Angular
 - JS, TS, Rust, Go and Python
 
-# Official CartesiKit Documentaion
+## Official CartesiKit Documentaion
 To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartdevkit)
 
-# Additional Helpful Resources
+## Additional Helpful Resources
 - [Cartesi Doc](https://docs.cartesi.io)
 - [Sunodo](https://docs.sunodo.io/)
 
-# Contact & Support
+## Contact & Support
 Join the Cartesi [Discord](https://discord.com/invite/pfXMwXDDfW) server. You can also connect with the team here [@africinnovate](https://twitter.com/africinnovate)
 
-# Roadmap
+## Roadmap
 See the open issues for a full list of proposed features (and known issues).
 
 
-# Contributing
+## Contributing
 We welcome contributions from the community.
 
-# LICENSE
+## LICENSE
 CartdevKit is licensed under the Apache License. Refer to the [LICENSE](https://github.com/gconnect/cartdev-kit/blob/master/LICENSE) file for more details
 
 
