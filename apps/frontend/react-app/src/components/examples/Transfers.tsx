@@ -75,7 +75,6 @@ const clear1155Batch = () => {
     setErc1155Ids([]);
     setErc1155Amounts([]);
 };
-
   return (
     <Box borderWidth='0.1px' padding='4' borderRadius='lg' overflow='hidden'>
     <Tabs variant="enclosed" size="lg" align="center">

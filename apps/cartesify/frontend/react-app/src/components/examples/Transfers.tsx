@@ -81,23 +81,25 @@ const Transfers: React.FC = () => {
   }
 
   const addTo1155Batch = () => {
-    const newIds = erc1155Ids;
-    newIds.push(erc1155Id);
-    setErc1155Ids(newIds);
-    const newAmounts = erc1155Amounts;
-    newAmounts.push(Number(erc1155Amount));
-    setErc1155Amounts(newAmounts);
-    setErc1155IdsStr("["+erc1155Ids.join(',')+"]");
-    setErc1155AmountsStr("["+erc1155Amounts.join(',')+"]");
-};
-
-
-const clear1155Batch = () => {
-    setErc1155IdsStr("[]");
-    setErc1155AmountsStr("[]");
+    setErc1155Ids((prevIds) => [...prevIds, erc1155Id]);
+    setErc1155Amounts((prevAmounts) => [...prevAmounts, Number(erc1155Amount)]);
+  };
+  
+  const clear1155Batch = () => {
     setErc1155Ids([]);
     setErc1155Amounts([]);
-};
+    setErc1155IdsStr("[]");
+    setErc1155AmountsStr("[]");
+  };
+  
+  useEffect(() => {
+    setErc1155IdsStr("[" + erc1155Ids.join(",") + "]");
+  }, [erc1155Ids]);
+  
+  useEffect(() => {
+    setErc1155AmountsStr("[" + erc1155Amounts.join(",") + "]");
+  }, [erc1155Amounts]);
+  
 
   return (
     <Box borderWidth='0.1px' padding='4' mb={36} borderRadius='lg' overflow='hidden'>

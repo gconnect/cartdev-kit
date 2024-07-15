@@ -1,17 +1,23 @@
-# CartDevKit CLI
-An all in one package to help you get started building your project on Cartesi
+<p align="center">
+  <img src="images/kit-icon.png" alt="Description of Image">
+</p>
+<h1 align="center">CartDevKit CLI</h1>
+
+<!-- <table>
+  <th> Heading 1</th>
+  <th> Heading 2</th>
+  <tr> 
+    <td>
+     Hello
+    </td>
+  </tr>
+</table> -->
+
+CartDevKit is an all in one package to help you get started building your project on Cartesi
 
 ![CartesiKit Architecture](images/architecture.png)
 
-Building on the blockchain doesn't have to hard. With CartesiKit you are one click away from bringing your ideas to life and launching your product while utilizing the full potentials of the Cartesi Rollup.
 
-The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
-
-With the template, you can easily create your frontend and backend project by selecting the template(s) you need in just one click of a command line.
-
-CartDevKit aims to address common challenges faced by developers when setting up new projects or working with various technologies and frameworks.
-
-This project is specially designed to meet the development needs of the Cartesi Developers. It aims to ease the onboarding of new developers into the [Cartesi](cartesi.io) ecosystem.
 
 # System Requirements and Prerequisites
 CartDevKit requires Node.js and npm to be installed on your system. Ensure that you have the latest versions of Node.js and npm installed before proceeding with the installation.
