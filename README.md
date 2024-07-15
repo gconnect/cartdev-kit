@@ -32,9 +32,7 @@
 </details>
 
 ## About CartDevKit
-CartDevKit is an all in one package to help you get started building your project on Cartesi.
-
-The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
+CartDevKit is an all in one package to help you get started building your project on Cartesi. The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
 
 ![CartesiKit Architecture](images/architecture.png)
 
