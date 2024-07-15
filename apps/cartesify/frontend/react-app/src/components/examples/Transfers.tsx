@@ -83,7 +83,7 @@ const Transfers: React.FC = () => {
   const addTo1155Batch = () => {
     setErc1155Ids((prevIds) => [...prevIds, erc1155Id]);
     setErc1155Amounts((prevAmounts) => [...prevAmounts, Number(erc1155Amount)]);
-  };
+  };  
   
   const clear1155Batch = () => {
     setErc1155Ids([]);

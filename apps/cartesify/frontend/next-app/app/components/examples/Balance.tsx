@@ -20,7 +20,7 @@ export const Balance: React.FC = () => {
     const [backendResponse, setResponse] = useState('')
     const signer = useEthersSigner()
     const { address, chain } = useAccount()
-    console.log(backendResponse)
+    // console.log(backendResponse)
     return (
         <div>
         <Box borderWidth='0.1px' padding='4' mt='16' borderRadius='lg' overflow='hidden'>

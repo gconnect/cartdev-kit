@@ -69,7 +69,7 @@ The next step will be to start the local server by running
   cartesi run
 ```
 If all goes well you should see this
-![sunodo run](images/sunodo-run-output.png)
+![cartesi run](images/run-output.png)
 
 ### Debugging 
 For quick troubleshooting incase you run into any issue you can quickly check the status using
@@ -80,23 +80,29 @@ sunodo doctor
 This will start the development server
 
 ### Frontend Setup
-If you are working on the frontend, all you need to do is to navigate into the frontend project directory and run
+If you are working on the frontend, all you need to do is to navigate into the frontend project directory
 
 ```bash
 npm run dev 
 ```
+or 
+
+```bash
+npm start 
+```
+Depending on the selected template!
+
 ### Note 
 More details on each individual project setup base on selected template will be provide soon.
 
 # Supported Templates
-A more comprehensive doc for each of the supported templates will be provided soon.
 - Backend (Python, JavaScript, TypeScript, Rust, Go)
 - Frontend (React, NestJS, Vue.js, Angular, Sundo Console)
 - Cartesify (Backend and Frontend)
 - Mobile (React Native with Expo and without Expo, Flutter)
 
 ## Backend Templates:
-CartesiKit supports backend templates in various programming languages, including Python, JavaScript, TypeScript, Rust, and Go. Each backend template comes with a basic project structure and configuration files.
+CartdevKit supports backend templates in various programming languages, including Python, JavaScript, TypeScript, Rust, and Go. Each backend template comes with a basic project structure and configuration files.
 
 ## Frontend Templates
 Frontend templates are available for popular frameworks such as React, NestJS, Vue.js, Angular, and Sundo Console. These templates include components, routing, and styling to kickstart front-end development.
@@ -107,29 +113,6 @@ Cartesify templates integrate the Cartesi platform for both backend and frontend
 ## Mobile Templates
 CartesiKit offers templates for mobile app development using React Native (with and without Expo) and Flutter. These templates include navigation, state management, and UI components for building cross-platform mobile applications utilizing Cartesi's Rollup features.
 
-# Current Features
-The current version of CartesiKit offers a range of powerful features designed to streamline project setup and enhance developer productivity. 
-
-Below are the key features available in this current release:
-
--  Integration with Cartesi Rollup, Sunodo and Cartesify
--  Project scaffolding
--  Template Selection and Customization
--  Template repository
--  CLI tool integration
--  Documentation and Examples
--  Version Control Integration
-
-# Future Plans
-- Improve on UI of the existing templates
-- Template expansion
-- Create better developer onboarding experience while using the CartesiKit
-- Add additional backend code samples
-- Add implementation logic for Angular, Vue and on the mobile templates
-- Template Updates and Maintenance
-- Community Engagement
-- Continuous Improvement
-
 # Built With
 - Cartesi Rollup
 - Sunodo
@@ -137,21 +120,18 @@ Below are the key features available in this current release:
 - Deroll/Cartesi Router
 - Cartesify
 - Node and Yarn Packages
-- Figlet
-- fs-extra
-- inquirer
-- path
-- shelljs
-- child_process
-- commander
+- Figlet, fs-extra,inquirer, path
+  shelljs, child_process,commander
+- React, Nextjs, Vuejs and Angular
+- JS, TS, Rust, Go and Python
 
 # Official CartesiKit Documentaion
-To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartesikit)
+To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartdevkit)
 
 # Contributing Guide
 This will be provided soon
 
 # LICENSE
-CartesiKit is licensed under the Apache License. Refer to the [LICENSE](https://github.com/gconnect/cartesi-kit/blob/master/LICENSE) file for more details
+CartdevKit is licensed under the Apache License. Refer to the [LICENSE](https://github.com/gconnect/cartesi-kit/blob/master/LICENSE) file for more details
 
 
