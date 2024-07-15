@@ -13,7 +13,9 @@
   </tr>
 </table> -->
 
-CartDevKit is an all in one package to help you get started building your project on Cartesi
+CartDevKit is an all in one package to help you get started building your project on Cartesi.
+
+The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
 
 ![CartesiKit Architecture](images/architecture.png)
 
@@ -74,7 +76,7 @@ The next step will be to start the local server by running
   cartesi run
 ```
 If all goes well you should see this
-![cartesi run](images/run-output.png)
+![Cartesi run](<Screenshot 2024-07-15 at 10.00.50 AM.png>)
 
 ### Debugging 
 For quick troubleshooting incase you run into any issue you can quickly check the status using
@@ -112,20 +114,20 @@ Checkout the individual docs to learn more about the template.
 
 ### Backend Templates:
 
-CartdevKit supports backend templates in various programming languages, including Python, [JavaScript Template](), [TypeScript Template](), Rust, and Go. Each backend template comes with a basic project structure and configuration files. 
+CartdevKit supports backend templates in various programming languages, including Python, [JavaScript Template](/apps/backend/js-template/README.md), [TypeScript Template](/apps/backend/ts-template/README.md), Rust, and Go. Each backend template comes with a basic project structure and configuration files. 
 
 
 ### Frontend Templates
 
-Frontend templates are available for popular frameworks such as [React App Template](), [NestJS Template](), Vue.js, Angular, and Sundo Console. These templates include components, routing, and styling to kickstart front-end development.
+Frontend templates are available for popular frameworks such as [React App Template](./apps/frontend/react-app/README.md), [NestJS Template](./apps/frontend/next-app/README.md), Vue.js, Angular, and Sundo Console. These templates include components, routing, and styling to kickstart front-end development.
 
 ### Cartesify Templates
 Cartesify templates integrate the Cartesi platform for both backend and frontend development. These templates enable developers to build scalable and secure applications using Cartesi's REST API technology.
 
 The Cartesify template has support for both backend and frontend integration.
 
-- **Frontend** : [React App Template](), [Nextjs App Template]()
-- **Backend** : [Javascript Template](), [Typescript Template]()
+- **Frontend** : [React App Template](/apps/cartesify/frontend/react-app/README.md), [Nextjs App Template](/apps/cartesify/frontend/next-app/README.md)
+- **Backend** : [Javascript Template](/apps/cartesify/backend/js-template/README.md), [Typescript Template](/apps/backend/ts-template/README.md)
 
 ### Mobile Templates
 CartesiKit offers templates for mobile app development using React Native (with and without Expo) and Flutter. These templates include navigation, state management, and UI components for building cross-platform mobile applications utilizing Cartesi's Rollup features.
@@ -146,11 +148,11 @@ CartesiKit offers templates for mobile app development using React Native (with 
 To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartdevkit)
 
 # Additional Helpful Resources
-- [Cartesi Doc]()
-- [Sunodo]()
+- [Cartesi Doc](https://docs.cartesi.io)
+- [Sunodo](https://docs.sunodo.io/)
 
 # Contact & Support
-Join the Cartesi [Discord]() server. You can also connect with the team here [@africinnovate]()
+Join the Cartesi [Discord](https://discord.com/invite/pfXMwXDDfW) server. You can also connect with the team here [@africinnovate](https://twitter.com/africinnovate)
 
 # Roadmap
 See the open issues for a full list of proposed features (and known issues).
