@@ -1,10 +1,13 @@
-# Getting Started with Create React App
+# React Template
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+CartDevkit support React boilerplate template with TailwindCSS and ChakraUI. This is a starter kit with no additional boilerplate code. It's a perfect starter kit to get your project started on Cartesi.
+
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory, you can run: Run `yarn` or `npm install` to install all the required dependencies to run the dApp.
+
 
 ### `yarn start`
 
@@ -13,6 +16,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
+
+# Architecture
+- /src/pages includes the example components (specifically Greetings.tsx and Wallet.tsx)
+- /src/cartesi includes Cartesi specific contract interaction code that you can easily call/import from anywhere in your component
+- /src/components includes example components as well as header and footer
+- /public includes static files
 
 ### `yarn test`
 
