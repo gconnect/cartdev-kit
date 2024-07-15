@@ -1,8 +1,43 @@
-# Cartesify NodeJS REST Example
+# Cartesify Nodejs TypeScript REST Template
 
-## Backend
+This is a template for TypeScript Cartesi DApps. It uses node to execute the backend application.
+The application entrypoint is the `src/index.ts` file. It is bundled with [esbuild](https://esbuild.github.io), but any bundler can be used.
 
-### With Nonodo
+## How it Works
+The entrypoint `src/index.ts` contains example code that shows all to perfrom CRUD and wallet operations using different REST api endpoints.
+
+## Prerequisite
+Ensure you have the following packages installed
+- [Node](https://nodejs.org/en) 20+, 
+- [Docker](https://docs.docker.com/desktop/install/windows-install/) and 
+- [Cartesi CLI](https://docs.sunodo.io/guide/introduction/installing)
+- [nonodo](https://github.com/Calindra/nonodo/tree/main)
+
+## How to Run the Backend Server Using Cartesi CLI
+To start the server when using Cartesi CLI ensure your docker is up and running
+
+  ```shell
+  cartesi build
+  ```
+  This will build th image. Once this is successful. The next command to run will be
+
+   ```shell
+  cartesi run
+  ```
+  This will start the local server. 
+
+   ```shell
+  cartesi run --epoch-duration 5
+  ```
+  The above command will start the local server with the epoch argument set to 5 seconds. You can set it to any number depending on the duration you want to wait before voucher can be executed.
+
+   ```shell
+  cartesi address-book
+  ```
+ To get list of addresses used for development purpose run this command;
+
+
+### How to Run the Backend Server Using Nonodo
 
 Start nonodo
 
@@ -13,18 +48,10 @@ nonodo
 Start the backend
 
 ```shell
-node src/app.js
+node src/index.js
 ```
 
-### With Sunodo
-
-Build:
-
-```shell
-sunodo build
-```
-
-Success output:
+### Success build output:
 
 ```shell
  => exporting to image                                                                                                                                                        0.2s
@@ -62,44 +89,8 @@ Cycles: 1493691714
 Storing machine: please wait
 
 ```
+### Success Run Output
+![alt text](<Screenshot 2024-07-15 at 10.00.50 AM-1.png>)
 
-## Frontend
-
-Start the frontend:
-
-```shell
-npm run dev
-```
-
-## How to advance the epoch
-
-```shell
-ETH_RPC_URL=http://localhost:8545 cast rpc evm_increaseTime 2592000
-```
-
-## How to configure the DApp address
-
-Run the command:
-
-```shell
-sunodo address-book
-```
-
-Output:
-
-```shell
- Contract            Address                                    
- ─────────────────── ────────────────────────────────────────── 
- CartesiDAppFactory  0x7122cd1221C20892234186facfE8615e6743Ab02 
- DAppAddressRelay    0xF5DE34d6BbC0446E2a45719E718efEbaaE179daE 
- ERC1155BatchPortal  0xedB53860A6B52bbb7561Ad596416ee9965B055Aa 
- ERC1155SinglePortal 0x7CFB0193Ca87eB6e48056885E026552c3A941FC4 
- ERC20Portal         0x9C21AEb2093C32DDbC53eEF24B873BDCd1aDa1DB 
- ERC721Portal        0x237F8DD094C0e47f4236f12b4Fa01d6Dae89fb87 
- EtherPortal         0xFfdbe43d4c855BF7e0f105c400A50857f53AB044 
- InputBox            0x59b22D57D4f067708AB0c00552767405926dc768 
- SunodoToken         0xf795b3D15D47ac1c61BEf4Cc6469EBb2454C6a9b 
- CartesiDApp         0x70ac08179605AF2D9e75782b8DEcDD3c22aA4D0C 
-```
-
-The DApp Address is 0x70ac08179605AF2D9e75782b8DEcDD3c22aA4D0C
+ ## To Learn More
+  To learn more about building on Cartesi you can visit the [Cartesi](https://docs.cartesi.io/cartesi-rollups/1.3/) and [Sunodu](https://docs.sunodo.io/) documentations.

@@ -1,3 +1,5 @@
+# Nextjs Template
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 CartDevkit support React boilerplate template with TailwindCSS and ChakraUI. This is a starter kit with no additional boilerplate code. It's a perfect starter kit to get your project started on Cartesi.
