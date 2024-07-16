@@ -46,19 +46,9 @@ CartDevKit requires Node.js minimum version requirement is Node v.20+ and npm to
 ## Installation Guide
 
 ### Npm Installation:  
-To install CartDevKit globally via npm, run the following command:
 
-```bash 
-npm install -g cartdevikit
-```
+To create a new project, run this command
 
-Once you have successfully install the package globally on your machine, you are now set to create your first project using the template by running the below command
-
-```bash
-npx cartdevikit create myexampleApp
-```
-
-Alternatively you can create a project this way without global installation
 ```bash 
 npx cartdevikit@latest create myexampleApp
 ```
