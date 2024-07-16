@@ -9,7 +9,6 @@
 - [About CartDevKit](#about-cartdevkit)
 - [System Requirements and Prerequisites](#system-requirements-and-prerequisites)
 - [Installation Guide](#installation-guide)
-  - [Npm Installation:](#npm-installation)
   - [CLI Options:](#cli-options)
   - [Backend Setup](#backend-setup)
   - [Debugging](#debugging)
@@ -44,8 +43,6 @@ CartDevKit is an all in one package to help you get started building your projec
 CartDevKit requires Node.js minimum version requirement is Node v.20+ and npm to be installed on your system. Ensure that you have the latest versions of Node.js and npm installed before proceeding with the installation.
 
 ## Installation Guide
-
-### Npm Installation:  
 
 To create a new project, run this command
 
