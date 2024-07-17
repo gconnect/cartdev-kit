@@ -47,9 +47,9 @@ class CreateGreeting {
  
     getGreeting(greeting_id: number){
       try{
-        let creator_json = JSON.stringify(this.greetings[greeting_id]);
-        console.log("Greeting", creator_json)
-        return new Log(creator_json);
+        let greeting_json = JSON.stringify(this.greetings[greeting_id]);
+        console.log("Greeting", greeting_json)
+        return new Log(greeting_json);
       }catch(error){
         return new Error_out(`Greeting id ${greeting_id} not found`);
       }
