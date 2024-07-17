@@ -47,7 +47,7 @@ CartDevKit requires Node.js minimum version requirement is Node v.20+ and npm to
 To create a new project, run this command
 
 ```bash 
-npx cartdevikit@latest create myexampleApp
+npx cartdevkit@latest create myexampleApp
 ```
 You should see something like this
 ![prompt image](images/prompt-ui.png)
@@ -58,7 +58,7 @@ Replace myapp with the desired name of your project. This command will prompt yo
 View available command-line options and flags by running  
 
 ```bash
-cartdevikit --help
+cartdevkit --help
 ```` 
 
 ### Backend Setup
@@ -74,7 +74,7 @@ But if you are only working on the frontend and you are not interacting with the
     cartesi build
   ```
 This will help build the image and run the Cartesi machine. Once this step is completed you should see something like this
-![sunodo build](images/build-output.png)
+![cartesi build](images/build-output.png)
 
 The next step will be to start the local server by running
 
