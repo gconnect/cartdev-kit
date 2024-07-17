@@ -50,7 +50,7 @@ To create a new project, run this command
 npx cartdevkit@latest create myexampleApp
 ```
 You should see something like this
-![prompt image](images/prompt-ui.png)
+![prompt image](<Screenshot 2024-07-17 at 1.18.39 AM.png>)
 
 Replace myapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
 
