@@ -47,7 +47,7 @@ CartDevKit requires Node.js minimum version requirement is Node v.20+ and npm to
 To create a new project, run this command
 
 ```bash 
-npx cartdevkit@latest create myexampleApp
+npx cartdevkit@latest create mydapp
 ```
 You should see something like this
 ![prompt image](<Screenshot 2024-07-17 at 1.18.39 AM.png>)
