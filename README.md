@@ -21,7 +21,7 @@
   - [Cartesify Templates](#cartesify-templates)
   - [Mobile Templates](#mobile-templates)
 - [Built With](#built-with)
-- [Official CartesiKit Documentaion](#official-cartesikit-documentaion)
+- [Official CartDevKit Documentaion](#official-cartdevkit-documentaion)
 - [Additional Helpful Resources](#additional-helpful-resources)
 - [Contact \& Support](#contact--support)
 - [Roadmap](#roadmap)
@@ -158,7 +158,7 @@ CartesiKit offers templates for mobile app development using React Native (with 
 - React, Nextjs, Vuejs and Angular
 - JS, TS, Rust, Go and Python
 
-## Official CartesiKit Documentaion
+## Official CartDevKit Documentaion
 To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartdevkit)
 
 ## Additional Helpful Resources
