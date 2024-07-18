@@ -164,6 +164,9 @@ CartesiKit offers templates for mobile app development using React Native (with 
 ## Official CartDevKit Documentaion
 To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartdevkit)
 
+# Video Tutorials
+Check out this [playlist](https://www.youtube.com/playlist?list=PLvrAcVH0nwP8EyBrIwdL5wC6PZwPy6vXE) to get started using the CLI tool.
+
 ## Additional Helpful Resources
 - [Cartesi Doc](https://docs.cartesi.io)
 - [Sunodo](https://docs.sunodo.io/)
