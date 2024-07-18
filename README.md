@@ -50,7 +50,7 @@ To create a new project, run this command
 npx cartdevkit@latest create mydapp
 ```
 You should see something like this
-![prompt image](<Screenshot 2024-07-17 at 1.18.39 AM.png>)
+![prompt image](./images//cardevkit-cli-output.png)
 
 Replace myapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
 
@@ -82,7 +82,7 @@ The next step will be to start the local server by running
   cartesi run
 ```
 If all goes well you should see this
-![Cartesi run](<Screenshot 2024-07-15 at 10.00.50 AM.png>)
+![Cartesi run](./images/run-output.png)
 
 ### Debugging 
 For quick troubleshooting incase you run into any issue you can quickly check the status using
@@ -148,7 +148,7 @@ CartesiKit offers templates for mobile app development using React Native (with 
 
 ## Built With
 - Cartesi Rollup
-- Sunodo
+- Cartesi CLI
 - Deroll/Cartesi Wallet
 - Deroll/Cartesi Router
 - Cartesify
