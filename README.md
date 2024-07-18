@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/kit-icon.png" alt="Description of Image">
+  <img src="https://github.com/user-attachments/assets/d5798bf2-61b4-4ebd-8b2f-a1b90ec50a5b" alt="Description of Image">
 </p>
 <h1 align="center" id="cartdevkit-cli">CartDevKit CLI</h1>
 
@@ -31,9 +31,9 @@
 </details>
 
 ## About CartDevKit
-CartDevKit is an all in one package to help you get started building your project on Cartesi. The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
+CartDevKit is an all-in-one package to help you get started building your project on Cartesi. The CartDevKit CLI tool is designed to streamline the process of setting up new projects by providing developers with a wide range of templates for backend, frontend, Cartesify, and mobile development.
 
-![CartesiKit Architecture](images/architecture.png)
+<img width="1411" alt="architecture" src="https://github.com/user-attachments/assets/d9c37cee-16db-4b37-8bb1-cd55d43e0c3c">
 
 <div align="right">
     <a href="#cartdevkit-cli">Back to Top</a>
@@ -50,7 +50,8 @@ To create a new project, run this command
 npx cartdevkit@latest create mydapp
 ```
 You should see something like this
-![prompt image](./images//cardevkit-cli-output.png)
+
+<img width="997" alt="cardevkit-cli-output" src="https://github.com/user-attachments/assets/a196c27f-6166-47a7-a6b6-449f3aafc8eb">
 
 Replace myapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
 
@@ -74,7 +75,8 @@ But if you are only working on the frontend and you are not interacting with the
     cartesi build
   ```
 This will help build the image and run the Cartesi machine. Once this step is completed you should see something like this
-![cartesi build](images/build-output.png)
+<img width="1066" alt="build-output" src="https://github.com/user-attachments/assets/1ee3d051-3045-4ecb-8c7a-eebac70fcc8a">
+
 
 The next step will be to start the local server by running
 
@@ -82,7 +84,8 @@ The next step will be to start the local server by running
   cartesi run
 ```
 If all goes well you should see this
-![Cartesi run](./images/run-output.png)
+<img width="863" alt="run-output" src="https://github.com/user-attachments/assets/8db68168-8d79-48d4-acf1-55979ee1b036">
+
 
 ### Debugging 
 For quick troubleshooting incase you run into any issue you can quickly check the status using
