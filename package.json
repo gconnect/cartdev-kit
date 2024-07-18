@@ -1,6 +1,6 @@
 {
   "name": "cartdevkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Custom template",
   "author": "gconnect",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\""
   },
-  "homepage": "https://github.com/gconnect/cartesi-kit/blob/master/README.md",
+  "homepage": "https://github.com/gconnect/cartdev-kit/blob/main/README.md",
   "keywords": [
     "cartdevkit",
     "cartesi"
