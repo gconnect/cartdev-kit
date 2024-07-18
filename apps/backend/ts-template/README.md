@@ -96,7 +96,8 @@ Storing machine: please wait
 
 ```
 ### Success Run Output
-![alt text](<Screenshot 2024-07-15 at 10.00.50 AM.png>)
+<img width="863" alt="run-output" src="https://github.com/user-attachments/assets/f52b72d7-48e9-4c7c-94a5-e7ecbff30688">
+
 
  ## To Learn More
   To learn more about building on Cartesi you can visit the [Cartesi](https://docs.cartesi.io/cartesi-rollups/1.3/) and [Sunodu](https://docs.sunodo.io/) documentations.
