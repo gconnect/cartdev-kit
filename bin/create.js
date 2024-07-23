@@ -57,7 +57,7 @@ async function createProject(projectName) {
       case 'backend':
         selectedBackend = await promptTemplateSelection('backend', templates.backend);
         const includeFrontend = await promptInclude('Do you want to include a frontend template?', "includeFrontend")
-        const includeConsole = await promptInclude('Do you want to include a frontend console template?', "includeConsole")
+        // const includeConsole = await promptInclude('Do you want to include a frontend console template?', "includeConsole")
   
         if (includeFrontend.includeFrontend) {
           selectedFrontend = await promptTemplateSelection('frontend', templates.frontend);
@@ -65,7 +65,7 @@ async function createProject(projectName) {
         // if(includeConsole.includeConsole){
         //   selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole )
         // }
-        // break;
+        break;
       // case 'mobileApp':
       //   selectedMobile = await promptTemplateSelection('mobileApp', templates.mobileApp);
       //   const includeBackend = await promptInclude('Do you want to include a backend template?', "includeBackend")
@@ -105,10 +105,10 @@ async function createProject(projectName) {
     // if(selectedMobile){
     //   await copyTemplateFiles(selectedMobile, mobileProjectDir, "apps/mobileApp", projectName); 
     // }
-    if(selectedConsole){
-      const giturl = "https://github.com/Mugen-Builders/sunodo-frontend-console.git"
-      await copyGitTemplateFiles(selectedConsole, projectDir, giturl)
-    }
+    // if(selectedConsole){
+    //   const giturl = "https://github.com/Mugen-Builders/sunodo-frontend-console.git"
+    //   await copyGitTemplateFiles(selectedConsole, projectDir, giturl)
+    // }
     console.log("Generating template...")
     await generateReadme(projectDir, projectName)
     await printSuccessMessage() 
