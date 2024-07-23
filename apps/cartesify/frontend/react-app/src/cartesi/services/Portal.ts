@@ -54,7 +54,7 @@ export const balanceERC1155 = async (erc1155address: string, signer: JsonRpcSign
 }
 
 export const loadBatchBalances = async (signer: JsonRpcSigner, erc1155address: string,
-    batch: Batch[], setBatch: Function) => {
+    batch: Batch[], setBatch: any) => {
 try {
     const bytecode = await signer.provider.getCode(erc1155address)
     if (bytecode === '0x') {

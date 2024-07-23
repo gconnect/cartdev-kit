@@ -413,8 +413,8 @@ export const getERC20Balance = async (
 export const getERC721Balance = async (
   signer: JsonRpcSigner, 
   erc721address: string,
-  setErc721balanceL1: Function,
-  setErc721balanceL2: Function
+  setErc721balanceL1: any,
+  setErc721balanceL2: any
 ) => {
   try {
     const url = `${BASE_URL}/wallet/${signer.address}`
@@ -435,8 +435,8 @@ export const getERC1155Balance = async (
   signer: JsonRpcSigner, 
   erc1155address: string,
   tokenId: number,
-  setErc1155balanceL1: Function,
-  setErc1155balanceL2: Function
+  setErc1155balanceL1: any,
+  setErc1155balanceL2: any
 ) => {
   try {
     const url = `${BASE_URL}/wallet/${signer.address}`
