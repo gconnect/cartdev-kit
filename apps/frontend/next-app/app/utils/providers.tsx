@@ -31,7 +31,7 @@ import { mylocalhost } from './mylocalhost';
 
 const { wallets } = getDefaultWallets();
 
-export const config = getDefaultConfig({
+const config = getDefaultConfig({
   appName: 'RainbowKit demo',
   projectId: process.env.NEXT_PUBLIC_WALLECT_CONNECT_PROJECT_ID as string,
   wallets: [
@@ -53,6 +53,10 @@ export const config = getDefaultConfig({
     baseSepolia,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [sepolia] : []),
   ],
+  transports: {
+    [mainnet.id]: http('https://eth-mainnet.g.alchemy.com/v2/...'),
+    [sepolia.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
+  },
   ssr: true,
 });
 

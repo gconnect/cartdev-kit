@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import '@rainbow-me/rainbowkit/styles.css';
-import { RainbowKitAndWagmiProvider } from './utils/RainbowKitAndWagmiProviders';
+import { Providers } from './utils/providers';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { ChakraProvider, theme } from "@chakra-ui/react";
@@ -42,11 +42,11 @@ export default function Layout() {
         <ChakraProvider theme= {theme}>
         {/* <UrqlProvider client={client} ssr={ssr}> */}
         <ApolloProvider client={apolloClient}>
-          <RainbowKitAndWagmiProvider>
+          <Providers>
           <Header/>
           <PageRoutes/>
           <Footer/>
-        </RainbowKitAndWagmiProvider>
+        </Providers>
         </ApolloProvider>
         {/* </UrqlProvider> */}
         <Toaster />

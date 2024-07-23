@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
-import { RainbowkitAndWagmiProviders } from './utils/RainbowkitAndWagmiProviders';
+import { Providers } from './utils/providers';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -25,11 +25,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-bcolor`}>
         <ChakraProvider>
-          <RainbowkitAndWagmiProviders>
+          <Providers>
           <Header/>
           { children }
           <Footer/>
-        </RainbowkitAndWagmiProviders>
+        </Providers>
         <Toaster />
        </ChakraProvider> 
       </body>

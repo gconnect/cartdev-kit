@@ -1,5 +1,5 @@
 import FooterItems from "./FooterItems"
-import devkit from "../images/CartDevKit.png";
+import devkit from "../assets/CartDevKit.png";
 
 const Footer: React.FC = () => {
   return(
