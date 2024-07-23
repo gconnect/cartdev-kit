@@ -52,7 +52,7 @@ You should see something like this
 
 <img width="997" alt="cardevkit-cli-output" src="https://github.com/user-attachments/assets/a196c27f-6166-47a7-a6b6-449f3aafc8eb">
 
-Replace myapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
+Replace mydapp with the desired name of your project. This command will prompt you to select a template and configure the project settings.
 
 ### CLI Options: 
 View available command-line options and flags by running  
@@ -111,7 +111,7 @@ Your `.env` file should look like this 👇 on the nextjs template
 ```bash
 NEXT_PUBLIC_WALLECT_CONNECT_PROJECT_ID= YOUR PROJECT ID
 ```
-If yusing the react-app template your `.env` file should look like this 👇 on the nextjs template
+If using the react-app template your `.env` file should look like this 👇 on the nextjs template
 
 ```bash
 VITE_WALLET_CONNECT_PROJECT_ID= YOUR PROJECT ID
