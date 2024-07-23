@@ -23,7 +23,7 @@ const { hasPackageJson } = require("../utils/check-package")
  async function copyTemplateFiles(templateName, destinationDir, templateDirectory, projectName) {
     const { default: chalk } = await import('chalk');
 
-    const filesToExclude = ['.git', '.env', 'node_modules', 'package-lock.json', 'yarn.lock', '.cartesi'];
+    const filesToExclude = ['.git', '.env', 'node_modules', 'package-lock.json', 'yarn.lock', '.cartesi', '.next'];
 
   try {
   // Use spawn to run the npm install command and log the progress
