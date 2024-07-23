@@ -11,15 +11,14 @@
 - [Installation Guide](#installation-guide)
   - [CLI Options:](#cli-options)
   - [Backend Setup](#backend-setup)
-  - [Debugging](#debugging)
   - [Frontend Setup](#frontend-setup)
+  - [Debugging](#debugging)
   - [Note](#note)
 - [Supported Templates](#supported-templates)
 - [Template Documentation](#template-documentation)
   - [Backend Templates:](#backend-templates)
   - [Frontend Templates](#frontend-templates)
   - [Cartesify Templates](#cartesify-templates)
-  - [Mobile Templates](#mobile-templates)
 - [Built With](#built-with)
 - [Official CartDevKit Documentaion](#official-cartdevkit-documentaion)
 - [Additional Helpful Resources](#additional-helpful-resources)
@@ -63,13 +62,16 @@ cartdevkit --help
 ```` 
 
 ### Backend Setup
-If you are interacting with the frontend and backend at the same time. Say you are building a full stack solution. 
+To setup your backend here are the required steps:
 
-Here are the steps:
+- Navigate to the backend directory of your created project and run the below command, keep in mind also ensure your [docker](https://docs.docker.com/engine/install/) is all setup up and running.
 
-But if you are only working on the frontend and you are not interacting with the backend you can skip this step.
+- Install all required dependencies using either `yarn install` or `npm i`
 
-- First navigate to the backend directory of your created project and run the below command, keep in mind also ensure your docker is all setup and up and running.
+### !NOTE
+To build and run the backend ensure that you have [Cartesi CLI](https://docs.sunodo.io/guide/introduction/installing) is installed and your docker is up and running. For debugging purpose you can run cartesi doctor.
+
+- Build the project by running the below command;
    
   ```shell
     cartesi build
@@ -96,30 +98,43 @@ cartesi doctor
 This will start the development server
 
 ### Frontend Setup
-If you are working on the frontend, all you need to do is to navigate into the frontend project directory
+If you are working on the frontend, here are the required steps:
+
+- Navigate into the frontend project directory
+- Install all required dependencies using either `npm i` or  `yarn install`
+
+### !NOTE
+Once you generate the frontend template, ensure to create  a `.env` file and provide your project Id as it's an important requirement when working with Rainbowkit and wagmi.
+
+Your `.env` file should look like this 👇 on the nextjs template
+
+```bash
+NEXT_PUBLIC_WALLECT_CONNECT_PROJECT_ID= YOUR PROJECT ID
+```
+If yusing the react-app template your `.env` file should look like this 👇 on the nextjs template
+
+```bash
+VITE_WALLET_CONNECT_PROJECT_ID= YOUR PROJECT ID
+```
+
+- Start up the local server using the below command.
 
 ```shell
 npm run dev 
 ```
-or 
 
-```shell
-npm start 
-```
-Depending on the selected template!
-
-### Note 
-More details on each individual project setup base on selected template will be provide soon.
+## !Note
+Detailed setup guide can be found in the readme of the individual template.
 
 <div align="right">
     <a href="#cartdevkit-cli">Back to Top</a>
 </div>
 
 ## Supported Templates
-- Backend (Python, JavaScript, TypeScript, Rust, Go)
-- Frontend (React, NestJS, Vue.js, Angular, Sundo Console)
+- Backend (JavaScript, TypeScript)
+- Frontend (React, NestJS, Sundo Console)
 - Cartesify (Backend and Frontend)
-- Mobile (React Native with Expo and without Expo, Flutter)
+<!-- - Mobile (React Native with Expo and without Expo, Flutter) -->
 
 
 ## Template Documentation
@@ -127,12 +142,23 @@ Checkout the individual docs to learn more about the template.
 
 ### Backend Templates:
 
-CartdevKit supports backend templates in various programming languages, including Python, [JavaScript Template](/apps/backend/js-template/README.md), [TypeScript Template](/apps/backend/ts-template/README.md), Rust, and Go. Each backend template comes with a basic project structure and configuration files. 
+CartdevKit supports backend templates in various programming languages, including;
+
+- [JavaScript Template](/apps/backend/js-template/README.md), 
+- [TypeScript Template](/apps/backend/ts-template/README.md). 
+
+Each backend template comes with a basic project structure and configuration files. 
 
 
 ### Frontend Templates
 
-Frontend templates are available for popular frameworks such as [React App Template](./apps/frontend/react-app/README.md), [NestJS Template](./apps/frontend/next-app/README.md), Vue.js, Angular, and Sundo Console. These templates include components, routing, and styling to kickstart front-end development.
+Frontend templates are available for popular frameworks such as 
+- [React App Template](./apps/frontend/react-app/README.md), 
+- [NestJS Template](./apps/frontend/next-app/README.md), and 
+- [Sundo Console](https://github.com/Mugen-Builders/sunodo-frontend-console). 
+
+These templates include components, routing, and styling to kickstart front-end development.
+
 
 ### Cartesify Templates
 Cartesify templates integrate the Cartesi platform for both backend and frontend development. These templates enable developers to build scalable and secure applications using Cartesi's REST API technology.
@@ -142,8 +168,9 @@ The Cartesify template has support for both backend and frontend integration.
 - **Frontend** : [React App Template](/apps/cartesify/frontend/react-app/README.md), [Nextjs App Template](/apps/cartesify/frontend/next-app/README.md)
 - **Backend** : [Javascript Template](/apps/cartesify/backend/js-template/README.md), [Typescript Template](/apps/backend/ts-template/README.md)
 
-### Mobile Templates
-CartesiKit offers templates for mobile app development using React Native (with and without Expo) and Flutter. These templates include navigation, state management, and UI components for building cross-platform mobile applications utilizing Cartesi's Rollup features.
+<!-- ### Mobile Templates
+CartesiKit offers templates for mobile app development using React Native (with and without Expo) and Flutter. These templates include navigation, state management, and UI components for building cross-platform mobile applications utilizing Cartesi's Rollup features. -->
+
 
 <div align="right">
     <a href="#cartdevkit-cli">Back to Top</a>
@@ -158,8 +185,10 @@ CartesiKit offers templates for mobile app development using React Native (with 
 - Node and Yarn Packages
 - Figlet, fs-extra,inquirer, path
   shelljs, child_process,commander
-- React, Nextjs, Vuejs and Angular
-- JS, TS, Rust, Go and Python
+- React
+- Nextjs
+- JavaScript
+- TypeScript
 
 ## Official CartDevKit Documentaion
 To read a more comprehensive version of this doc visit [here](https://africlab.gitbook.io/cartdevkit)
@@ -170,6 +199,10 @@ Check out this [playlist](https://www.youtube.com/playlist?list=PLvrAcVH0nwP8EyB
 ## Additional Helpful Resources
 - [Cartesi Doc](https://docs.cartesi.io)
 - [Sunodo](https://docs.sunodo.io/)
+- [Cartesi Router](https://github.com/jjhbk/cartesi-router/tree/main)
+- [Cartesi Wallet](https://github.com/jjhbk/cartesi-wallet)
+- [React Vite](https://vitejs.dev/guide/)
+- [Nextjs](https://nextjs.org/docs)
 
 ## Contact & Support
 Join the Cartesi [Discord](https://discord.com/invite/pfXMwXDDfW) server. You can also connect with the team here [@africinnovate](https://twitter.com/africinnovate)
