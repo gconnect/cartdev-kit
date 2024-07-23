@@ -18,14 +18,15 @@ async function createProject(projectName) {
   const inquirer = await import('inquirer');
 
   const templates = {
-    frontend: ['react-app', 'next-app', 'angular-app', 'vue-app'],
+    // frontend: ['react-app', 'next-app', 'angular-app', 'vue-app'],
+    frontend: ['react-app', 'next-app'],
     frontendConsole: ['sunodo-frontend-console-cli'],
-    backend: ['js-template', 'ts-template', 'python-template'],
+    backend: ['js-template', 'ts-template'],
     cartesify: {
       backend: ['js-template', 'ts-template'],
       frontend: ['react-app', 'next-app']
     },
-    mobileApp: ['react_native_app', 'react_native_with_expo', 'flutter_app']
+    // mobileApp: ['react_native_app', 'react_native_with_expo', 'flutter_app']
   };
   
     console.log(chalk.cyan(await figletText))
@@ -38,11 +39,11 @@ async function createProject(projectName) {
       { name: 'Frontend', value: 'frontend' },
       { name: 'Backend', value: 'backend' },
       { name: 'Cartesify', value: 'cartesify' },
-      { name: 'Mobile App', value: 'mobileApp' },
+      // { name: 'Mobile App', value: 'mobileApp' },
     ]);
   
     let selectedFrontend, selectedBackend, selectedConsole
-    let selectedMobile, selectedCartesifyBackend, selectedCartesifyFrontend
+    let selectedCartesifyBackend, selectedCartesifyFrontend
   
   
     switch (selectedTemplateType) {
@@ -65,13 +66,13 @@ async function createProject(projectName) {
           selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole )
         }
         break;
-      case 'mobileApp':
-        selectedMobile = await promptTemplateSelection('mobileApp', templates.mobileApp);
-        const includeBackend = await promptInclude('Do you want to include a backend template?', "includeBackend")
-        if (includeBackend.includeBackend) {
-          selectedBackend = await promptTemplateSelection( 'backend', templates.backend);
-        }
-        break;
+      // case 'mobileApp':
+      //   selectedMobile = await promptTemplateSelection('mobileApp', templates.mobileApp);
+      //   const includeBackend = await promptInclude('Do you want to include a backend template?', "includeBackend")
+      //   if (includeBackend.includeBackend) {
+      //     selectedBackend = await promptTemplateSelection( 'backend', templates.backend);
+      //   }
+      //   break;
       case 'cartesify':
         selectedCartesifyBackend = await promptTemplateSelection('cartesify', templates.cartesify.backend)
         selectedCartesifyFrontend = await promptTemplateSelection('cartesify', templates.cartesify.frontend)
@@ -83,7 +84,7 @@ async function createProject(projectName) {
   
     const frontendProjectDir = `${projectDir}/frontend`;
     const backendProjectDir = `${projectDir}/backend`;
-    const mobileProjectDir = `${projectDir}/mobile-app`
+    // const mobileProjectDir = `${projectDir}/mobile-app`
 
     const templateArray = [`${projectDir}/frontend`,`${projectDir}/backend`, `${projectDir}/mobile-app` ]
   
@@ -101,9 +102,9 @@ async function createProject(projectName) {
     if(selectedCartesifyFrontend){
       await copyTemplateFiles(selectedCartesifyFrontend, frontendProjectDir, "apps/cartesify/frontend", projectName); 
     }
-    if(selectedMobile){
-      await copyTemplateFiles(selectedMobile, mobileProjectDir, "apps/mobileApp", projectName); 
-    }
+    // if(selectedMobile){
+    //   await copyTemplateFiles(selectedMobile, mobileProjectDir, "apps/mobileApp", projectName); 
+    // }
     if(selectedConsole){
       const giturl = "https://github.com/Mugen-Builders/sunodo-frontend-console.git"
       await copyGitTemplateFiles(selectedConsole, projectDir, giturl)
