@@ -20,7 +20,7 @@ async function createProject(projectName) {
   const templates = {
     // frontend: ['react-app', 'next-app', 'angular-app', 'vue-app'],
     frontend: ['react-app', 'next-app'],
-    frontendConsole: ['sunodo-frontend-console-cli'],
+    // frontendConsole: ['sunodo-frontend-console-cli'],
     backend: ['js-template', 'ts-template'],
     cartesify: {
       backend: ['js-template', 'ts-template'],
@@ -42,7 +42,7 @@ async function createProject(projectName) {
       // { name: 'Mobile App', value: 'mobileApp' },
     ]);
   
-    let selectedFrontend, selectedBackend, selectedConsole
+    let selectedFrontend, selectedBackend
     let selectedCartesifyBackend, selectedCartesifyFrontend
   
   
@@ -62,10 +62,10 @@ async function createProject(projectName) {
         if (includeFrontend.includeFrontend) {
           selectedFrontend = await promptTemplateSelection('frontend', templates.frontend);
         }
-        if(includeConsole.includeConsole){
-          selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole )
-        }
-        break;
+        // if(includeConsole.includeConsole){
+        //   selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole )
+        // }
+        // break;
       // case 'mobileApp':
       //   selectedMobile = await promptTemplateSelection('mobileApp', templates.mobileApp);
       //   const includeBackend = await promptInclude('Do you want to include a backend template?', "includeBackend")
@@ -77,9 +77,9 @@ async function createProject(projectName) {
         selectedCartesifyBackend = await promptTemplateSelection('cartesify', templates.cartesify.backend)
         selectedCartesifyFrontend = await promptTemplateSelection('cartesify', templates.cartesify.frontend)
         break
-      case 'frontendConsole':
-        selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole)
-        break
+      // case 'frontendConsole':
+      //   selectedConsole = await promptTemplateSelection('frontendConsole', templates.frontendConsole)
+      //   break
     }
   
     const frontendProjectDir = `${projectDir}/frontend`;
