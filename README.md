@@ -132,7 +132,7 @@ Detailed setup guide can be found in the readme of the individual template.
 
 ## Supported Templates
 - Backend (JavaScript, TypeScript)
-- Frontend (React, NestJS, Sundo Console)
+- Frontend (React, NestJS)
 - Cartesify (Backend and Frontend)
 <!-- - Mobile (React Native with Expo and without Expo, Flutter) -->
 
@@ -155,7 +155,7 @@ Each backend template comes with a basic project structure and configuration fil
 Frontend templates are available for popular frameworks such as 
 - [React App Template](./apps/frontend/react-app/README.md), 
 - [NestJS Template](./apps/frontend/next-app/README.md), and 
-- [Sundo Console](https://github.com/Mugen-Builders/sunodo-frontend-console). 
+<!-- - [Sundo Console](https://github.com/Mugen-Builders/sunodo-frontend-console).  -->
 
 These templates include components, routing, and styling to kickstart front-end development.
 
