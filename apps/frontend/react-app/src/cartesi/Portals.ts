@@ -28,7 +28,7 @@ export const addInput = async (
  ) => {
   if (rollups) {
       try {
-        let payload = ethers.toUtf8Bytes(jsonPayload);
+        const payload = ethers.toUtf8Bytes(jsonPayload);
         const tx = await rollups.inputContract.addInput(dappAddress, payload);
         const receipt = await tx?.wait()
         console.log(receipt?.hash)
@@ -96,20 +96,6 @@ export const depositErc20ToPortal = async (
           erc20PortalAddress,
           parseEther(`${amount}`)
         );
-
-        // const receipt = await tx.wait(1);
-        // if(!receipt) return errorAlert("Error approving")
-        //   const event = (
-        //     await tokenContract.queryFilter(
-        //       tokenContract.filters.Approval(),
-        //       receipt.blockHash
-        //     )
-        //   ).pop();
-        //   if (!event) {
-        //     throw Error(
-        //       `could not approve ${amount} tokens for DAppERC20Portal(${erc20PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
-        //     );
-        //   }
       }
 
      const deposit = await rollups.erc20PortalContract.depositERC20Tokens(
@@ -135,7 +121,7 @@ export const withdrawEther = async (
 ) => {
   try {
     if (rollups && provider) {
-      let ether_amount = parseEther(String(amount)).toString();
+      const ether_amount = parseEther(String(amount)).toString();
       console.log("ether after parsing: ", ether_amount);
       const input_obj = {
         method: "ether_withdraw",
@@ -144,7 +130,7 @@ export const withdrawEther = async (
         },
       };
       const data = JSON.stringify(input_obj);
-      let payload = ethers.toUtf8Bytes(data);
+      const payload = ethers.toUtf8Bytes(data);
       const tx = await rollups.inputContract.addInput(dappAddress, payload);
       const receipt = await tx.wait(1)
       return receipt
@@ -158,12 +144,12 @@ export const withdrawEther = async (
 export const withdrawErc20 = async (
     rollups: RollupsContracts | undefined, 
     provider: JsonRpcApiProvider | undefined,
-    amount: number, address: String,
+    amount: number, address: string,
     dappAddress: string
   ) => {
   try {
     if (rollups && provider) {
-      let erc20_amount = parseEther(String(amount)).toString();
+      const erc20_amount = parseEther(String(amount)).toString();
       console.log("erc20 after parsing: ", erc20_amount);
       const input_obj = {
         method: "erc20_withdraw",
@@ -173,7 +159,7 @@ export const withdrawErc20 = async (
         },
       };
       const data = JSON.stringify(input_obj);
-      let payload = ethers.toUtf8Bytes(data);
+      const payload = ethers.toUtf8Bytes(data);
       const tx =  await rollups.inputContract.addInput(dappAddress, payload);
       const receipt = await tx.wait(1)
       return receipt
@@ -187,13 +173,13 @@ export const withdrawErc20 = async (
 export const withdrawErc721 = async (
   rollups: RollupsContracts | undefined, 
   provider: JsonRpcApiProvider | undefined,
-  address: String, 
+  address: string, 
   id: number,
   dappAddress: string
 ) => {
   try {
     if (rollups && provider) {
-      let erc721_id = String(id);
+      const erc721_id = String(id);
       console.log("erc721 after parsing: ", erc721_id);
       const input_obj = {
         method: "erc721_withdraw",
@@ -203,7 +189,7 @@ export const withdrawErc721 = async (
         },
       };
       const data = JSON.stringify(input_obj);
-      let payload = ethers.toUtf8Bytes(data);
+      const payload = ethers.toUtf8Bytes(data);
       const tx = await rollups.inputContract.addInput(dappAddress, payload);
       const receipt = await tx.wait(1)
       return receipt
@@ -239,18 +225,6 @@ export const transferNftToPortal = async (
       if (currentApproval !== erc721PortalAddress) {
         // Allow portal to withdraw `amount` tokens from signer
         const tx = await tokenContract.approve(erc721PortalAddress, nftid);      
-        // const receipt = await tx.wait(1);
-        // const event = (
-        //   await tokenContract.queryFilter(
-        //     tokenContract.filters.Approval(),
-        //     receipt?.hash
-        //   )
-        // ).pop();
-        // if (!event) {
-        //   throw Error(
-        //     `could not approve ${nftid} for DAppERC721Portal(${erc721PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
-        //   );
-        // }
       }
 
       // Transfer
