@@ -6,7 +6,7 @@ import Footer from "./components/Footer";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { Toaster } from 'react-hot-toast'
-import { API_BASE_URL } from "./utils/constants";
+import { GRAPHQL_BASE_URL } from "./utils/constants";
 import {
   ssrExchange,
   cacheExchange,
@@ -18,7 +18,7 @@ import PageRoutes from "./PageRoutes"
 export default function Layout() {
 
   const apolloClient = new ApolloClient({
-    uri: API_BASE_URL,
+    uri: GRAPHQL_BASE_URL,
     cache: new InMemoryCache(),
   })
 
@@ -27,7 +27,7 @@ export default function Layout() {
       isClient: typeof window !== 'undefined',
     });
     const client = createClient({
-      url: API_BASE_URL,
+      url: GRAPHQL_BASE_URL,
       exchanges: [cacheExchange, ssr, fetchExchange],
       suspense: true,
     });
