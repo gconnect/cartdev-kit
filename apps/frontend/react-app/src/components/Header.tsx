@@ -1,5 +1,5 @@
 import { useState } from "react";
-import devkit from "../images/CartDevKit.png";
+import devkit from "../assets/CartDevKit.png";
 import {FaBars} from 'react-icons/fa'
 import { IoCloseSharp } from "react-icons/io5";
 import CustomButton from "./CustomButton";
