@@ -5,7 +5,6 @@ import {
   IERC20__factory,
   IERC721__factory,
 } from "./generated/rollups";
-import { successAlert, errorAlert } from "../utils/customAlert";
 import { Report } from "./hooks/useReports";
 import { getVoucherWithProof, createUrqlClient} from "./VoucherService";
 
@@ -97,20 +96,6 @@ export const depositErc20ToPortal = async (
           erc20PortalAddress,
           parseEther(`${amount}`)
         );
-
-        // const receipt = await tx.wait(1);
-        // if(!receipt) return errorAlert("Error approving")
-        //   const event = (
-        //     await tokenContract.queryFilter(
-        //       tokenContract.filters.Approval(),
-        //       receipt.blockHash
-        //     )
-        //   ).pop();
-        //   if (!event) {
-        //     throw Error(
-        //       `could not approve ${amount} tokens for DAppERC20Portal(${erc20PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
-        //     );
-        //   }
       }
 
      const deposit = await rollups.erc20PortalContract.depositERC20Tokens(
@@ -241,18 +226,6 @@ export const transferNftToPortal = async (
       if (currentApproval !== erc721PortalAddress) {
         // Allow portal to withdraw `amount` tokens from signer
         const tx = await tokenContract.approve(erc721PortalAddress, nftid);      
-        // const receipt = await tx.wait(1);
-        // const event = (
-        //   await tokenContract.queryFilter(
-        //     tokenContract.filters.Approval(),
-        //     receipt?.hash
-        //   )
-        // ).pop();
-        // if (!event) {
-        //   throw Error(
-        //     `could not approve ${nftid} for DAppERC721Portal(${erc721PortalAddress})  (signer: ${signerAddress}, tx: ${tx.hash})`
-        //   );
-        // }
       }
 
       // Transfer
