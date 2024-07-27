@@ -24,6 +24,7 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, WagmiProvider } from 'wagmi';
 import { mylocalhost } from './mylocalhost';
+import { RPC_URL } from './constants';
 
 
 const { wallets } = getDefaultWallets();
@@ -53,8 +54,7 @@ const { wallets } = getDefaultWallets();
     ...(import.meta.env.VITE_ENABLE_TESTNETS === 'true' ? [sepolia] : []),
   ],
   transports: {
-    [mainnet.id]: http('https://eth-mainnet.g.alchemy.com/v2/...'),
-    [sepolia.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
+    [sepolia.id]: http(RPC_URL),
   },
   ssr: true,
 });

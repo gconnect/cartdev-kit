@@ -26,14 +26,15 @@ import {
 } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
-import { http, createConfig } from 'wagmi'
+import { http } from 'wagmi'
 import { mylocalhost } from './mylocalhost';
+import { RPC_URL } from './constants';
 
 const { wallets } = getDefaultWallets();
 
 const config = getDefaultConfig({
   appName: 'RainbowKit demo',
-  projectId: process.env.NEXT_PUBLIC_WALLECT_CONNECT_PROJECT_ID as string,
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
   wallets: [
     ...wallets,
     {
@@ -54,8 +55,7 @@ const config = getDefaultConfig({
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [sepolia] : []),
   ],
   transports: {
-    [mainnet.id]: http('https://eth-mainnet.g.alchemy.com/v2/...'),
-    [sepolia.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
+    [sepolia.id]: http(RPC_URL),
   },
   ssr: true,
 });
